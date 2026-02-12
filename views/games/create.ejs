@@ -1,0 +1,130 @@
+<%- include('../layouts/main', { body: `
+<div class="create-game-page">
+    <div class="container container-narrow">
+        <h1>Create a Game</h1>
+        <p class="text-muted">Post a tee time and find playing partners</p>
+
+        <form action="/games/create" method="POST" class="game-form">
+            <section class="form-section">
+                <h2>When & Where</h2>
+
+                <div class="form-group">
+                    <label for="course_id">Golf Course *</label>
+                    <select id="course_id" name="course_id" required>
+                        <option value="">Select a course...</option>
+                        ${courses.map(c => `<option value="${c.id}" ${preselectedCourse === c.id ? 'selected' : ''}>${c.name} - ${c.city}</option>`).join('')}
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="game_date">Date *</label>
+                        <input type="date" id="game_date" name="game_date" required
+                               min="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                    <div class="form-group">
+                        <label for="tee_time">Tee Time *</label>
+                        <input type="time" id="tee_time" name="tee_time" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="spots_total">Players Needed *</label>
+                    <select id="spots_total" name="spots_total" required>
+                        <option value="1">1 player (2-ball)</option>
+                        <option value="2">2 players (3-ball)</option>
+                        <option value="3" selected>3 players (4-ball)</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2>Preferences (Optional)</h2>
+                <p class="text-muted text-small">Help players know what to expect</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="level_min">Minimum Level</label>
+                        <select id="level_min" name="level_min">
+                            <option value="">Any level</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="scratch">Scratch</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="level_max">Maximum Level</label>
+                        <select id="level_max" name="level_max">
+                            <option value="">Any level</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="scratch">Scratch</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pace_preference">Pace</label>
+                        <select id="pace_preference" name="pace_preference">
+                            <option value="">No preference</option>
+                            <option value="relaxed">Relaxed</option>
+                            <option value="normal">Normal</option>
+                            <option value="fast">Fast</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transport_preference">Transport</label>
+                        <select id="transport_preference" name="transport_preference">
+                            <option value="">No preference</option>
+                            <option value="buggy">Buggy</option>
+                            <option value="walking">Walking</option>
+                            <option value="trolley">Trolley</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Languages</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="languages" value="English"> English
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="languages" value="French"> French
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="languages" value="Italian"> Italian
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="languages" value="German"> German
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="note">Note to Players</label>
+                    <textarea id="note" name="note" rows="3"
+                              placeholder="E.g., Looking for a fun round, drinks after at the clubhouse..."></textarea>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <a href="/games" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Game</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.create-game-page { padding: var(--spacing-2xl) 0; }
+.create-game-page h1 { margin-bottom: var(--spacing-xs); }
+.create-game-page > .container > p { margin-bottom: var(--spacing-xl); }
+.checkbox-group { display: flex; flex-wrap: wrap; gap: var(--spacing-lg); }
+.checkbox-label { display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer; }
+.checkbox-label input { width: auto; }
+</style>
+` }) %>

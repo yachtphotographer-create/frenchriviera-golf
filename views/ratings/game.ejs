@@ -1,0 +1,104 @@
+<%- include('../layouts/main', { body: `
+<div class="rating-page">
+    <div class="container container-narrow">
+        <h1>Rate Your Playing Partners</h1>
+        <p class="text-muted">Game at ${game.course_name} on ${new Date(game.game_date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+
+        ${playersToRate.filter(p => !p.already_rated).length === 0 ?
+            `<div class="card">
+                <p>You have already rated all players from this game.</p>
+                <a href="/games/${game.id}" class="btn btn-outline">Back to Game</a>
+            </div>` :
+            `<form action="/ratings/submit" method="POST" class="ratings-form">
+                <input type="hidden" name="game_id" value="${game.id}">
+
+                ${playersToRate.filter(p => !p.already_rated).map((player, index) => `
+                    <div class="rating-card card">
+                        <div class="rating-player">
+                            ${player.profile_photo ?
+                                `<img src="${player.profile_photo}" alt="" class="rating-avatar">` :
+                                `<span class="rating-avatar-placeholder">${player.display_name.charAt(0)}</span>`
+                            }
+                            <h3>${player.display_name}</h3>
+                        </div>
+
+                        <input type="hidden" name="ratings[${index}][user_id]" value="${player.user_id}">
+
+                        <div class="rating-criteria">
+                            <div class="rating-item">
+                                <label>Punctuality</label>
+                                <div class="star-rating" data-name="ratings[${index}][punctuality]">
+                                    ${[1,2,3,4,5].map(n => `
+                                        <input type="radio" name="ratings[${index}][punctuality]" value="${n}" id="punct_${index}_${n}" required>
+                                        <label for="punct_${index}_${n}">&#9733;</label>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="rating-item">
+                                <label>Pace of Play</label>
+                                <div class="star-rating" data-name="ratings[${index}][pace_of_play]">
+                                    ${[1,2,3,4,5].map(n => `
+                                        <input type="radio" name="ratings[${index}][pace_of_play]" value="${n}" id="pace_${index}_${n}" required>
+                                        <label for="pace_${index}_${n}">&#9733;</label>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="rating-item">
+                                <label>Friendliness</label>
+                                <div class="star-rating" data-name="ratings[${index}][friendliness]">
+                                    ${[1,2,3,4,5].map(n => `
+                                        <input type="radio" name="ratings[${index}][friendliness]" value="${n}" id="friend_${index}_${n}" required>
+                                        <label for="friend_${index}_${n}">&#9733;</label>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="rating-item">
+                                <label>Would Play Again</label>
+                                <div class="star-rating" data-name="ratings[${index}][would_play_again]">
+                                    ${[1,2,3,4,5].map(n => `
+                                        <input type="radio" name="ratings[${index}][would_play_again]" value="${n}" id="again_${index}_${n}" required>
+                                        <label for="again_${index}_${n}">&#9733;</label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment_${index}">Comment (optional)</label>
+                            <textarea name="ratings[${index}][comment]" id="comment_${index}" rows="2"
+                                      placeholder="Any feedback for this player..."></textarea>
+                        </div>
+                    </div>
+                `).join('')}
+
+                <div class="form-actions">
+                    <a href="/games/${game.id}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Submit Ratings</button>
+                </div>
+            </form>`
+        }
+    </div>
+</div>
+
+<style>
+.rating-page { padding: var(--spacing-2xl) 0; }
+.rating-page h1 { margin-bottom: var(--spacing-xs); }
+.rating-page > .container > p { margin-bottom: var(--spacing-xl); }
+.rating-card { margin-bottom: var(--spacing-xl); }
+.rating-player { display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-lg); border-bottom: 1px solid var(--color-border); }
+.rating-avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+.rating-avatar-placeholder { width: 56px; height: 56px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 600; }
+.rating-player h3 { margin: 0; }
+.rating-criteria { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg); margin-bottom: var(--spacing-lg); }
+.rating-item label:first-child { display: block; font-weight: 500; margin-bottom: var(--spacing-sm); }
+.star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+.star-rating input { display: none; }
+.star-rating label { font-size: 1.5rem; color: var(--color-border); cursor: pointer; padding: 0 2px; }
+.star-rating label:hover, .star-rating label:hover ~ label,
+.star-rating input:checked ~ label { color: var(--color-secondary); }
+@media (max-width: 768px) { .rating-criteria { grid-template-columns: 1fr; } }
+</style>
+` }) %>

@@ -1,0 +1,276 @@
+<%- include('../layouts/main', { body: `
+<div class="game-detail-page">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="/games">Games</a> &rsaquo;
+            <span>Game at ${game.course_name}</span>
+        </nav>
+
+        <div class="game-detail-grid">
+            <div class="game-main">
+                <div class="game-header card">
+                    <div class="game-header-top">
+                        <div class="game-date-large">
+                            <span class="day">${new Date(game.game_date).toLocaleDateString('en-GB', { weekday: 'long' })}</span>
+                            <span class="date">${new Date(game.game_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                            <span class="time">${game.tee_time.slice(0, 5)}</span>
+                        </div>
+                        <div class="game-status status-${game.status}">
+                            ${game.status === 'open' ? 'Open' :
+                              game.status === 'full' ? 'Full' :
+                              game.status === 'confirmed' ? 'Confirmed' :
+                              game.status === 'completed' ? 'Completed' :
+                              game.status === 'cancelled' ? 'Cancelled' : game.status}
+                        </div>
+                    </div>
+
+                    <h1><a href="/courses/${game.course_slug}">${game.course_name}</a></h1>
+                    <p class="game-location">${game.course_city}</p>
+
+                    ${game.note ? `<p class="game-note">"${game.note}"</p>` : ''}
+
+                    <div class="game-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Spots</span>
+                            <span class="meta-value">${game.spots_filled} / ${game.spots_total + 1} filled</span>
+                        </div>
+                        ${game.pace_preference ? `
+                        <div class="meta-item">
+                            <span class="meta-label">Pace</span>
+                            <span class="meta-value">${game.pace_preference}</span>
+                        </div>` : ''}
+                        ${game.transport_preference ? `
+                        <div class="meta-item">
+                            <span class="meta-label">Transport</span>
+                            <span class="meta-value">${game.transport_preference}</span>
+                        </div>` : ''}
+                        ${game.level_min || game.level_max ? `
+                        <div class="meta-item">
+                            <span class="meta-label">Level</span>
+                            <span class="meta-value">${game.level_min || 'Any'} - ${game.level_max || 'Any'}</span>
+                        </div>` : ''}
+                    </div>
+                </div>
+
+                <div class="players-section card">
+                    <h2>Players (${players.filter(p => p.status === 'accepted').length + 1}/${game.spots_total + 1})</h2>
+
+                    <div class="players-list">
+                        ${players.filter(p => p.status === 'accepted' || p.role === 'creator').map(player => `
+                            <div class="player-item ${player.role === 'creator' ? 'is-creator' : ''}">
+                                ${player.profile_photo ?
+                                    `<img src="${player.profile_photo}" alt="" class="player-avatar">` :
+                                    `<span class="player-avatar-placeholder">${player.display_name.charAt(0)}</span>`
+                                }
+                                <div class="player-info">
+                                    <a href="/profile/${player.user_id}" class="player-name">${player.display_name}</a>
+                                    <div class="player-details">
+                                        ${player.handicap ? `<span>HCP ${player.handicap}</span>` : ''}
+                                        ${player.playing_level ? `<span>${player.playing_level}</span>` : ''}
+                                        ${player.nationality ? `<span>${player.nationality}</span>` : ''}
+                                    </div>
+                                </div>
+                                ${player.role === 'creator' ? '<span class="badge-creator">Organizer</span>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    ${isCreator && players.filter(p => p.status === 'pending').length > 0 ? `
+                        <div class="pending-requests">
+                            <h3>Pending Requests</h3>
+                            ${players.filter(p => p.status === 'pending').map(player => `
+                                <div class="player-item pending">
+                                    ${player.profile_photo ?
+                                        `<img src="${player.profile_photo}" alt="" class="player-avatar">` :
+                                        `<span class="player-avatar-placeholder">${player.display_name.charAt(0)}</span>`
+                                    }
+                                    <div class="player-info">
+                                        <a href="/profile/${player.user_id}" class="player-name">${player.display_name}</a>
+                                        <div class="player-details">
+                                            ${player.handicap ? `<span>HCP ${player.handicap}</span>` : ''}
+                                            ${player.playing_level ? `<span>${player.playing_level}</span>` : ''}
+                                        </div>
+                                    </div>
+                                    <div class="player-actions">
+                                        <form action="/games/${game.id}/accept/${player.user_id}" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn btn-primary btn-sm">Accept</button>
+                                        </form>
+                                        <form action="/games/${game.id}/decline/${player.user_id}" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn btn-outline btn-sm">Decline</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+
+                <!-- Chat Section (only for accepted players) -->
+                ${user && (userStatus === 'accepted' || isCreator) && game.status !== 'cancelled' ? `
+                    <div class="chat-section card" id="game-chat" data-game-id="${game.id}">
+                        <h2>Group Chat</h2>
+                        <div class="chat-messages" id="chat-messages">
+                            ${typeof messages !== 'undefined' && messages && messages.length > 0 ?
+                                messages.map(msg => `
+                                    <div class="chat-message ${msg.sender_id === user.id ? 'own' : ''}">
+                                        <div class="message-avatar">
+                                            ${msg.profile_photo ?
+                                                `<img src="${msg.profile_photo}" alt="">` :
+                                                `<span>${msg.display_name.charAt(0)}</span>`
+                                            }
+                                        </div>
+                                        <div class="message-content">
+                                            <div class="message-header">
+                                                <span class="message-author">${msg.display_name}</span>
+                                                <span class="message-time">${new Date(msg.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
+                                            </div>
+                                            <p class="message-text">${msg.content}</p>
+                                        </div>
+                                    </div>
+                                `).join('') :
+                                '<p class="chat-empty">No messages yet. Start the conversation!</p>'
+                            }
+                        </div>
+                        <form class="chat-form" id="chat-form">
+                            <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                    </div>
+                    <script>window.currentUserId = ${user.id};</script>
+                    <script src="/socket.io/socket.io.js"></script>
+                    <script src="/js/chat.js"></script>
+                ` : ''}
+            </div>
+
+            <aside class="game-sidebar">
+                <div class="card">
+                    ${game.status === 'cancelled' ? `
+                        <p class="text-muted">This game has been cancelled.</p>
+                    ` : game.status === 'completed' ? `
+                        <p class="text-muted">This game has been completed.</p>
+                        ${user && (userStatus === 'accepted' || isCreator) ? `
+                            <a href="/ratings/game/${game.id}" class="btn btn-primary btn-block">Rate Players</a>
+                        ` : ''}
+                    ` : !user ? `
+                        <p>Want to join this game?</p>
+                        <a href="/auth/login" class="btn btn-primary btn-block">Login to Join</a>
+                        <p class="text-small text-muted" style="margin-top: var(--spacing-md);">
+                            Don't have an account? <a href="/auth/register">Sign up</a>
+                        </p>
+                    ` : isCreator ? `
+                        <p class="text-muted">You created this game.</p>
+                        ${game.status === 'open' || game.status === 'full' ? `
+                            <form action="/games/${game.id}/cancel" method="POST"
+                                  onsubmit="return confirm('Are you sure you want to cancel this game?');">
+                                <button type="submit" class="btn btn-outline btn-block">Cancel Game</button>
+                            </form>
+                        ` : ''}
+                    ` : userStatus === 'accepted' ? `
+                        <p class="text-success">You're playing!</p>
+                        <form action="/games/${game.id}/withdraw" method="POST"
+                              onsubmit="return confirm('Are you sure you want to withdraw from this game?');">
+                            <button type="submit" class="btn btn-outline btn-block">Withdraw</button>
+                        </form>
+                    ` : userStatus === 'pending' ? `
+                        <p class="text-muted">Your request is pending...</p>
+                        <form action="/games/${game.id}/withdraw" method="POST">
+                            <button type="submit" class="btn btn-outline btn-block">Cancel Request</button>
+                        </form>
+                    ` : userStatus === 'declined' ? `
+                        <p class="text-muted">Your request was declined.</p>
+                    ` : game.status === 'full' ? `
+                        <p class="text-muted">This game is full.</p>
+                    ` : `
+                        <form action="/games/${game.id}/join" method="POST">
+                            <button type="submit" class="btn btn-primary btn-block">Request to Join</button>
+                        </form>
+                    `}
+                </div>
+
+                <div class="card">
+                    <h3>Course</h3>
+                    <p><a href="/courses/${game.course_slug}">${game.course_name}</a></p>
+                    <p class="text-muted">${game.course_city}</p>
+                    <a href="/courses/${game.course_slug}" class="btn btn-outline btn-block btn-sm">View Course</a>
+                </div>
+
+                <div class="card">
+                    <h3>Organizer</h3>
+                    <div class="organizer-info">
+                        ${game.creator_photo ?
+                            `<img src="${game.creator_photo}" alt="" class="organizer-avatar">` :
+                            `<span class="organizer-avatar-placeholder">${game.creator_name.charAt(0)}</span>`
+                        }
+                        <div>
+                            <a href="/profile/${game.creator_id}">${game.creator_name}</a>
+                            ${game.creator_handicap ? `<p class="text-small text-muted">HCP ${game.creator_handicap}</p>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<style>
+.game-detail-page { padding: var(--spacing-xl) 0 var(--spacing-2xl); }
+.game-detail-grid { display: grid; grid-template-columns: 1fr 320px; gap: var(--spacing-xl); }
+.game-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-lg); }
+.game-date-large .day { display: block; font-size: 0.875rem; color: var(--color-text-muted); }
+.game-date-large .date { display: block; font-size: 1.25rem; font-weight: 600; }
+.game-date-large .time { display: block; font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+.game-status { padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 500; }
+.status-open { background: #d4edda; color: #155724; }
+.status-full { background: #fff3cd; color: #856404; }
+.status-confirmed { background: #cce5ff; color: #004085; }
+.status-completed { background: var(--color-bg-alt); color: var(--color-text-muted); }
+.status-cancelled { background: #f8d7da; color: #721c24; }
+.game-header h1 { margin-bottom: var(--spacing-xs); }
+.game-header h1 a { color: inherit; }
+.game-location { color: var(--color-text-muted); margin-bottom: var(--spacing-md); }
+.game-note { font-style: italic; color: var(--color-text-muted); padding: var(--spacing-md); background: var(--color-bg-alt); border-radius: var(--radius-md); margin-bottom: var(--spacing-lg); }
+.game-meta { display: flex; flex-wrap: wrap; gap: var(--spacing-lg); }
+.meta-item { }
+.meta-label { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
+.meta-value { font-weight: 500; text-transform: capitalize; }
+.players-section h2 { margin-bottom: var(--spacing-lg); }
+.players-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.player-item { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-md); background: var(--color-bg-alt); border-radius: var(--radius-md); }
+.player-item.is-creator { background: linear-gradient(135deg, rgba(27, 94, 32, 0.1), rgba(27, 94, 32, 0.05)); }
+.player-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.player-avatar-placeholder { width: 48px; height: 48px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+.player-info { flex: 1; }
+.player-name { font-weight: 500; color: var(--color-text); }
+.player-details { font-size: 0.875rem; color: var(--color-text-muted); display: flex; gap: var(--spacing-md); }
+.badge-creator { background: var(--color-primary); color: white; padding: 2px 8px; border-radius: var(--radius-full); font-size: 0.75rem; }
+.pending-requests { margin-top: var(--spacing-xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--color-border); }
+.pending-requests h3 { margin-bottom: var(--spacing-md); }
+.player-item.pending { background: #fff3cd; }
+.player-actions { display: flex; gap: var(--spacing-sm); }
+.text-success { color: var(--color-success); font-weight: 500; }
+.organizer-info { display: flex; align-items: center; gap: var(--spacing-md); }
+.organizer-avatar { width: 48px; height: 48px; border-radius: 50%; }
+.organizer-avatar-placeholder { width: 48px; height: 48px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+/* Chat styles */
+.chat-section { margin-top: var(--spacing-lg); }
+.chat-section h2 { margin-bottom: var(--spacing-md); }
+.chat-messages { height: 300px; overflow-y: auto; padding: var(--spacing-md); background: var(--color-bg-alt); border-radius: var(--radius-md); margin-bottom: var(--spacing-md); }
+.chat-empty { text-align: center; color: var(--color-text-muted); padding: var(--spacing-xl) 0; }
+.chat-message { display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); }
+.chat-message.own { flex-direction: row-reverse; }
+.chat-message .message-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+.chat-message .message-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.chat-message .message-avatar span { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--color-primary); color: white; font-size: 0.75rem; font-weight: 600; }
+.message-content { max-width: 70%; background: white; padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-md); }
+.chat-message.own .message-content { background: var(--color-primary); color: white; }
+.message-header { display: flex; justify-content: space-between; gap: var(--spacing-md); margin-bottom: var(--spacing-xs); }
+.message-author { font-weight: 500; font-size: 0.875rem; }
+.message-time { font-size: 0.75rem; opacity: 0.7; }
+.message-text { margin: 0; font-size: 0.875rem; }
+.chat-form { display: flex; gap: var(--spacing-sm); }
+.chat-form input { flex: 1; padding: var(--spacing-sm) var(--spacing-md); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+
+@media (max-width: 768px) { .game-detail-grid { grid-template-columns: 1fr; } }
+</style>
+` }) %>

@@ -1,0 +1,6 @@
+node_modules/
+.env
+public/uploads/profiles/*
+!public/uploads/profiles/.gitkeep
+*.log
+.DS_Store

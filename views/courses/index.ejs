@@ -1,0 +1,56 @@
+<%- include('../layouts/main', { body: `
+<div class="courses-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>Golf Courses</h1>
+            <p class="page-subtitle">Discover the finest courses on the French Riviera</p>
+        </div>
+
+        <div class="filters-bar">
+            <form action="/courses" method="GET" class="filters-form">
+                <div class="filter-group">
+                    <select name="department" onchange="this.form.submit()">
+                        <option value="">All Departments</option>
+                        <option value="06" ${selectedDepartment === '06' ? 'selected' : ''}>Alpes-Maritimes (06)</option>
+                        <option value="83" ${selectedDepartment === '83' ? 'selected' : ''}>Var (83)</option>
+                    </select>
+                </div>
+                <div class="filter-group search-group">
+                    <input type="text" name="search" placeholder="Search courses..."
+                           value="${searchQuery || ''}">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="courses-grid">
+            ${courses && courses.length > 0 ?
+                courses.map(course => `
+                    <article class="course-card">
+                        <a href="/courses/${course.slug}">
+                            <div class="course-card-image">
+                                <div class="course-card-placeholder">
+                                    <span>${course.holes} Holes</span>
+                                </div>
+                                ${course.featured ? '<span class="badge badge-featured">Featured</span>' : ''}
+                            </div>
+                            <div class="course-card-content">
+                                <h3 class="course-card-title">${course.name}</h3>
+                                <p class="course-card-location">${course.city}, ${course.department_name}</p>
+                                <div class="course-card-details">
+                                    <span>${course.holes} holes</span>
+                                    <span>Par ${course.par}</span>
+                                    ${course.avg_rating && parseFloat(course.avg_rating) > 0 ?
+                                        `<span class="course-rating"><span class="star">&#9733;</span> ${parseFloat(course.avg_rating).toFixed(1)}</span>` : ''
+                                    }
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                `).join('') :
+                '<p class="no-results">No courses found. Try a different search.</p>'
+            }
+        </div>
+    </div>
+</div>
+` }) %>

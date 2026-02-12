@@ -1,0 +1,113 @@
+<%- include('../layouts/main', { body: `
+<div class="games-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>Find a Game</h1>
+            <p class="page-subtitle">Browse open tee times and join other golfers</p>
+        </div>
+
+        <div class="page-actions">
+            <a href="/games/create" class="btn btn-primary">Create a Game</a>
+        </div>
+
+        <div class="filters-bar">
+            <form action="/games" method="GET" class="filters-form">
+                <div class="filter-group">
+                    <select name="department">
+                        <option value="">All Areas</option>
+                        <option value="06" ${filters.department === '06' ? 'selected' : ''}>Alpes-Maritimes</option>
+                        <option value="83" ${filters.department === '83' ? 'selected' : ''}>Var</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select name="course">
+                        <option value="">All Courses</option>
+                        ${courses.map(c => `<option value="${c.id}" ${filters.course == c.id ? 'selected' : ''}>${c.name}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <input type="date" name="date" value="${filters.date || ''}" placeholder="Any date">
+                </div>
+                <button type="submit" class="btn btn-outline">Filter</button>
+                ${(filters.department || filters.course || filters.date) ? '<a href="/games" class="btn btn-outline">Clear</a>' : ''}
+            </form>
+        </div>
+
+        <div class="games-list">
+            ${games && games.length > 0 ?
+                games.map(game => `
+                    <article class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-date">
+                                <span class="game-day">${new Date(game.game_date).toLocaleDateString('en-GB', { weekday: 'short' })}</span>
+                                <span class="game-date-num">${new Date(game.game_date).getDate()}</span>
+                                <span class="game-month">${new Date(game.game_date).toLocaleDateString('en-GB', { month: 'short' })}</span>
+                            </div>
+                            <div class="game-info">
+                                <h3><a href="/games/${game.id}">${game.course_name}</a></h3>
+                                <p class="game-location">${game.course_city}</p>
+                                <p class="game-time">${game.tee_time.slice(0, 5)}</p>
+                            </div>
+                            <div class="game-spots">
+                                <span class="spots-count">${game.spots_total - game.spots_filled}</span>
+                                <span class="spots-label">spot${game.spots_total - game.spots_filled !== 1 ? 's' : ''} left</span>
+                            </div>
+                        </div>
+                        <div class="game-card-body">
+                            <div class="game-creator">
+                                ${game.creator_photo ?
+                                    `<img src="${game.creator_photo}" alt="" class="creator-avatar">` :
+                                    `<span class="creator-avatar-placeholder">${game.creator_name.charAt(0)}</span>`
+                                }
+                                <span>Created by <strong>${game.creator_name}</strong></span>
+                                ${game.creator_handicap ? `<span class="creator-hcp">HCP ${game.creator_handicap}</span>` : ''}
+                            </div>
+                            ${game.note ? `<p class="game-note">${game.note}</p>` : ''}
+                            <div class="game-tags">
+                                ${game.pace_preference ? `<span class="tag">${game.pace_preference} pace</span>` : ''}
+                                ${game.transport_preference ? `<span class="tag">${game.transport_preference}</span>` : ''}
+                                ${game.level_min || game.level_max ? `<span class="tag">${game.level_min || 'Any'} - ${game.level_max || 'Any'}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="/games/${game.id}" class="btn btn-primary btn-sm">View Details</a>
+                        </div>
+                    </article>
+                `).join('') :
+                `<div class="empty-state">
+                    <p>No open games found. Be the first to create one!</p>
+                    <a href="/games/create" class="btn btn-primary">Create a Game</a>
+                </div>`
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.page-actions { margin-bottom: var(--spacing-xl); }
+.games-list { display: flex; flex-direction: column; gap: var(--spacing-lg); }
+.game-card { background: white; border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+.game-card-header { display: flex; align-items: center; gap: var(--spacing-lg); padding: var(--spacing-lg); border-bottom: 1px solid var(--color-border); }
+.game-date { text-align: center; min-width: 60px; }
+.game-day { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
+.game-date-num { display: block; font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+.game-month { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
+.game-info { flex: 1; }
+.game-info h3 { margin-bottom: 0; font-size: 1.125rem; }
+.game-info h3 a { color: inherit; }
+.game-location { color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 0; }
+.game-time { font-weight: 600; color: var(--color-primary); }
+.game-spots { text-align: center; background: var(--color-bg-alt); padding: var(--spacing-md); border-radius: var(--radius-md); }
+.spots-count { display: block; font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+.spots-label { font-size: 0.75rem; color: var(--color-text-muted); }
+.game-card-body { padding: var(--spacing-lg); }
+.game-creator { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); font-size: 0.875rem; }
+.creator-avatar { width: 32px; height: 32px; border-radius: 50%; }
+.creator-avatar-placeholder { width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; }
+.creator-hcp { background: var(--color-bg-alt); padding: 2px 8px; border-radius: var(--radius-full); font-size: 0.75rem; }
+.game-note { color: var(--color-text-muted); font-style: italic; margin-bottom: var(--spacing-md); }
+.game-tags { display: flex; gap: var(--spacing-sm); flex-wrap: wrap; }
+.tag { background: var(--color-bg-alt); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.75rem; text-transform: capitalize; }
+.game-card-footer { padding: var(--spacing-md) var(--spacing-lg); background: var(--color-bg-alt); }
+</style>
+` }) %>

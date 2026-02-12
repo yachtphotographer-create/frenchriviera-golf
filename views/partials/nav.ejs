@@ -1,0 +1,56 @@
+<header class="header">
+    <nav class="nav container">
+        <a href="/" class="nav-logo">
+            <span class="logo-text">French Riviera Golf</span>
+        </a>
+
+        <button class="nav-toggle" aria-label="Toggle menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="nav-menu" id="nav-menu">
+            <li><a href="/courses" class="nav-link">Courses</a></li>
+            <% if (user) { %>
+                <li><a href="/games" class="nav-link">Find Games</a></li>
+                <li><a href="/available" class="nav-link">Players</a></li>
+                <li>
+                    <a href="/notifications" class="nav-link nav-notifications">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <% if (unreadNotifications > 0) { %>
+                            <span class="notification-badge"><%= unreadNotifications > 9 ? '9+' : unreadNotifications %></span>
+                        <% } %>
+                    </a>
+                </li>
+                <li class="nav-dropdown">
+                    <button class="nav-link nav-dropdown-toggle">
+                        <% if (user.profile_photo) { %>
+                            <img src="<%= user.profile_photo %>" alt="" class="nav-avatar">
+                        <% } else { %>
+                            <span class="nav-avatar-placeholder"><%= user.display_name.charAt(0).toUpperCase() %></span>
+                        <% } %>
+                        <span><%= user.display_name %></span>
+                    </button>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="/dashboard">Dashboard</a></li>
+                        <li><a href="/profile">My Profile</a></li>
+                        <li><a href="/profile/edit">Edit Profile</a></li>
+                        <li><a href="/games/mine">My Games</a></li>
+                        <li><a href="/availability/create">Set Availability</a></li>
+                        <li class="nav-dropdown-divider"></li>
+                        <li><a href="/auth/logout">Logout</a></li>
+                    </ul>
+                </li>
+            <% } else { %>
+                <li><a href="/auth/login" class="nav-link">Login</a></li>
+                <li><a href="/auth/register" class="btn btn-primary btn-sm">Sign Up</a></li>
+            <% } %>
+        </ul>
+    </nav>
+</header>
+
+<style>
+.nav-notifications { position: relative; display: flex; align-items: center; }
+.notification-badge { position: absolute; top: -5px; right: -8px; background: var(--color-error); color: white; font-size: 0.625rem; font-weight: 600; padding: 2px 5px; border-radius: 10px; min-width: 16px; text-align: center; }
+</style>

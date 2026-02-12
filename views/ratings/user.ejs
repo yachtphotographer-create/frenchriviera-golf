@@ -1,0 +1,117 @@
+<%- include('../layouts/main', { body: `
+<div class="user-ratings-page">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="/profile/${profile.id}">${profile.display_name}</a> &rsaquo;
+            <span>Ratings</span>
+        </nav>
+
+        <div class="ratings-header">
+            <div class="ratings-summary">
+                ${profile.profile_photo ?
+                    `<img src="${profile.profile_photo}" alt="" class="ratings-avatar">` :
+                    `<span class="ratings-avatar-placeholder">${profile.display_name.charAt(0)}</span>`
+                }
+                <div class="ratings-info">
+                    <h1>${profile.display_name}</h1>
+                    <div class="overall-rating">
+                        <span class="rating-stars">${'&#9733;'.repeat(Math.round(parseFloat(stats.average_rating)))}</span>
+                        <span class="rating-number">${parseFloat(stats.average_rating).toFixed(1)}</span>
+                        <span class="rating-count">(${stats.total_ratings} ratings)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rating-breakdown">
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Punctuality</span>
+                    <div class="breakdown-bar">
+                        <div class="breakdown-fill" style="width: ${(parseFloat(stats.avg_punctuality) / 5) * 100}%"></div>
+                    </div>
+                    <span class="breakdown-value">${parseFloat(stats.avg_punctuality).toFixed(1)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Pace of Play</span>
+                    <div class="breakdown-bar">
+                        <div class="breakdown-fill" style="width: ${(parseFloat(stats.avg_pace) / 5) * 100}%"></div>
+                    </div>
+                    <span class="breakdown-value">${parseFloat(stats.avg_pace).toFixed(1)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Friendliness</span>
+                    <div class="breakdown-bar">
+                        <div class="breakdown-fill" style="width: ${(parseFloat(stats.avg_friendliness) / 5) * 100}%"></div>
+                    </div>
+                    <span class="breakdown-value">${parseFloat(stats.avg_friendliness).toFixed(1)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Would Play Again</span>
+                    <div class="breakdown-bar">
+                        <div class="breakdown-fill" style="width: ${(parseFloat(stats.avg_play_again) / 5) * 100}%"></div>
+                    </div>
+                    <span class="breakdown-value">${parseFloat(stats.avg_play_again).toFixed(1)}</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="ratings-list">
+            <h2>Recent Reviews</h2>
+            ${ratings && ratings.length > 0 ?
+                ratings.map(rating => `
+                    <div class="rating-review card">
+                        <div class="review-header">
+                            <div class="reviewer">
+                                ${rating.rater_photo ?
+                                    `<img src="${rating.rater_photo}" alt="" class="reviewer-avatar">` :
+                                    `<span class="reviewer-avatar-placeholder">${rating.rater_name.charAt(0)}</span>`
+                                }
+                                <div>
+                                    <strong>${rating.rater_name}</strong>
+                                    <p class="review-meta">${rating.course_name} · ${new Date(rating.game_date).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</p>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                <span class="rating-stars">${'&#9733;'.repeat(Math.round(parseFloat(rating.overall)))}</span>
+                                <span>${parseFloat(rating.overall).toFixed(1)}</span>
+                            </div>
+                        </div>
+                        ${rating.comment ? `<p class="review-comment">"${rating.comment}"</p>` : ''}
+                    </div>
+                `).join('') :
+                `<div class="empty-state">
+                    <p>No ratings received yet.</p>
+                </div>`
+            }
+        </section>
+    </div>
+</div>
+
+<style>
+.user-ratings-page { padding: var(--spacing-xl) 0 var(--spacing-2xl); }
+.ratings-header { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-2xl); margin-bottom: var(--spacing-2xl); padding: var(--spacing-xl); background: var(--color-bg-alt); border-radius: var(--radius-lg); }
+.ratings-summary { display: flex; align-items: center; gap: var(--spacing-lg); }
+.ratings-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+.ratings-avatar-placeholder { width: 80px; height: 80px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600; }
+.ratings-info h1 { margin-bottom: var(--spacing-xs); }
+.overall-rating { display: flex; align-items: center; gap: var(--spacing-sm); }
+.rating-stars { color: var(--color-secondary); }
+.rating-number { font-size: 1.25rem; font-weight: 600; }
+.rating-count { color: var(--color-text-muted); }
+.rating-breakdown { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.breakdown-item { display: flex; align-items: center; gap: var(--spacing-md); }
+.breakdown-label { width: 120px; font-size: 0.875rem; }
+.breakdown-bar { flex: 1; height: 8px; background: var(--color-border); border-radius: var(--radius-full); overflow: hidden; }
+.breakdown-fill { height: 100%; background: var(--color-secondary); border-radius: var(--radius-full); }
+.breakdown-value { width: 30px; text-align: right; font-weight: 500; }
+.ratings-list h2 { margin-bottom: var(--spacing-lg); }
+.rating-review { margin-bottom: var(--spacing-md); }
+.review-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.reviewer { display: flex; align-items: center; gap: var(--spacing-md); }
+.reviewer-avatar { width: 40px; height: 40px; border-radius: 50%; }
+.reviewer-avatar-placeholder { width: 40px; height: 40px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+.review-meta { margin: 0; font-size: 0.875rem; color: var(--color-text-muted); }
+.review-rating { text-align: right; }
+.review-comment { margin-top: var(--spacing-md); font-style: italic; color: var(--color-text-muted); }
+@media (max-width: 768px) { .ratings-header { grid-template-columns: 1fr; } }
+</style>
+` }) %>

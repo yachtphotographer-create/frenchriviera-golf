@@ -1,0 +1,122 @@
+<%- include('layouts/main', { body: `
+<div class="dashboard">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Welcome back, ${user.display_name}!</h1>
+            ${!user.email_verified ? `
+                <div class="alert alert-warning">
+                    <span>Your email is not verified. <a href="/auth/resend-verification">Resend verification email</a></span>
+                </div>
+            ` : ''}
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-main">
+                <section class="dashboard-section">
+                    <h2>Quick Actions</h2>
+                    <div class="quick-actions">
+                        <a href="/games/create" class="action-card">
+                            <div class="action-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                            </div>
+                            <span>Create a Game</span>
+                        </a>
+                        <a href="/availability/create" class="action-card">
+                            <div class="action-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            </div>
+                            <span>Set Availability</span>
+                        </a>
+                        <a href="/games" class="action-card">
+                            <div class="action-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            </div>
+                            <span>Find Games</span>
+                        </a>
+                        <a href="/courses" class="action-card">
+                            <div class="action-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <span>Explore Courses</span>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Upcoming Games</h2>
+                        <a href="/games/mine">View All</a>
+                    </div>
+                    ${typeof upcomingGames !== 'undefined' && upcomingGames && upcomingGames.length > 0 ?
+                        `<div class="upcoming-games-list">
+                            ${upcomingGames.map(game => `
+                                <a href="/games/${game.id}" class="upcoming-game-card">
+                                    <div class="game-date-small">
+                                        <span class="date-num">${new Date(game.game_date).getDate()}</span>
+                                        <span class="date-month">${new Date(game.game_date).toLocaleDateString('en-GB', { month: 'short' })}</span>
+                                    </div>
+                                    <div class="game-info-small">
+                                        <strong>${game.course_name}</strong>
+                                        <span>${game.tee_time.slice(0, 5)}</span>
+                                    </div>
+                                </a>
+                            `).join('')}
+                        </div>` :
+                        `<div class="empty-state">
+                            <p>No upcoming games. <a href="/games">Find a game</a> or <a href="/games/create">create one</a>.</p>
+                        </div>`
+                    }
+                </section>
+
+                ${typeof gamesToRate !== 'undefined' && gamesToRate && gamesToRate.length > 0 ? `
+                    <section class="dashboard-section">
+                        <h2>Rate Your Partners</h2>
+                        <div class="rate-games-list">
+                            ${gamesToRate.map(game => `
+                                <div class="rate-game-card">
+                                    <div class="rate-game-info">
+                                        <strong>${game.course_name}</strong>
+                                        <span>${new Date(game.game_date).toLocaleDateString('en-GB')}</span>
+                                    </div>
+                                    <a href="/ratings/game/${game.id}" class="btn btn-primary btn-sm">Rate</a>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                ` : ''}
+            </div>
+
+            <aside class="dashboard-sidebar">
+                <div class="profile-summary card">
+                    <div class="profile-summary-header">
+                        ${user.profile_photo ?
+                            `<img src="${user.profile_photo}" alt="" class="profile-avatar">` :
+                            `<div class="profile-avatar-placeholder">${user.display_name.charAt(0).toUpperCase()}</div>`
+                        }
+                        <div>
+                            <h3>${user.display_name}</h3>
+                            <a href="/profile/edit" class="text-small">Edit Profile</a>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Games</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">-</span>
+                            <span class="stat-label">Rating</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Complete Your Profile</h3>
+                    <p class="text-muted">Add your golf details to get better match suggestions.</p>
+                    <a href="/profile/edit" class="btn btn-outline btn-block">Edit Profile</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+` }) %>

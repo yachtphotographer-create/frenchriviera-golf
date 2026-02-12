@@ -1,0 +1,90 @@
+<%- include('../layouts/main', { body: `
+<div class="my-games-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>My Games</h1>
+        </div>
+
+        <div class="page-actions">
+            <a href="/games/create" class="btn btn-primary">Create a Game</a>
+            <a href="/games" class="btn btn-outline">Find Games</a>
+        </div>
+
+        <section class="games-section">
+            <h2>Upcoming Games</h2>
+            ${upcoming && upcoming.length > 0 ?
+                `<div class="games-list">
+                    ${upcoming.map(game => `
+                        <article class="game-card-mini">
+                            <div class="game-date-mini">
+                                <span class="date-num">${new Date(game.game_date).getDate()}</span>
+                                <span class="date-month">${new Date(game.game_date).toLocaleDateString('en-GB', { month: 'short' })}</span>
+                            </div>
+                            <div class="game-info-mini">
+                                <h3><a href="/games/${game.id}">${game.course_name}</a></h3>
+                                <p>${game.tee_time.slice(0, 5)} · ${game.role === 'creator' ? 'You created' : 'Joined'}</p>
+                            </div>
+                            <div class="game-status-mini">
+                                <span class="status-badge status-${game.status}">${game.status}</span>
+                                ${game.player_status === 'pending' ? '<span class="status-badge status-pending">Pending</span>' : ''}
+                            </div>
+                            <a href="/games/${game.id}" class="btn btn-outline btn-sm">View</a>
+                        </article>
+                    `).join('')}
+                </div>` :
+                `<div class="empty-state">
+                    <p>No upcoming games. <a href="/games">Find a game</a> or <a href="/games/create">create one</a>.</p>
+                </div>`
+            }
+        </section>
+
+        <section class="games-section">
+            <h2>Past Games</h2>
+            ${past && past.length > 0 ?
+                `<div class="games-list">
+                    ${past.map(game => `
+                        <article class="game-card-mini past">
+                            <div class="game-date-mini">
+                                <span class="date-num">${new Date(game.game_date).getDate()}</span>
+                                <span class="date-month">${new Date(game.game_date).toLocaleDateString('en-GB', { month: 'short' })}</span>
+                            </div>
+                            <div class="game-info-mini">
+                                <h3><a href="/games/${game.id}">${game.course_name}</a></h3>
+                                <p>${new Date(game.game_date).toLocaleDateString('en-GB')}</p>
+                            </div>
+                            <a href="/games/${game.id}" class="btn btn-outline btn-sm">View</a>
+                        </article>
+                    `).join('')}
+                </div>` :
+                `<div class="empty-state">
+                    <p>No past games yet.</p>
+                </div>`
+            }
+        </section>
+    </div>
+</div>
+
+<style>
+.my-games-page { padding: var(--spacing-2xl) 0; }
+.page-actions { display: flex; gap: var(--spacing-md); margin-bottom: var(--spacing-xl); }
+.games-section { margin-bottom: var(--spacing-2xl); }
+.games-section h2 { margin-bottom: var(--spacing-lg); }
+.games-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.game-card-mini { display: flex; align-items: center; gap: var(--spacing-lg); padding: var(--spacing-md) var(--spacing-lg); background: white; border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.game-card-mini.past { opacity: 0.7; }
+.game-date-mini { text-align: center; min-width: 50px; }
+.date-num { display: block; font-size: 1.25rem; font-weight: 700; color: var(--color-primary); }
+.date-month { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
+.game-info-mini { flex: 1; }
+.game-info-mini h3 { margin-bottom: 0; font-size: 1rem; }
+.game-info-mini h3 a { color: inherit; }
+.game-info-mini p { margin: 0; font-size: 0.875rem; color: var(--color-text-muted); }
+.game-status-mini { display: flex; gap: var(--spacing-sm); }
+.status-badge { padding: 2px 8px; border-radius: var(--radius-full); font-size: 0.75rem; text-transform: capitalize; }
+.status-open { background: #d4edda; color: #155724; }
+.status-full { background: #fff3cd; color: #856404; }
+.status-pending { background: #fff3cd; color: #856404; }
+.status-completed { background: var(--color-bg-alt); color: var(--color-text-muted); }
+.status-cancelled { background: #f8d7da; color: #721c24; }
+</style>
+` }) %>

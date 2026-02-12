@@ -1,0 +1,30 @@
+<article class="course-card">
+    <a href="/courses/<%= course.slug %>">
+        <div class="course-card-image">
+            <% if (course.photos && course.photos.length > 0) { %>
+                <img src="<%= course.photos[0] %>" alt="<%= course.name %>">
+            <% } else { %>
+                <div class="course-card-placeholder">
+                    <span>Golf Course</span>
+                </div>
+            <% } %>
+            <% if (course.featured) { %>
+                <span class="badge badge-featured">Featured</span>
+            <% } %>
+        </div>
+        <div class="course-card-content">
+            <h3 class="course-card-title"><%= course.name %></h3>
+            <p class="course-card-location"><%= course.city %>, <%= course.department_name %></p>
+            <div class="course-card-details">
+                <span><%= course.holes %> holes</span>
+                <span>Par <%= course.par %></span>
+                <% if (course.avg_rating > 0) { %>
+                    <span class="course-rating">
+                        <span class="star">&#9733;</span>
+                        <%= parseFloat(course.avg_rating).toFixed(1) %>
+                    </span>
+                <% } %>
+            </div>
+        </div>
+    </a>
+</article>

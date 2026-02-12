@@ -1,0 +1,99 @@
+<%- include('../layouts/main', { body: `
+<div class="availability-page">
+    <div class="container container-narrow">
+        <h1>Set Your Availability</h1>
+        <p class="text-muted">Let other golfers know when you're free to play</p>
+
+        <form action="/availability/create" method="POST" class="availability-form">
+            <section class="form-section">
+                <h2>When are you available?</h2>
+
+                <div class="form-group">
+                    <label for="available_date">Date *</label>
+                    <input type="date" id="available_date" name="available_date" required
+                           min="${new Date().toISOString().split('T')[0]}">
+                </div>
+
+                <div class="form-group">
+                    <label for="time_window">Time Window *</label>
+                    <select id="time_window" name="time_window" required>
+                        <option value="">Select...</option>
+                        <option value="early_bird">Early Bird (before 8am)</option>
+                        <option value="morning">Morning (8am - 12pm)</option>
+                        <option value="afternoon">Afternoon (after 12pm)</option>
+                        <option value="all_day">All Day</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2>Where? (Optional)</h2>
+
+                <div class="form-group">
+                    <label for="course_id">Preferred Course</label>
+                    <select id="course_id" name="course_id">
+                        <option value="">Any course</option>
+                        ${courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="area">Area</label>
+                    <select id="area" name="area">
+                        <option value="">Any area</option>
+                        <option value="nice">Nice</option>
+                        <option value="cannes">Cannes</option>
+                        <option value="monaco">Monaco</option>
+                        <option value="mougins">Mougins</option>
+                        <option value="saint-tropez">Saint-Tropez</option>
+                        <option value="grasse">Grasse</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="note">Note (Optional)</label>
+                    <textarea id="note" name="note" rows="2"
+                              placeholder="E.g., Looking for a relaxed round, happy to play anywhere..."></textarea>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <a href="/dashboard" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">Set Availability</button>
+            </div>
+        </form>
+
+        ${myAvailability && myAvailability.length > 0 ? `
+            <section class="my-availability">
+                <h2>Your Current Availability</h2>
+                <div class="availability-list">
+                    ${myAvailability.map(avail => `
+                        <div class="availability-item">
+                            <div class="avail-info">
+                                <strong>${new Date(avail.available_date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</strong>
+                                <span>${avail.time_window.replace('_', ' ')}</span>
+                                ${avail.course_name ? `<span>@ ${avail.course_name}</span>` : ''}
+                            </div>
+                            <form action="/availability/${avail.id}/delete" method="POST">
+                                <button type="submit" class="btn btn-outline btn-sm">Remove</button>
+                            </form>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+        ` : ''}
+    </div>
+</div>
+
+<style>
+.availability-page { padding: var(--spacing-2xl) 0; }
+.availability-page h1 { margin-bottom: var(--spacing-xs); }
+.availability-page > .container > p { margin-bottom: var(--spacing-xl); }
+.my-availability { margin-top: var(--spacing-2xl); padding-top: var(--spacing-2xl); border-top: 1px solid var(--color-border); }
+.my-availability h2 { margin-bottom: var(--spacing-lg); }
+.availability-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.availability-item { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md); background: var(--color-bg-alt); border-radius: var(--radius-md); }
+.avail-info { display: flex; gap: var(--spacing-md); align-items: center; }
+.avail-info span { color: var(--color-text-muted); text-transform: capitalize; }
+</style>
+` }) %>

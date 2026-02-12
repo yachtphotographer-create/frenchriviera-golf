@@ -1,0 +1,349 @@
+<%- include('../layouts/main', { body: `
+<div class="course-detail-page">
+    <div class="course-hero">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/courses">Courses</a> &rsaquo;
+                <a href="/courses?department=${course.department}">${course.department_name}</a> &rsaquo;
+                <span>${course.name}</span>
+            </nav>
+            <h1>${course.name}</h1>
+            <p class="course-hero-location">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                ${course.city}, ${course.department_name}
+            </p>
+            ${course.reviews && course.reviews.length > 0 ? `
+                <div class="course-hero-rating">
+                    <span class="stars">${'★'.repeat(Math.round(course.reviews.reduce((a, r) => a + r.rating, 0) / course.reviews.length))}${'☆'.repeat(5 - Math.round(course.reviews.reduce((a, r) => a + r.rating, 0) / course.reviews.length))}</span>
+                    <span>${course.reviews.length} ${course.reviews.length === 1 ? 'review' : 'reviews'}</span>
+                </div>
+            ` : ''}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="course-content">
+            <div class="course-main">
+                <section class="course-section">
+                    <h2>About This Course</h2>
+                    <p class="course-description">${course.description_en || 'No description available.'}</p>
+                </section>
+
+                <section class="course-section">
+                    <h2>Course Details</h2>
+                    <div class="course-stats">
+                        <div class="stat-card">
+                            <span class="stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            </span>
+                            <span class="stat-value">${course.holes}</span>
+                            <span class="stat-label">Holes</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                            </span>
+                            <span class="stat-value">${course.par}</span>
+                            <span class="stat-label">Par</span>
+                        </div>
+                        ${course.course_length_meters ? `
+                            <div class="stat-card">
+                                <span class="stat-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                                </span>
+                                <span class="stat-value">${course.course_length_meters}m</span>
+                                <span class="stat-label">Length</span>
+                            </div>
+                        ` : ''}
+                        ${course.slope_rating ? `
+                            <div class="stat-card">
+                                <span class="stat-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                                </span>
+                                <span class="stat-value">${course.slope_rating}</span>
+                                <span class="stat-label">Slope</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="details-grid course-meta">
+                        ${course.architect ? `
+                            <div class="detail-item">
+                                <span class="detail-label">Architect</span>
+                                <span class="detail-value">${course.architect}</span>
+                            </div>
+                        ` : ''}
+                        ${course.year_opened ? `
+                            <div class="detail-item">
+                                <span class="detail-label">Opened</span>
+                                <span class="detail-value">${course.year_opened}</span>
+                            </div>
+                        ` : ''}
+                        ${course.course_rating ? `
+                            <div class="detail-item">
+                                <span class="detail-label">Course Rating</span>
+                                <span class="detail-value">${course.course_rating}</span>
+                            </div>
+                        ` : ''}
+                        ${course.max_handicap ? `
+                            <div class="detail-item">
+                                <span class="detail-label">Max Handicap</span>
+                                <span class="detail-value">${course.max_handicap}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                </section>
+
+                <section class="course-section">
+                    <h2>Facilities</h2>
+                    <div class="facilities-grid-icons">
+                        ${course.driving_range ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🎯</span>
+                                <span>Driving Range</span>
+                            </div>
+                        ` : ''}
+                        ${course.putting_green ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">⛳</span>
+                                <span>Putting Green</span>
+                            </div>
+                        ` : ''}
+                        ${course.chipping_green ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🏌️</span>
+                                <span>Chipping Green</span>
+                            </div>
+                        ` : ''}
+                        ${course.practice_bunker ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🏖️</span>
+                                <span>Practice Bunker</span>
+                            </div>
+                        ` : ''}
+                        ${course.buggy_available ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🚗</span>
+                                <span>Buggy Rental</span>
+                            </div>
+                        ` : ''}
+                        ${course.trolley_available ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🛒</span>
+                                <span>Trolley Rental</span>
+                            </div>
+                        ` : ''}
+                        ${course.club_rental ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🏒</span>
+                                <span>Club Rental</span>
+                            </div>
+                        ` : ''}
+                        ${course.pro_shop ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🛍️</span>
+                                <span>Pro Shop</span>
+                            </div>
+                        ` : ''}
+                        ${course.golf_lessons ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">📚</span>
+                                <span>Golf Lessons</span>
+                            </div>
+                        ` : ''}
+                        ${course.restaurant ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🍽️</span>
+                                <span>Restaurant</span>
+                            </div>
+                        ` : ''}
+                        ${course.hotel_onsite ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🏨</span>
+                                <span>Hotel On-site</span>
+                            </div>
+                        ` : ''}
+                        ${course.spa ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">💆</span>
+                                <span>Spa</span>
+                            </div>
+                        ` : ''}
+                        ${course.swimming_pool ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🏊</span>
+                                <span>Swimming Pool</span>
+                            </div>
+                        ` : ''}
+                        ${course.caddy_available ? `
+                            <div class="facility-item">
+                                <span class="facility-icon">🧑</span>
+                                <span>Caddy Service</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                </section>
+
+                ${course.signature_holes ? `
+                    <section class="course-section">
+                        <h2>Signature Holes</h2>
+                        <p>${course.signature_holes}</p>
+                    </section>
+                ` : ''}
+
+                ${course.insider_tips ? `
+                    <section class="course-section insider-tips">
+                        <h2>Insider Tips</h2>
+                        <div class="tip-box">
+                            <span class="tip-icon">💡</span>
+                            <p>${course.insider_tips}</p>
+                        </div>
+                    </section>
+                ` : ''}
+
+                ${course.green_fee_info ? `
+                    <section class="course-section">
+                        <h2>Green Fees</h2>
+                        <p>${course.green_fee_info}</p>
+                    </section>
+                ` : ''}
+
+                ${course.dress_code ? `
+                    <section class="course-section">
+                        <h2>Dress Code</h2>
+                        <p>${course.dress_code}</p>
+                    </section>
+                ` : ''}
+
+                ${course.booking_info ? `
+                    <section class="course-section">
+                        <h2>Booking Information</h2>
+                        <p>${course.booking_info}</p>
+                    </section>
+                ` : ''}
+
+                <section class="course-section reviews-section">
+                    <div class="section-header">
+                        <h2>Reviews ${course.reviews && course.reviews.length > 0 ? `(${course.reviews.length})` : ''}</h2>
+                        ${typeof user !== 'undefined' && user ? `
+                            <a href="/courses/${course.slug}/review" class="btn btn-outline btn-sm">Write a Review</a>
+                        ` : `
+                            <a href="/auth/login?redirect=/courses/${course.slug}/review" class="btn btn-outline btn-sm">Login to Review</a>
+                        `}
+                    </div>
+                    ${course.reviews && course.reviews.length > 0 ? `
+                        <div class="reviews-summary">
+                            <div class="avg-rating">
+                                <span class="avg-number">${(course.reviews.reduce((a, r) => a + r.rating, 0) / course.reviews.length).toFixed(1)}</span>
+                                <span class="avg-stars">${'★'.repeat(Math.round(course.reviews.reduce((a, r) => a + r.rating, 0) / course.reviews.length))}</span>
+                            </div>
+                        </div>
+                        <div class="reviews-list">
+                            ${course.reviews.map(review => `
+                                <div class="review-card">
+                                    <div class="review-header">
+                                        <div class="review-author">
+                                            ${review.profile_photo ?
+                                                `<img src="${review.profile_photo}" alt="" class="review-avatar">` :
+                                                `<span class="review-avatar-placeholder">${review.display_name.charAt(0)}</span>`
+                                            }
+                                            <div class="review-author-info">
+                                                <span class="author-name">${review.display_name}</span>
+                                                ${review.date_played ? `<span class="review-date">Played ${new Date(review.date_played).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</span>` : ''}
+                                            </div>
+                                        </div>
+                                        <div class="review-rating">
+                                            ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                                        </div>
+                                    </div>
+                                    ${review.title ? `<h4 class="review-title">${review.title}</h4>` : ''}
+                                    <p class="review-content">${review.content}</p>
+                                    ${review.course_condition || review.value_for_money || review.facilities || review.scenery ? `
+                                        <div class="review-breakdown">
+                                            ${review.course_condition ? `<span>Condition: ${'★'.repeat(review.course_condition)}</span>` : ''}
+                                            ${review.value_for_money ? `<span>Value: ${'★'.repeat(review.value_for_money)}</span>` : ''}
+                                            ${review.facilities ? `<span>Facilities: ${'★'.repeat(review.facilities)}</span>` : ''}
+                                            ${review.scenery ? `<span>Scenery: ${'★'.repeat(review.scenery)}</span>` : ''}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <div class="empty-state">
+                            <p>No reviews yet. Be the first to share your experience!</p>
+                        </div>
+                    `}
+                </section>
+            </div>
+
+            <aside class="course-sidebar">
+                <div class="card course-actions-card">
+                    <h3>Play Here</h3>
+                    <a href="/games?course=${course.id}" class="btn btn-primary btn-block">Find a Game</a>
+                    <a href="/games/create?course=${course.id}" class="btn btn-outline btn-block">Create a Game</a>
+                </div>
+
+                <div class="card course-contact-card">
+                    <h3>Contact</h3>
+                    ${course.phone ? `
+                        <div class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <a href="tel:${course.phone}">${course.phone}</a>
+                        </div>
+                    ` : ''}
+                    ${course.email ? `
+                        <div class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            <a href="mailto:${course.email}">${course.email}</a>
+                        </div>
+                    ` : ''}
+                    ${course.website ? `
+                        <div class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            <a href="${course.website}" target="_blank" rel="noopener">${course.website.replace(/^https?:\\/\\//, '').replace(/\\/$/, '')}</a>
+                        </div>
+                    ` : ''}
+                    ${course.address ? `
+                        <div class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>${course.address}</span>
+                        </div>
+                    ` : ''}
+                </div>
+
+                ${course.latitude && course.longitude ? `
+                    <div class="card">
+                        <h3>Location</h3>
+                        <div id="course-map" class="course-map" data-lat="${course.latitude}" data-lng="${course.longitude}" data-name="${course.name}"></div>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${course.latitude},${course.longitude}" target="_blank" rel="noopener" class="btn btn-outline btn-block btn-sm">Get Directions</a>
+                    </div>
+                ` : ''}
+
+                <div class="card nearby-card">
+                    <h3>Play With Others</h3>
+                    <p class="text-muted">Looking for playing partners at ${course.name}?</p>
+                    <a href="/available?course=${course.id}" class="btn btn-outline btn-block btn-sm">Find Available Players</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize map if coordinates available
+document.addEventListener('DOMContentLoaded', function() {
+    const mapEl = document.getElementById('course-map');
+    if (mapEl && typeof L !== 'undefined') {
+        const lat = parseFloat(mapEl.dataset.lat);
+        const lng = parseFloat(mapEl.dataset.lng);
+        const name = mapEl.dataset.name;
+
+        const map = L.map('course-map').setView([lat, lng], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+        L.marker([lat, lng]).addTo(map).bindPopup(name);
+    }
+});
+</script>
+` }) %>

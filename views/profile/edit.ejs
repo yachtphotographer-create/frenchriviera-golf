@@ -1,0 +1,196 @@
+<%- include('../layouts/main', { body: `
+<div class="profile-edit-page">
+    <div class="container container-narrow">
+        <h1>Edit Profile</h1>
+
+        <!-- Photo Upload -->
+        <section class="form-section">
+            <h2>Profile Photo</h2>
+            <div class="photo-upload">
+                <div class="current-photo">
+                    ${profile.profile_photo ?
+                        `<img src="${profile.profile_photo}" alt="Current photo">` :
+                        `<div class="avatar-placeholder large">${profile.display_name.charAt(0).toUpperCase()}</div>`
+                    }
+                </div>
+                <form action="/profile/photo" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="photo" id="photo" accept="image/*">
+                    <label for="photo" class="btn btn-outline">Choose Photo</label>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Profile Form -->
+        <form action="/profile/edit" method="POST" class="profile-form">
+            <section class="form-section">
+                <h2>Basic Info</h2>
+
+                <div class="form-group">
+                    <label for="display_name">Display Name *</label>
+                    <input type="text" id="display_name" name="display_name"
+                           value="${profile.display_name}" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nationality">Nationality</label>
+                        <input type="text" id="nationality" name="nationality"
+                               value="${profile.nationality || ''}" placeholder="e.g. French">
+                    </div>
+                    <div class="form-group">
+                        <label for="location_city">City</label>
+                        <input type="text" id="location_city" name="location_city"
+                               value="${profile.location_city || ''}" placeholder="e.g. Nice">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="location_type">I am a...</label>
+                    <select id="location_type" name="location_type">
+                        <option value="">Select...</option>
+                        <option value="resident" ${profile.location_type === 'resident' ? 'selected' : ''}>Resident</option>
+                        <option value="visitor" ${profile.location_type === 'visitor' ? 'selected' : ''}>Visitor</option>
+                        <option value="seasonal" ${profile.location_type === 'seasonal' ? 'selected' : ''}>Seasonal</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="languages">Languages (comma separated)</label>
+                    <input type="text" id="languages" name="languages"
+                           value="${profile.languages ? profile.languages.join(', ') : ''}"
+                           placeholder="e.g. English, French">
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">About Me</label>
+                    <textarea id="bio" name="bio" rows="4"
+                              placeholder="Tell other golfers about yourself...">${profile.bio || ''}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone (optional)</label>
+                    <input type="tel" id="phone" name="phone"
+                           value="${profile.phone || ''}" placeholder="+33 6 XX XX XX XX">
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2>Golf Details</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="handicap">Handicap</label>
+                        <input type="number" id="handicap" name="handicap"
+                               value="${profile.handicap || ''}" step="0.1" min="-5" max="54"
+                               placeholder="e.g. 18.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="handicap_type">Handicap Type</label>
+                        <select id="handicap_type" name="handicap_type">
+                            <option value="">Select...</option>
+                            <option value="official" ${profile.handicap_type === 'official' ? 'selected' : ''}>Official</option>
+                            <option value="self_declared" ${profile.handicap_type === 'self_declared' ? 'selected' : ''}>Self-declared</option>
+                            <option value="none" ${profile.handicap_type === 'none' ? 'selected' : ''}>No handicap</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="playing_level">Playing Level</label>
+                    <select id="playing_level" name="playing_level">
+                        <option value="">Select...</option>
+                        <option value="beginner" ${profile.playing_level === 'beginner' ? 'selected' : ''}>Beginner</option>
+                        <option value="intermediate" ${profile.playing_level === 'intermediate' ? 'selected' : ''}>Intermediate</option>
+                        <option value="advanced" ${profile.playing_level === 'advanced' ? 'selected' : ''}>Advanced</option>
+                        <option value="scratch" ${profile.playing_level === 'scratch' ? 'selected' : ''}>Scratch</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pace_preference">Pace Preference</label>
+                        <select id="pace_preference" name="pace_preference">
+                            <option value="">Select...</option>
+                            <option value="relaxed" ${profile.pace_preference === 'relaxed' ? 'selected' : ''}>Relaxed</option>
+                            <option value="normal" ${profile.pace_preference === 'normal' ? 'selected' : ''}>Normal</option>
+                            <option value="fast" ${profile.pace_preference === 'fast' ? 'selected' : ''}>Fast</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transport_preference">Transport</label>
+                        <select id="transport_preference" name="transport_preference">
+                            <option value="">Select...</option>
+                            <option value="buggy" ${profile.transport_preference === 'buggy' ? 'selected' : ''}>Buggy</option>
+                            <option value="walking" ${profile.transport_preference === 'walking' ? 'selected' : ''}>Walking</option>
+                            <option value="trolley" ${profile.transport_preference === 'trolley' ? 'selected' : ''}>Trolley</option>
+                            <option value="caddy" ${profile.transport_preference === 'caddy' ? 'selected' : ''}>Caddy</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="typical_tee_time">Preferred Tee Time</label>
+                        <select id="typical_tee_time" name="typical_tee_time">
+                            <option value="">Select...</option>
+                            <option value="early_bird" ${profile.typical_tee_time === 'early_bird' ? 'selected' : ''}>Early Bird (before 8am)</option>
+                            <option value="morning" ${profile.typical_tee_time === 'morning' ? 'selected' : ''}>Morning (8am-12pm)</option>
+                            <option value="afternoon" ${profile.typical_tee_time === 'afternoon' ? 'selected' : ''}>Afternoon</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="usual_days">Usually Plays</label>
+                        <select id="usual_days" name="usual_days">
+                            <option value="">Select...</option>
+                            <option value="weekdays" ${profile.usual_days === 'weekdays' ? 'selected' : ''}>Weekdays</option>
+                            <option value="weekends" ${profile.usual_days === 'weekends' ? 'selected' : ''}>Weekends</option>
+                            <option value="both" ${profile.usual_days === 'both' ? 'selected' : ''}>Both</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2>Playing Style</h2>
+
+                <div class="form-group">
+                    <label for="vibe">Golf Vibe</label>
+                    <select id="vibe" name="vibe">
+                        <option value="">Select...</option>
+                        <option value="competitive" ${profile.vibe === 'competitive' ? 'selected' : ''}>Competitive</option>
+                        <option value="social" ${profile.vibe === 'social' ? 'selected' : ''}>Social</option>
+                        <option value="networking" ${profile.vibe === 'networking' ? 'selected' : ''}>Networking</option>
+                        <option value="learning" ${profile.vibe === 'learning' ? 'selected' : ''}>Learning</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="group_preference">Group Preference</label>
+                    <select id="group_preference" name="group_preference">
+                        <option value="">Select...</option>
+                        <option value="mixed" ${profile.group_preference === 'mixed' ? 'selected' : ''}>Mixed levels</option>
+                        <option value="same_level" ${profile.group_preference === 'same_level' ? 'selected' : ''}>Same level</option>
+                        <option value="beginners_welcome" ${profile.group_preference === 'beginners_welcome' ? 'selected' : ''}>Beginners welcome</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="post_round">After the Round</label>
+                    <select id="post_round" name="post_round">
+                        <option value="">Select...</option>
+                        <option value="lunch" ${profile.post_round === 'lunch' ? 'selected' : ''}>Lunch</option>
+                        <option value="drinks" ${profile.post_round === 'drinks' ? 'selected' : ''}>Drinks</option>
+                        <option value="quick_exit" ${profile.post_round === 'quick_exit' ? 'selected' : ''}>Quick exit</option>
+                    </select>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <a href="/profile" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+` }) %>

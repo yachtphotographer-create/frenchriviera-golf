@@ -1,0 +1,147 @@
+<%- include('../layouts/main', { body: `
+<div class="review-page">
+    <div class="container container-narrow">
+        <nav class="breadcrumb">
+            <a href="/courses">Courses</a> &rsaquo;
+            <a href="/courses/${course.slug}">${course.name}</a> &rsaquo;
+            <span>Write Review</span>
+        </nav>
+
+        <div class="card">
+            <h1>Review ${course.name}</h1>
+            <p class="text-muted">Share your experience to help other golfers</p>
+
+            <form action="/courses/${course.slug}/review" method="POST" class="review-form">
+                <div class="form-group">
+                    <label>Overall Rating *</label>
+                    <div class="star-rating-input large">
+                        <input type="radio" name="rating" value="5" id="rating-5" required>
+                        <label for="rating-5" title="Excellent">★</label>
+                        <input type="radio" name="rating" value="4" id="rating-4">
+                        <label for="rating-4" title="Very Good">★</label>
+                        <input type="radio" name="rating" value="3" id="rating-3">
+                        <label for="rating-3" title="Good">★</label>
+                        <input type="radio" name="rating" value="2" id="rating-2">
+                        <label for="rating-2" title="Fair">★</label>
+                        <input type="radio" name="rating" value="1" id="rating-1">
+                        <label for="rating-1" title="Poor">★</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Review Title (optional)</label>
+                    <input type="text" id="title" name="title" class="form-control" placeholder="Sum up your experience in a few words">
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Your Review *</label>
+                    <textarea id="content" name="content" class="form-control" rows="5" required placeholder="Tell us about your experience - the course condition, layout, facilities, service, and any tips for other players..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_played">When did you play? (optional)</label>
+                    <input type="date" id="date_played" name="date_played" class="form-control">
+                </div>
+
+                <div class="form-section">
+                    <h3>Rate specific aspects (optional)</h3>
+                    <p class="text-muted">Help others by rating individual aspects of the course</p>
+
+                    <div class="rating-aspects">
+                        <div class="aspect-rating">
+                            <label>Course Condition</label>
+                            <div class="star-rating-input small">
+                                <input type="radio" name="course_condition" value="5" id="cc-5">
+                                <label for="cc-5">★</label>
+                                <input type="radio" name="course_condition" value="4" id="cc-4">
+                                <label for="cc-4">★</label>
+                                <input type="radio" name="course_condition" value="3" id="cc-3">
+                                <label for="cc-3">★</label>
+                                <input type="radio" name="course_condition" value="2" id="cc-2">
+                                <label for="cc-2">★</label>
+                                <input type="radio" name="course_condition" value="1" id="cc-1">
+                                <label for="cc-1">★</label>
+                            </div>
+                        </div>
+
+                        <div class="aspect-rating">
+                            <label>Value for Money</label>
+                            <div class="star-rating-input small">
+                                <input type="radio" name="value_for_money" value="5" id="vm-5">
+                                <label for="vm-5">★</label>
+                                <input type="radio" name="value_for_money" value="4" id="vm-4">
+                                <label for="vm-4">★</label>
+                                <input type="radio" name="value_for_money" value="3" id="vm-3">
+                                <label for="vm-3">★</label>
+                                <input type="radio" name="value_for_money" value="2" id="vm-2">
+                                <label for="vm-2">★</label>
+                                <input type="radio" name="value_for_money" value="1" id="vm-1">
+                                <label for="vm-1">★</label>
+                            </div>
+                        </div>
+
+                        <div class="aspect-rating">
+                            <label>Facilities</label>
+                            <div class="star-rating-input small">
+                                <input type="radio" name="facilities" value="5" id="fac-5">
+                                <label for="fac-5">★</label>
+                                <input type="radio" name="facilities" value="4" id="fac-4">
+                                <label for="fac-4">★</label>
+                                <input type="radio" name="facilities" value="3" id="fac-3">
+                                <label for="fac-3">★</label>
+                                <input type="radio" name="facilities" value="2" id="fac-2">
+                                <label for="fac-2">★</label>
+                                <input type="radio" name="facilities" value="1" id="fac-1">
+                                <label for="fac-1">★</label>
+                            </div>
+                        </div>
+
+                        <div class="aspect-rating">
+                            <label>Scenery</label>
+                            <div class="star-rating-input small">
+                                <input type="radio" name="scenery" value="5" id="sc-5">
+                                <label for="sc-5">★</label>
+                                <input type="radio" name="scenery" value="4" id="sc-4">
+                                <label for="sc-4">★</label>
+                                <input type="radio" name="scenery" value="3" id="sc-3">
+                                <label for="sc-3">★</label>
+                                <input type="radio" name="scenery" value="2" id="sc-2">
+                                <label for="sc-2">★</label>
+                                <input type="radio" name="scenery" value="1" id="sc-1">
+                                <label for="sc-1">★</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/courses/${course.slug}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.review-page { padding: var(--spacing-xl) 0; }
+.review-form { margin-top: var(--spacing-lg); }
+.form-section { margin-top: var(--spacing-xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border); }
+.form-section h3 { margin-bottom: var(--spacing-xs); }
+.rating-aspects { display: grid; gap: var(--spacing-md); margin-top: var(--spacing-md); }
+.aspect-rating { display: flex; justify-content: space-between; align-items: center; }
+.aspect-rating label:first-child { font-weight: 500; }
+
+/* Star Rating Input */
+.star-rating-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+.star-rating-input.large { font-size: 2rem; }
+.star-rating-input.small { font-size: 1.25rem; }
+.star-rating-input input { display: none; }
+.star-rating-input label { color: #ccc; cursor: pointer; transition: color 0.2s; }
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label,
+.star-rating-input input:checked ~ label { color: var(--color-secondary); }
+
+.form-actions { display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-xl); }
+</style>
+` }) %>

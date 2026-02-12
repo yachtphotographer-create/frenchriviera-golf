@@ -1,0 +1,137 @@
+<%- include('../layouts/main', { body: `
+<div class="profile-page">
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-avatar-large">
+                ${profile.profile_photo ?
+                    `<img src="${profile.profile_photo}" alt="${profile.display_name}">` :
+                    `<div class="avatar-placeholder">${profile.display_name.charAt(0).toUpperCase()}</div>`
+                }
+            </div>
+            <div class="profile-info">
+                <h1>${profile.display_name}</h1>
+                <p class="profile-location">
+                    ${profile.nationality ? profile.nationality : ''}
+                    ${profile.location_city ? (profile.nationality ? ' · ' : '') + profile.location_city : ''}
+                </p>
+                ${profile.languages && profile.languages.length > 0 ?
+                    `<p class="profile-languages">Speaks: ${profile.languages.join(', ')}</p>` : ''
+                }
+                <div class="profile-stats-inline">
+                    <span><strong>${profile.games_played || 0}</strong> games played</span>
+                    ${profile.average_rating > 0 ?
+                        `<span><strong>${parseFloat(profile.average_rating).toFixed(1)}</strong> rating (${profile.total_ratings})</span>` : ''
+                    }
+                </div>
+            </div>
+            ${isOwnProfile ?
+                `<a href="/profile/edit" class="btn btn-outline">Edit Profile</a>` : ''
+            }
+        </div>
+
+        <div class="profile-content">
+            ${profile.bio ?
+                `<section class="profile-section">
+                    <h2>About</h2>
+                    <p>${profile.bio}</p>
+                </section>` : ''
+            }
+
+            <section class="profile-section">
+                <h2>Golf Details</h2>
+                <div class="details-grid">
+                    ${profile.handicap !== null ?
+                        `<div class="detail-item">
+                            <span class="detail-label">Handicap</span>
+                            <span class="detail-value">${profile.handicap} (${profile.handicap_type || 'not specified'})</span>
+                        </div>` : ''
+                    }
+                    ${profile.playing_level ?
+                        `<div class="detail-item">
+                            <span class="detail-label">Level</span>
+                            <span class="detail-value">${profile.playing_level}</span>
+                        </div>` : ''
+                    }
+                    ${profile.pace_preference ?
+                        `<div class="detail-item">
+                            <span class="detail-label">Pace</span>
+                            <span class="detail-value">${profile.pace_preference}</span>
+                        </div>` : ''
+                    }
+                    ${profile.transport_preference ?
+                        `<div class="detail-item">
+                            <span class="detail-label">Transport</span>
+                            <span class="detail-value">${profile.transport_preference}</span>
+                        </div>` : ''
+                    }
+                    ${profile.typical_tee_time ?
+                        `<div class="detail-item">
+                            <span class="detail-label">Preferred Time</span>
+                            <span class="detail-value">${profile.typical_tee_time.replace('_', ' ')}</span>
+                        </div>` : ''
+                    }
+                    ${profile.usual_days ?
+                        `<div class="detail-item">
+                            <span class="detail-label">Usually Plays</span>
+                            <span class="detail-value">${profile.usual_days}</span>
+                        </div>` : ''
+                    }
+                </div>
+            </section>
+
+            ${profile.vibe || profile.group_preference || profile.post_round ?
+                `<section class="profile-section">
+                    <h2>Playing Style</h2>
+                    <div class="details-grid">
+                        ${profile.vibe ?
+                            `<div class="detail-item">
+                                <span class="detail-label">Vibe</span>
+                                <span class="detail-value">${profile.vibe}</span>
+                            </div>` : ''
+                        }
+                        ${profile.group_preference ?
+                            `<div class="detail-item">
+                                <span class="detail-label">Group Preference</span>
+                                <span class="detail-value">${profile.group_preference.replace('_', ' ')}</span>
+                            </div>` : ''
+                        }
+                        ${profile.post_round ?
+                            `<div class="detail-item">
+                                <span class="detail-label">After the Round</span>
+                                <span class="detail-value">${profile.post_round.replace('_', ' ')}</span>
+                            </div>` : ''
+                        }
+                    </div>
+                </section>` : ''
+            }
+
+            ${profile.average_rating > 0 ? `
+                <section class="profile-section ratings-section">
+                    <div class="section-header">
+                        <h2>Player Rating</h2>
+                        <a href="/ratings/user/${profile.id}">View All Reviews</a>
+                    </div>
+                    <div class="rating-summary-card">
+                        <div class="rating-big">
+                            <span class="rating-number">${parseFloat(profile.average_rating).toFixed(1)}</span>
+                            <div class="rating-stars-big">
+                                ${[1,2,3,4,5].map(i => `
+                                    <svg class="star ${i <= Math.round(profile.average_rating) ? 'filled' : ''}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="${i <= Math.round(profile.average_rating) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                `).join('')}
+                            </div>
+                            <span class="rating-count">${profile.total_ratings} ${profile.total_ratings === 1 ? 'review' : 'reviews'}</span>
+                        </div>
+                    </div>
+                </section>
+            ` : ''}
+
+            <section class="profile-section">
+                <h2>Member Since</h2>
+                <p>${new Date(profile.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</p>
+            </section>
+        </div>
+    </div>
+</div>
+` }) %>
