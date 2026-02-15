@@ -1,0 +1,176 @@
+<%- include('../layouts/main', { body: `
+<article class="blog-post-page">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="/">Home</a> &rsaquo;
+            <a href="/blog">Blog</a> &rsaquo;
+            <span>${post.title}</span>
+        </nav>
+
+        <header class="blog-post-header">
+            <div class="blog-post-meta">
+                ${post.category ? `<span class="blog-category">${post.category}</span>` : ''}
+                <span class="blog-date">${new Date(post.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+            </div>
+            <h1>${post.title}</h1>
+            ${post.excerpt ? `<p class="blog-post-excerpt">${post.excerpt}</p>` : ''}
+        </header>
+
+        ${post.featured_image ? `
+            <div class="blog-post-image">
+                <img src="${post.featured_image}" alt="${post.title}">
+            </div>
+        ` : ''}
+
+        <div class="blog-post-layout">
+            <div class="blog-post-content">
+                ${post.content}
+            </div>
+
+            <aside class="blog-sidebar">
+                <div class="sidebar-card">
+                    <h3>Find Golf Partners</h3>
+                    <p>Looking for playing partners on the French Riviera?</p>
+                    <a href="/auth/register" class="btn btn-primary btn-block">Join Free</a>
+                </div>
+
+                ${recentPosts && recentPosts.length > 0 ? `
+                    <div class="sidebar-card">
+                        <h3>Recent Posts</h3>
+                        <ul class="recent-posts-list">
+                            ${recentPosts.filter(p => p.slug !== post.slug).slice(0, 4).map(p => `
+                                <li><a href="/blog/${p.slug}">${p.title}</a></li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+
+                <div class="sidebar-card">
+                    <h3>Popular Courses</h3>
+                    <ul class="recent-posts-list">
+                        <li><a href="/courses/monte-carlo-golf-club">Monte-Carlo Golf Club</a></li>
+                        <li><a href="/courses/terre-blanche-chateau">Terre Blanche</a></li>
+                        <li><a href="/courses/royal-mougins-golf-club">Royal Mougins</a></li>
+                        <li><a href="/courses/golf-saint-tropez">Golf de Saint-Tropez</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+        <div class="blog-post-footer">
+            <a href="/blog" class="btn btn-outline">&larr; Back to Blog</a>
+        </div>
+    </div>
+</article>
+
+<style>
+.blog-post-page { padding: 2rem 0 4rem; }
+.blog-post-header { margin: 2rem 0; }
+.blog-post-header h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin: 1rem 0;
+}
+.blog-post-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.blog-category {
+    background: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.blog-date { color: var(--color-text-muted); font-size: 0.9rem; }
+.blog-post-excerpt {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+.blog-post-image {
+    margin: 2rem 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+.blog-post-image img {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+}
+.blog-post-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+    margin: 2rem 0;
+}
+@media (max-width: 900px) {
+    .blog-post-layout { grid-template-columns: 1fr; }
+}
+.blog-post-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--color-text);
+}
+.blog-post-content h2 {
+    font-size: 1.75rem;
+    margin: 2rem 0 1rem;
+    color: var(--color-text);
+}
+.blog-post-content h3 {
+    font-size: 1.4rem;
+    margin: 1.5rem 0 0.75rem;
+}
+.blog-post-content p { margin-bottom: 1.5rem; }
+.blog-post-content ul, .blog-post-content ol {
+    margin: 1rem 0 1.5rem 1.5rem;
+}
+.blog-post-content li { margin-bottom: 0.5rem; }
+.blog-post-content a { color: var(--color-primary); }
+.blog-post-content blockquote {
+    border-left: 4px solid var(--color-primary);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+.sidebar-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.sidebar-card h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+.sidebar-card p {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+}
+.recent-posts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.recent-posts-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+.recent-posts-list li:last-child { border-bottom: none; }
+.recent-posts-list a {
+    color: var(--color-text);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+.recent-posts-list a:hover { color: var(--color-primary); }
+.blog-post-footer { margin-top: 3rem; }
+</style>
+` }) %>

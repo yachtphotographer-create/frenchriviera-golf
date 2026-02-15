@@ -1,0 +1,113 @@
+<%- include('../layouts/main', { body: `
+<div class="blog-page">
+    <div class="container">
+        <div class="page-header">
+            <h1>Golf Blog</h1>
+            <p class="page-subtitle">Tips, guides, and news from the French Riviera golf scene</p>
+        </div>
+
+        <div class="blog-grid">
+            ${posts && posts.length > 0 ?
+                posts.map(post => `
+                    <article class="blog-card">
+                        <a href="/blog/${post.slug}">
+                            <div class="blog-card-image">
+                                ${post.featured_image ?
+                                    `<img src="${post.featured_image}" alt="${post.title}" loading="lazy">` :
+                                    `<div class="blog-card-placeholder"><span>Golf Blog</span></div>`
+                                }
+                                ${post.category ? `<span class="blog-category">${post.category}</span>` : ''}
+                            </div>
+                            <div class="blog-card-content">
+                                <h2 class="blog-card-title">${post.title}</h2>
+                                <p class="blog-card-excerpt">${post.excerpt || ''}</p>
+                                <div class="blog-card-meta">
+                                    <span class="blog-date">${new Date(post.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                    <span class="blog-read-more">Read more →</span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                `).join('') :
+                `<div class="empty-state">
+                    <p>No blog posts yet. Check back soon for golf tips and guides!</p>
+                </div>`
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.blog-page { padding: 2rem 0 4rem; }
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.blog-card {
+    background: var(--glass-bg);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glass-hover);
+}
+.blog-card a { text-decoration: none; color: inherit; }
+.blog-card-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+.blog-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.blog-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+.blog-category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.blog-card-content { padding: 1.5rem; }
+.blog-card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+}
+.blog-card-excerpt {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+.blog-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+}
+.blog-date { color: var(--color-text-muted); }
+.blog-read-more { color: var(--color-primary); font-weight: 500; }
+</style>
+` }) %>

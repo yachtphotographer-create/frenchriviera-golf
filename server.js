@@ -118,6 +118,7 @@ const availabilityRoutes = require('./routes/availability');
 const ratingsRoutes = require('./routes/ratings');
 const notificationsRoutes = require('./routes/notifications');
 const sitemapRoutes = require('./routes/sitemap');
+const blogRoutes = require('./routes/blog');
 
 app.use('/auth', authLimiter, authRoutes);
 app.use('/profile', profileRoutes);
@@ -127,6 +128,7 @@ app.use('/availability', availabilityRoutes);
 app.use('/available', availabilityRoutes);
 app.use('/ratings', ratingsRoutes);
 app.use('/notifications', notificationsRoutes);
+app.use('/blog', blogRoutes);
 app.use('/', sitemapRoutes);
 
 // Home page
