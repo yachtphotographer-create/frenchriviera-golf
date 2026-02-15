@@ -29,9 +29,11 @@
                     <article class="course-card">
                         <a href="/courses/${course.slug}">
                             <div class="course-card-image">
-                                <div class="course-card-placeholder">
-                                    <span>${course.holes} Holes</span>
-                                </div>
+                                ${course.photos && Array.isArray(course.photos) && course.photos.length > 0 ?
+                                    `<img src="${course.photos[0]}" alt="${course.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                     <div class="course-card-placeholder" style="display:none;"><span>${course.holes} Holes</span></div>` :
+                                    `<div class="course-card-placeholder"><span>${course.holes} Holes</span></div>`
+                                }
                                 ${course.featured ? '<span class="badge badge-featured">Featured</span>' : ''}
                             </div>
                             <div class="course-card-content">
