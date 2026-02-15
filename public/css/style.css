@@ -618,6 +618,25 @@ h3 { font-size: 1.375rem; }
     padding-top: var(--spacing-lg);
     color: var(--color-text-muted);
     font-size: 0.8125rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.footer-social {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-social a {
+    color: var(--color-text-muted);
+    transition: color 0.3s ease;
+}
+
+.footer-social a:hover {
+    color: var(--color-primary);
 }
 
 /* ===== Hero - Glass Overlay ===== */
