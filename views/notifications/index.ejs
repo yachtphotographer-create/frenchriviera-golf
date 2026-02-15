@@ -28,7 +28,7 @@
                         <div class="notification-content">
                             <strong>${notif.title}</strong>
                             <p>${notif.message}</p>
-                            <span class="notification-time">${timeAgo(notif.created_at)}</span>
+                            <span class="notification-time" data-time="${notif.created_at}">${new Date(notif.created_at).toLocaleDateString()}</span>
                         </div>
                         ${!notif.read ? '<span class="notification-dot"></span>' : ''}
                     </a>
@@ -74,8 +74,10 @@ function timeAgo(dateString) {
 
 // Update time displays
 document.querySelectorAll('.notification-time').forEach(el => {
-    const item = el.closest('.notification-item');
-    const created = item.querySelector('.notification-content p')?.dataset?.created;
+    const created = el.dataset.time;
+    if (created) {
+        el.textContent = timeAgo(created);
+    }
 });
 </script>
 ` }) %>
