@@ -5,6 +5,8 @@ const http = require('http');
 const path = require('path');
 const session = require('express-session');
 const { Server } = require('socket.io');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const sessionConfig = require('./config/session');
 
 const app = express();
@@ -14,6 +16,41 @@ const PORT = process.env.PORT || 3000;
 
 // Trust proxy (for HTTPS behind Nginx)
 app.set('trust proxy', 1);
+
+// Security middleware
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'", "https://www.google-analytics.com", "wss:"],
+            frameSrc: ["https://www.googletagmanager.com"]
+        }
+    },
+    crossOriginEmbedderPolicy: false
+}));
+
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: 'Too many requests, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false
+});
+app.use(limiter);
+
+// Stricter rate limit for auth routes
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 auth requests per windowMs
+    message: 'Too many login attempts, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false
+});
 
 // View engine
 app.set('view engine', 'ejs');
@@ -68,7 +105,7 @@ const ratingsRoutes = require('./routes/ratings');
 const notificationsRoutes = require('./routes/notifications');
 const sitemapRoutes = require('./routes/sitemap');
 
-app.use('/auth', authRoutes);
+app.use('/auth', authLimiter, authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/courses', coursesRoutes);
 app.use('/games', gamesRoutes);
