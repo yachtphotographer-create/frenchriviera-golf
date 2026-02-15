@@ -2,35 +2,35 @@
 /* French Riviera Golf - Premium Glass UI */
 
 :root {
-    /* Colors - Dark Premium with Golf Green Accent */
+    /* Colors - Light Premium with Golf Green Accent */
     --color-primary: #34c759;
     --color-primary-dark: #28a745;
     --color-primary-light: #5dd879;
-    --color-primary-muted: #1a6b2e;
+    --color-primary-muted: #e8f5e9;
 
-    /* Dark backgrounds */
-    --color-bg: #000000;
-    --color-bg-elevated: #0a0a0a;
-    --color-bg-card: #1a1a1a;
-    --color-surface: rgba(255, 255, 255, 0.03);
+    /* Light backgrounds */
+    --color-bg: #ffffff;
+    --color-bg-elevated: #f8f9fa;
+    --color-bg-card: #ffffff;
+    --color-surface: #f5f5f7;
 
     /* Text */
-    --color-text: #ffffff;
-    --color-text-secondary: #b8b8b8;
-    --color-text-muted: #808080;
+    --color-text: #1d1d1f;
+    --color-text-secondary: #515154;
+    --color-text-muted: #86868b;
 
-    /* Glass effects */
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-bg-hover: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-border-light: rgba(255, 255, 255, 0.12);
-    --glass-accent: rgba(52, 199, 89, 0.15);
-    --glass-accent-border: rgba(52, 199, 89, 0.25);
+    /* Glass effects - adapted for light theme */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-bg-hover: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(0, 0, 0, 0.06);
+    --glass-border-light: rgba(0, 0, 0, 0.1);
+    --glass-accent: rgba(52, 199, 89, 0.1);
+    --glass-accent-border: rgba(52, 199, 89, 0.3);
 
     /* Status colors */
-    --color-error: #ff453a;
+    --color-error: #ff3b30;
     --color-success: #34c759;
-    --color-warning: #ff9f0a;
+    --color-warning: #ff9500;
 
     /* Typography */
     --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
@@ -52,10 +52,10 @@
     --radius-xl: 20px;
     --radius-full: 9999px;
 
-    /* Shadows */
-    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4);
-    --shadow-glass-hover: 0 12px 48px rgba(0, 0, 0, 0.5);
-    --shadow-glow: 0 0 40px rgba(52, 199, 89, 0.15);
+    /* Shadows - softer for light theme */
+    --shadow-glass: 0 4px 24px rgba(0, 0, 0, 0.08);
+    --shadow-glass-hover: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --shadow-glow: 0 0 40px rgba(52, 199, 89, 0.2);
 
     /* Container */
     --container-width: 1200px;
@@ -183,44 +183,38 @@ h3 { font-size: 1.375rem; }
 }
 
 .btn-primary {
-    background: rgba(52, 199, 89, 0.2);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(52, 199, 89, 0.3);
-    color: var(--color-text);
+    background: var(--color-primary);
+    border: none;
+    color: #ffffff;
 }
 
 .btn-primary:hover {
-    background: rgba(52, 199, 89, 0.35);
-    border-color: rgba(52, 199, 89, 0.5);
-    box-shadow: 0 4px 20px rgba(52, 199, 89, 0.25);
-    color: var(--color-text);
+    background: var(--color-primary-dark);
+    box-shadow: 0 4px 20px rgba(52, 199, 89, 0.3);
+    color: #ffffff;
 }
 
 .btn-solid {
     background: var(--color-primary);
-    color: #000000;
+    color: #ffffff;
     border: none;
 }
 
 .btn-solid:hover {
-    background: var(--color-primary-light);
+    background: var(--color-primary-dark);
     box-shadow: 0 4px 20px rgba(52, 199, 89, 0.4);
-    color: #000000;
+    color: #ffffff;
 }
 
 .btn-dark {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--color-text);
+    background: var(--color-text);
+    border: none;
+    color: #ffffff;
 }
 
 .btn-dark:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: var(--color-text);
+    background: #000000;
+    color: #ffffff;
 }
 
 .btn-outline {
@@ -394,10 +388,10 @@ h3 { font-size: 1.375rem; }
 
 /* ===== Navigation - Floating Glass ===== */
 .header {
-    background: rgba(10, 10, 10, 0.7);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(24px) saturate(1.3);
     -webkit-backdrop-filter: blur(24px) saturate(1.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -452,7 +446,7 @@ h3 { font-size: 1.375rem; }
 .nav-link:hover {
     color: var(--color-text);
     text-decoration: none;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.04);
 }
 
 .nav-link.active {
@@ -491,7 +485,7 @@ h3 { font-size: 1.375rem; }
     height: 34px;
     border-radius: var(--radius-full);
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: #000;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -520,7 +514,7 @@ h3 { font-size: 1.375rem; }
 }
 
 .nav-dropdown-toggle:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.04);
     color: var(--color-text);
 }
 
@@ -529,7 +523,7 @@ h3 { font-size: 1.375rem; }
     position: absolute;
     top: calc(100% + var(--spacing-sm));
     right: 0;
-    background: rgba(26, 26, 26, 0.95);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
@@ -559,7 +553,7 @@ h3 { font-size: 1.375rem; }
 }
 
 .nav-dropdown-menu a:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.04);
     color: var(--color-text);
     text-decoration: none;
 }
@@ -572,9 +566,7 @@ h3 { font-size: 1.375rem; }
 
 /* ===== Footer - Glass Style ===== */
 .footer {
-    background: rgba(10, 10, 10, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--color-surface);
     border-top: 1px solid var(--glass-border);
     padding: var(--spacing-3xl) 0 var(--spacing-xl);
     margin-top: var(--spacing-3xl);
@@ -610,7 +602,7 @@ h3 { font-size: 1.375rem; }
 }
 
 .footer-links a {
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
     display: block;
     margin-bottom: var(--spacing-sm);
     font-size: 0.9rem;
@@ -630,7 +622,7 @@ h3 { font-size: 1.375rem; }
 
 /* ===== Hero - Glass Overlay ===== */
 .hero {
-    background: linear-gradient(135deg, rgba(52, 199, 89, 0.15) 0%, rgba(0, 0, 0, 0.9) 50%);
+    background: linear-gradient(135deg, rgba(52, 199, 89, 0.08) 0%, var(--color-surface) 100%);
     padding: var(--spacing-3xl) 0;
     text-align: center;
     position: relative;
@@ -644,7 +636,7 @@ h3 { font-size: 1.375rem; }
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at 30% 50%, rgba(52, 199, 89, 0.08) 0%, transparent 50%);
+    background: radial-gradient(circle at 30% 50%, rgba(52, 199, 89, 0.06) 0%, transparent 50%);
     animation: heroGlow 15s ease-in-out infinite;
 }
 
@@ -659,6 +651,7 @@ h3 { font-size: 1.375rem; }
     margin-bottom: var(--spacing-md);
     position: relative;
     letter-spacing: -0.03em;
+    color: var(--color-text);
 }
 
 .hero p {
@@ -875,9 +868,7 @@ h3 { font-size: 1.375rem; }
 
 /* ===== CTA Section - Glass ===== */
 .cta {
-    background: linear-gradient(135deg, rgba(52, 199, 89, 0.2) 0%, rgba(52, 199, 89, 0.05) 100%);
-    border-top: 1px solid var(--glass-accent-border);
-    border-bottom: 1px solid var(--glass-accent-border);
+    background: linear-gradient(135deg, rgba(52, 199, 89, 0.1) 0%, var(--color-primary-muted) 100%);
     text-align: center;
     padding: var(--spacing-3xl) 0;
 }
@@ -1047,7 +1038,7 @@ h3 { font-size: 1.375rem; }
     height: 64px;
     border-radius: var(--radius-full);
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: #000;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1104,7 +1095,7 @@ h3 { font-size: 1.375rem; }
 
 .avatar-placeholder {
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: #000;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1281,7 +1272,7 @@ h3 { font-size: 1.375rem; }
 }
 
 .course-hero {
-    background: linear-gradient(135deg, rgba(52, 199, 89, 0.1) 0%, var(--color-bg) 100%);
+    background: var(--color-surface);
     padding: var(--spacing-2xl) 0;
     margin-bottom: var(--spacing-xl);
     border-bottom: 1px solid var(--glass-border);
@@ -1532,7 +1523,7 @@ h3 { font-size: 1.375rem; }
     height: 40px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: #000;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1846,7 +1837,7 @@ h3 { font-size: 1.375rem; }
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.95);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
         flex-direction: column;
