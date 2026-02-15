@@ -1,8 +1,9 @@
 <article class="course-card">
+    <!-- DEBUG: photos=<%= JSON.stringify(course.photos) %> type=<%= typeof course.photos %> isArray=<%= Array.isArray(course.photos) %> -->
     <a href="/courses/<%= course.slug %>">
         <div class="course-card-image">
-            <% if (course.photos && course.photos.length > 0) { %>
-                <img src="<%= course.photos[0] %>" alt="<%= course.name %>">
+            <% if (course.photos && Array.isArray(course.photos) && course.photos.length > 0) { %>
+                <img src="<%= course.photos[0] %>" alt="<%= course.name %>" onerror="this.parentElement.innerHTML='<div class=course-card-placeholder><span>Golf Course</span></div>'">
             <% } else { %>
                 <div class="course-card-placeholder">
                     <span>Golf Course</span>
