@@ -18,13 +18,55 @@ router.get('/', async (req, res) => {
             courses = await Course.getWithReviewStats();
         }
 
+        // Breadcrumbs
+        const breadcrumbs = [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": process.env.APP_URL || 'https://frenchriviera.golf'
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Golf Courses"
+            }
+        ];
+
+        // ItemList schema for course directory
+        const itemListSchema = {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Golf Courses on the French Riviera",
+            "description": "Complete directory of golf courses on the Côte d'Azur",
+            "numberOfItems": courses.length,
+            "itemListElement": courses.slice(0, 10).map((course, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "item": {
+                    "@type": "GolfCourse",
+                    "name": course.name,
+                    "url": (process.env.APP_URL || 'https://frenchriviera.golf') + '/courses/' + course.slug,
+                    "address": {
+                        "@type": "PostalAddress",
+                        "addressLocality": course.city,
+                        "addressRegion": course.department_name,
+                        "addressCountry": "FR"
+                    }
+                }
+            }))
+        };
+
         res.render('courses/index', {
             title: 'Golf Courses on the French Riviera',
             courses,
             selectedDepartment: department || '',
             searchQuery: search || '',
-            metaDescription: 'Discover 30+ golf courses on the French Riviera. From Monte-Carlo to Saint-Tropez, find the perfect course for your next round on the Côte d\'Azur.',
-            canonicalPath: '/courses'
+            metaDescription: `Discover ${courses.length} golf courses on the French Riviera. From Monte-Carlo to Saint-Tropez, find the perfect course for your next round on the Côte d'Azur. Compare facilities, read reviews, book tee times.`,
+            canonicalPath: '/courses',
+            keywords: 'golf courses french riviera, golf cote d azur, best golf courses monaco, cannes golf, nice golf courses, saint tropez golf, golf holidays france',
+            breadcrumbs,
+            schema: itemListSchema
         });
 
     } catch (err) {
@@ -190,14 +232,85 @@ router.get('/:slug', async (req, res) => {
         // Add course details
         if (course.holes) schema.numberOfHoles = course.holes;
         if (course.year_opened) schema.foundingDate = course.year_opened.toString();
+        if (course.photos && course.photos.length > 0) {
+            schema.image = course.photos.map(p => (process.env.APP_URL || 'https://frenchriviera.golf') + p);
+        }
+
+        // Add FAQ Schema for rich snippets
+        const faqSchema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": `How many holes does ${course.name} have?`,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": `${course.name} is a ${course.holes}-hole golf course with a par of ${course.par}.`
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": `Where is ${course.name} located?`,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": `${course.name} is located in ${course.city}, ${course.department_name}, on the French Riviera.${course.address ? ' The full address is: ' + course.address : ''}`
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": `How can I book a tee time at ${course.name}?`,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": `You can book a tee time at ${course.name} by ${course.phone ? 'calling ' + course.phone : 'contacting the club directly'}${course.website ? ' or visiting their website at ' + course.website : ''}.`
+                    }
+                }
+            ]
+        };
+
+        // Combine schemas into array
+        const combinedSchema = [schema, faqSchema];
+
+        // Breadcrumbs for SEO
+        const breadcrumbs = [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": process.env.APP_URL || 'https://frenchriviera.golf'
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Golf Courses",
+                "item": (process.env.APP_URL || 'https://frenchriviera.golf') + '/courses'
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": course.department_name,
+                "item": (process.env.APP_URL || 'https://frenchriviera.golf') + '/courses?department=' + course.department
+            },
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "name": course.name
+            }
+        ];
+
+        // SEO keywords specific to this course
+        const keywords = `${course.name}, golf ${course.city}, golf ${course.department_name}, ${course.holes} hole golf course france, golf french riviera, tee time ${course.city}, green fee ${course.city}`;
 
         res.render('courses/detail', {
             title: course.name,
             course,
-            metaDescription: course.description_en || `Play golf at ${course.name} in ${course.city}, French Riviera. ${course.holes} holes, par ${course.par}.`,
+            metaDescription: course.description_en || `Play golf at ${course.name} in ${course.city}, French Riviera. ${course.holes} holes, par ${course.par}. Book tee times, find playing partners, read reviews.`,
             canonicalPath: `/courses/${course.slug}`,
             ogType: 'place',
-            schema
+            ogImage: course.photos && course.photos.length > 0 ? (process.env.APP_URL || 'https://frenchriviera.golf') + course.photos[0] : null,
+            keywords,
+            breadcrumbs,
+            schema: combinedSchema
         });
 
     } catch (err) {

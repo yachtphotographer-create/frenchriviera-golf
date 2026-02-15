@@ -122,23 +122,48 @@ app.get('/', async (req, res) => {
         const result = await db.query(
             'SELECT * FROM courses WHERE featured = true AND active = true ORDER BY name LIMIT 6'
         );
-        res.render('home', {
-            title: 'Find Golf Partners on the French Riviera',
-            featuredCourses: result.rows,
-            metaDescription: 'Connect with fellow golfers on the French Riviera. Find playing partners, join games at 30+ courses, and discover the best golf on the Côte d\'Azur.',
-            canonicalPath: '/',
-            schema: {
+        const APP_URL = process.env.APP_URL || "https://frenchriviera.golf";
+
+        // Combined schemas for homepage
+        const homeSchemas = [
+            {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
                 "name": "French Riviera Golf",
-                "url": process.env.APP_URL || "https://frenchriviera.golf",
-                "description": "Find golf partners on the French Riviera",
+                "url": APP_URL,
+                "description": "Find golf partners on the French Riviera. Connect with players, join games, discover courses.",
                 "potentialAction": {
                     "@type": "SearchAction",
-                    "target": (process.env.APP_URL || "https://frenchriviera.golf") + "/courses?search={search_term_string}",
+                    "target": APP_URL + "/courses?search={search_term_string}",
                     "query-input": "required name=search_term_string"
                 }
+            },
+            {
+                "@context": "https://schema.org",
+                "@type": "SportsActivityLocation",
+                "name": "French Riviera Golf",
+                "description": "Golf player matching platform for the French Riviera and Côte d'Azur",
+                "url": APP_URL,
+                "sport": "Golf",
+                "areaServed": {
+                    "@type": "Place",
+                    "name": "French Riviera",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "addressRegion": "Provence-Alpes-Côte d'Azur",
+                        "addressCountry": "FR"
+                    }
+                }
             }
+        ];
+
+        res.render('home', {
+            title: 'Find Golf Partners on the French Riviera',
+            featuredCourses: result.rows,
+            metaDescription: 'Connect with fellow golfers on the French Riviera. Find playing partners, join games at 20+ courses from Monaco to Saint-Tropez. Free to join.',
+            canonicalPath: '/',
+            keywords: 'golf partners french riviera, find golfers cote d azur, golf buddies france, play golf monaco, golf cannes nice, tee time partners',
+            schema: homeSchemas
         });
     } catch (err) {
         console.error('Error loading home page:', err);

@@ -4,6 +4,22 @@ const Course = require('../models/Course');
 
 const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
 
+// GET /sitemap - HTML sitemap for users
+router.get('/sitemap', async (req, res) => {
+    try {
+        const courses = await Course.findAll();
+        res.render('sitemap', {
+            title: 'Sitemap',
+            courses,
+            metaDescription: 'Complete sitemap of French Riviera Golf - find all golf courses, pages, and resources on our site.',
+            canonicalPath: '/sitemap'
+        });
+    } catch (err) {
+        console.error('Sitemap error:', err);
+        res.redirect('/');
+    }
+});
+
 // GET /sitemap.xml - Dynamic sitemap
 router.get('/sitemap.xml', async (req, res) => {
     try {
@@ -57,10 +73,38 @@ router.get('/sitemap.xml', async (req, res) => {
 
 // GET /robots.txt - Robots file
 router.get('/robots.txt', (req, res) => {
-    const robots = `User-agent: *
+    const robots = `# French Riviera Golf - robots.txt
+# https://frenchriviera.golf
+
+User-agent: *
 Allow: /
 
+# Block admin and private areas
+Disallow: /auth/reset-password
+Disallow: /auth/verify
+Disallow: /profile/edit
+Disallow: /notifications
+Disallow: /api/
+
+# Block search result pages with parameters
+Disallow: /*?search=
+Disallow: /*?department=
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+# Sitemaps
 Sitemap: ${APP_URL}/sitemap.xml
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
 `;
     res.set('Content-Type', 'text/plain');
     res.send(robots);

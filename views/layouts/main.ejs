@@ -14,6 +14,31 @@
     <meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'Find golf partners on the French Riviera. Connect with players, join games, and discover the best courses on the Côte d\'Azur.' %>">
     <link rel="canonical" href="<%= appUrl %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>">
 
+    <!-- Additional SEO Meta Tags -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="author" content="French Riviera Golf">
+    <meta name="keywords" content="<%= typeof keywords !== 'undefined' ? keywords : 'golf french riviera, golf cote d azur, golf partners france, golf monaco, golf cannes, golf nice, tee time french riviera, play golf france' %>">
+
+    <!-- Geo Tags for Local SEO -->
+    <meta name="geo.region" content="FR-06">
+    <meta name="geo.placename" content="French Riviera">
+    <meta name="geo.position" content="43.7102;7.2620">
+    <meta name="ICBM" content="43.7102, 7.2620">
+
+    <!-- Language Alternates -->
+    <link rel="alternate" hreflang="en" href="<%= appUrl %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>">
+    <link rel="alternate" hreflang="fr" href="<%= appUrl %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>">
+    <link rel="alternate" hreflang="x-default" href="<%= appUrl %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#34c759">
+    <meta name="msapplication-TileColor" content="#34c759">
+
     <!-- Open Graph -->
     <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : appName %>">
     <meta property="og:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'Find golf partners on the French Riviera' %>">
@@ -21,22 +46,70 @@
     <meta property="og:url" content="<%= appUrl %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>">
     <meta property="og:site_name" content="<%= appName %>">
     <meta property="og:locale" content="en_GB">
+    <meta property="og:locale:alternate" content="fr_FR">
     <% if (typeof ogImage !== 'undefined' && ogImage) { %>
     <meta property="og:image" content="<%= ogImage %>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <% } else { %>
     <meta property="og:image" content="<%= appUrl %>/images/og-default.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="French Riviera Golf - Find playing partners on the Côte d'Azur">
     <% } %>
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : appName %>">
     <meta name="twitter:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'Find golf partners on the French Riviera' %>">
+    <meta name="twitter:image" content="<%= typeof ogImage !== 'undefined' && ogImage ? ogImage : appUrl + '/images/og-default.jpg' %>">
+
+    <!-- Organization Schema (appears on all pages) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "French Riviera Golf",
+        "url": "<%= appUrl %>",
+        "logo": "<%= appUrl %>/images/logo.png",
+        "description": "Connect with golf partners on the French Riviera. Find players, join games, and discover 20+ courses on the Côte d'Azur.",
+        "areaServed": {
+            "@type": "Place",
+            "name": "French Riviera",
+            "geo": {
+                "@type": "GeoCircle",
+                "geoMidpoint": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 43.7102,
+                    "longitude": 7.2620
+                },
+                "geoRadius": "100000"
+            }
+        },
+        "sameAs": []
+    }
+    </script>
 
     <% if (typeof schema !== 'undefined' && schema) { %>
-    <!-- Schema.org Structured Data -->
+    <!-- Page-specific Schema.org Structured Data -->
+    <% if (Array.isArray(schema)) { %>
+        <% schema.forEach(function(s) { %>
+    <script type="application/ld+json"><%- JSON.stringify(s) %></script>
+        <% }); %>
+    <% } else { %>
     <script type="application/ld+json"><%- JSON.stringify(schema) %></script>
+    <% } %>
+    <% } %>
+
+    <% if (typeof breadcrumbs !== 'undefined' && breadcrumbs) { %>
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": <%- JSON.stringify(breadcrumbs) %>
+    }
+    </script>
     <% } %>
 
     <!-- Fonts - Apple-style clean typography -->

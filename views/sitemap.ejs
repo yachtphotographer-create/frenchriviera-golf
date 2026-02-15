@@ -1,0 +1,54 @@
+<%- include('layouts/main', { body: `
+<div class="container" style="padding: 3rem 1rem;">
+    <h1>Sitemap</h1>
+    <p class="text-muted" style="margin-bottom: 2rem;">Complete directory of all pages on French Riviera Golf</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+        <section>
+            <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-primary);">Main Pages</h2>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 0.5rem;"><a href="/">Home</a></li>
+                <li style="margin-bottom: 0.5rem;"><a href="/courses">Golf Courses Directory</a></li>
+                <li style="margin-bottom: 0.5rem;"><a href="/games">Find a Game</a></li>
+                <li style="margin-bottom: 0.5rem;"><a href="/available">Available Players</a></li>
+                <li style="margin-bottom: 0.5rem;"><a href="/auth/register">Create Account</a></li>
+                <li style="margin-bottom: 0.5rem;"><a href="/auth/login">Login</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-primary);">Golf Regions</h2>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 0.5rem;"><a href="/courses?department=06">Alpes-Maritimes (06)</a> - Nice, Cannes, Monaco area</li>
+                <li style="margin-bottom: 0.5rem;"><a href="/courses?department=83">Var (83)</a> - Saint-Tropez, Fréjus area</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-primary);">Alpes-Maritimes Courses</h2>
+            <ul style="list-style: none; padding: 0;">
+                ${courses.filter(c => c.department === '06').map(c =>
+                    '<li style="margin-bottom: 0.5rem;"><a href="/courses/' + c.slug + '">' + c.name + '</a> - ' + c.city + '</li>'
+                ).join('')}
+            </ul>
+        </section>
+
+        <section>
+            <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-primary);">Var Courses</h2>
+            <ul style="list-style: none; padding: 0;">
+                ${courses.filter(c => c.department === '83').map(c =>
+                    '<li style="margin-bottom: 0.5rem;"><a href="/courses/' + c.slug + '">' + c.name + '</a> - ' + c.city + '</li>'
+                ).join('')}
+            </ul>
+        </section>
+    </div>
+
+    <section style="margin-top: 3rem;">
+        <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-primary);">Technical</h2>
+        <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><a href="/sitemap.xml">XML Sitemap</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="/robots.txt">Robots.txt</a></li>
+        </ul>
+    </section>
+</div>
+` }) %>
