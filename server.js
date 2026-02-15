@@ -56,8 +56,22 @@ const authLimiter = rateLimit({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware
-app.use(express.static(path.join(__dirname, 'public')));
+// Middleware - Static files with caching
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '7d', // Cache static assets for 7 days
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, path) => {
+        // Longer cache for images
+        if (path.endsWith('.jpg') || path.endsWith('.png') || path.endsWith('.svg') || path.endsWith('.webp')) {
+            res.setHeader('Cache-Control', 'public, max-age=2592000'); // 30 days
+        }
+        // Shorter cache for CSS/JS (might change more often)
+        if (path.endsWith('.css') || path.endsWith('.js')) {
+            res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 days
+        }
+    }
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

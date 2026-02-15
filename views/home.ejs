@@ -61,7 +61,7 @@
                         <a href="/courses/${course.slug}">
                             <div class="course-card-image">
                                 ${course.photos && Array.isArray(course.photos) && course.photos.length > 0 ?
-                                    `<img src="${course.photos[0]}" alt="${course.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                    `<img src="${course.photos[0]}" alt="${course.name} golf course in ${course.city}, French Riviera" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
                                      <div class="course-card-placeholder" style="display:none;"><span>${course.holes} Holes</span></div>` :
                                     `<div class="course-card-placeholder"><span>${course.holes} Holes</span></div>`
                                 }
