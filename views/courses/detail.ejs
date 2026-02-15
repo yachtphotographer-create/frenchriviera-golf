@@ -314,8 +314,8 @@
                 ${course.latitude && course.longitude ? `
                     <div class="card">
                         <h3>Location</h3>
-                        <div id="course-map" class="course-map" data-lat="${course.latitude}" data-lng="${course.longitude}" data-name="${course.name}"></div>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=${course.latitude},${course.longitude}" target="_blank" rel="noopener" class="btn btn-outline btn-block btn-sm">Get Directions</a>
+                        <div id="course-map" class="course-map" data-lat="${course.latitude}" data-lng="${course.longitude}" data-name="${course.name}" data-address="${course.address || ''}"></div>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(course.address || course.latitude + ',' + course.longitude)}" target="_blank" rel="noopener" class="btn btn-outline btn-block btn-sm">Get Directions</a>
                     </div>
                 ` : ''}
 
@@ -337,12 +337,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const lat = parseFloat(mapEl.dataset.lat);
         const lng = parseFloat(mapEl.dataset.lng);
         const name = mapEl.dataset.name;
+        const address = mapEl.dataset.address;
 
         const map = L.map('course-map').setView([lat, lng], 14);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(map);
-        L.marker([lat, lng]).addTo(map).bindPopup(name);
+
+        const popupContent = address
+            ? '<strong>' + name + '</strong><br>' + address
+            : '<strong>' + name + '</strong>';
+        L.marker([lat, lng]).addTo(map).bindPopup(popupContent).openPopup();
     }
 });
 </script>
