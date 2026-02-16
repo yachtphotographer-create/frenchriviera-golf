@@ -37,7 +37,6 @@
                                 <div class="course-card-details">
                                     <span>${course.holes} ${isFr ? 'trous' : 'holes'}</span>
                                     <span>Par ${course.par}</span>
-                                    ${course.featured ? '<span class="badge badge-featured-inline">' + (isFr ? 'En Vedette' : 'Featured') + '</span>' : ''}
                                     ${course.avg_rating && parseFloat(course.avg_rating) > 0 ?
                                         `<span class="course-rating"><span class="star">&#9733;</span> ${parseFloat(course.avg_rating).toFixed(1)}</span>` : ''
                                     }
