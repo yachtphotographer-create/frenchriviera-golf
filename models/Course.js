@@ -133,6 +133,27 @@ const Course = {
         return result.rows[0];
     },
 
+    // Get courses by city names (for city landing pages)
+    async getByCities(cities) {
+        const placeholders = cities.map((_, i) => `$${i + 1}`).join(', ');
+        const result = await db.query(
+            `SELECT c.id, c.name, c.slug, c.city, c.department, c.department_name,
+                    c.holes, c.par, c.course_length_meters, c.architect, c.year_opened,
+                    c.latitude, c.longitude, c.description_en, c.photos, c.featured,
+                    COALESCE(AVG(cr.rating), 0) as avg_rating,
+                    COUNT(cr.id) as review_count
+             FROM courses c
+             LEFT JOIN course_reviews cr ON c.id = cr.course_id AND cr.approved = true
+             WHERE c.active = true AND c.city IN (${placeholders})
+             GROUP BY c.id, c.name, c.slug, c.city, c.department, c.department_name,
+                      c.holes, c.par, c.course_length_meters, c.architect, c.year_opened,
+                      c.latitude, c.longitude, c.description_en, c.photos, c.featured
+             ORDER BY c.name`,
+            cities
+        );
+        return result.rows;
+    },
+
     // Get nearby courses (basic version without PostGIS)
     async getNearby(lat, lng, radiusKm = 30, limit = 10) {
         // Haversine formula approximation

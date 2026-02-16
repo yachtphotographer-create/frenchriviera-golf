@@ -1,0 +1,383 @@
+<%- include('../layouts/main', { body: `
+<div class="city-landing-page">
+    <div class="city-hero">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a> &rsaquo;
+                <a href="/courses">Golf Courses</a> &rsaquo;
+                <span>Golf in ${cityName}</span>
+            </nav>
+            <h1>Golf in ${cityName}</h1>
+            <p class="city-hero-subtitle">${courses.length} golf course${courses.length !== 1 ? 's' : ''} on the French Riviera</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="city-content">
+            <div class="city-main">
+                <section class="city-section city-intro">
+                    <h2>Golf on the French Riviera in ${cityName}</h2>
+                    <p class="city-description">${config.description}</p>
+
+                    <div class="city-highlights">
+                        <h3>Why Golf in ${cityName}?</h3>
+                        <ul class="highlights-list">
+                            ${config.highlights.map(h => `<li>${h}</li>`).join('')}
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="city-section">
+                    <h2>Golf Courses in ${cityName}</h2>
+                    <div class="courses-grid">
+                        ${courses.map(course => `
+                            <a href="/courses/${course.slug}" class="course-card">
+                                <div class="course-card-image">
+                                    ${course.photos && course.photos.length > 0
+                                        ? `<img src="${course.photos[0]}" alt="${course.name}" loading="lazy">`
+                                        : `<div class="course-card-placeholder">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                          </div>`
+                                    }
+                                    ${course.featured ? '<span class="badge badge-featured">Featured</span>' : ''}
+                                </div>
+                                <div class="course-card-content">
+                                    <h3 class="course-card-name">${course.name}</h3>
+                                    <p class="course-card-location">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                        ${course.city}
+                                    </p>
+                                    <div class="course-card-stats">
+                                        <span>${course.holes} holes</span>
+                                        <span>Par ${course.par}</span>
+                                        ${course.avg_rating > 0 ? `
+                                            <span class="course-card-rating">
+                                                <span class="star">★</span> ${Number(course.avg_rating).toFixed(1)}
+                                            </span>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </a>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <section class="city-section city-tips">
+                    <h2>Golf Tips for ${cityName}</h2>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <h4>Best Time to Play</h4>
+                            <p>The French Riviera enjoys over 300 days of sunshine per year. Spring (April-June) and autumn (September-November) offer ideal golfing conditions with pleasant temperatures.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>Getting There</h4>
+                            <p>Nice Côte d'Azur Airport is the main gateway, with easy access to all courses. Car rental is recommended for maximum flexibility.</p>
+                        </div>
+                        <div class="tip-card">
+                            <h4>What to Expect</h4>
+                            <p>French Riviera courses often have dress codes. Smart casual attire is expected. Green fees vary significantly between courses.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="city-section city-cta">
+                    <h2>Find Playing Partners in ${cityName}</h2>
+                    <p>Looking for golfers to play with in ${cityName}? Join French Riviera Golf to connect with local players and visitors.</p>
+                    <div class="cta-buttons">
+                        <a href="/auth/register" class="btn btn-primary">Create Free Account</a>
+                        <a href="/games" class="btn btn-outline">Browse Open Games</a>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="city-sidebar">
+                <div class="sidebar-card">
+                    <h3>Quick Stats</h3>
+                    <div class="sidebar-stats">
+                        <div class="sidebar-stat">
+                            <span class="stat-number">${courses.length}</span>
+                            <span class="stat-label">Golf Courses</span>
+                        </div>
+                        <div class="sidebar-stat">
+                            <span class="stat-number">${courses.reduce((a, c) => a + (c.holes || 0), 0)}</span>
+                            <span class="stat-label">Total Holes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>Nearby Areas</h3>
+                    <ul class="nearby-links">
+                        ${nearbyCities.map(city => `
+                            <li><a href="/golf-in-${city.slug}">Golf in ${city.name}</a></li>
+                        `).join('')}
+                    </ul>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>All French Riviera</h3>
+                    <p>Explore all golf courses across the French Riviera.</p>
+                    <a href="/courses" class="btn btn-outline btn-block">View All Courses</a>
+                </div>
+
+                <div class="sidebar-card sidebar-cta">
+                    <h3>Find Playing Partners</h3>
+                    <p>Connect with golfers in ${cityName} and across the French Riviera.</p>
+                    <a href="/auth/register" class="btn btn-primary btn-block">Join Free</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<style>
+.city-landing-page {
+    min-height: 100vh;
+}
+
+.city-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.city-hero .breadcrumb {
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.city-hero .breadcrumb a {
+    color: white;
+    opacity: 0.8;
+}
+
+.city-hero .breadcrumb a:hover {
+    opacity: 1;
+}
+
+.city-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.city-hero-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+.city-content {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.city-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.city-section h2 {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.city-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text);
+}
+
+.city-highlights {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.city-highlights h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.highlights-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    list-style: none;
+    padding: 0;
+}
+
+.highlights-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.highlights-list li::before {
+    content: "✓";
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.tip-card {
+    padding: 1.5rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+
+.tip-card h4 {
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.tip-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.city-cta {
+    text-align: center;
+    background: linear-gradient(135deg, var(--bg-light) 0%, white 100%);
+}
+
+.city-cta p {
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.city-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.sidebar-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.sidebar-card h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.sidebar-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.sidebar-stat {
+    text-align: center;
+}
+
+.sidebar-stat .stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.sidebar-stat .stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.nearby-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nearby-links li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.nearby-links li:last-child {
+    border-bottom: none;
+}
+
+.nearby-links a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.nearby-links a:hover {
+    color: var(--primary);
+}
+
+.sidebar-cta {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+}
+
+.sidebar-cta h3 {
+    color: white;
+}
+
+.sidebar-cta p {
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+@media (max-width: 1024px) {
+    .city-content {
+        grid-template-columns: 1fr;
+    }
+
+    .city-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .city-hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .highlights-list {
+        grid-template-columns: 1fr;
+    }
+
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .city-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+` }) %>

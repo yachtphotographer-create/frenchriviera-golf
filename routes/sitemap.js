@@ -33,6 +33,12 @@ router.get('/sitemap.xml', async (req, res) => {
             { loc: '/available', changefreq: 'daily', priority: '0.7' },
             { loc: '/auth/login', changefreq: 'monthly', priority: '0.5' },
             { loc: '/auth/register', changefreq: 'monthly', priority: '0.5' },
+            // City landing pages
+            { loc: '/golf-in-nice', changefreq: 'weekly', priority: '0.85' },
+            { loc: '/golf-in-monaco', changefreq: 'weekly', priority: '0.85' },
+            { loc: '/golf-in-cannes', changefreq: 'weekly', priority: '0.85' },
+            { loc: '/golf-in-saint-tropez', changefreq: 'weekly', priority: '0.85' },
+            { loc: '/golf-in-grasse', changefreq: 'weekly', priority: '0.85' },
         ];
 
         // Add course pages
