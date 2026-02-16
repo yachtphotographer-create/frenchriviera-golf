@@ -1,12 +1,13 @@
+<% const isFr = typeof lang !== 'undefined' && lang === 'fr'; %>
 <%- include('layouts/main', { body: `
 <section class="hero">
     <div class="container">
         <div class="hero-content">
-            <h1>Find Your Perfect Golf Partners on the French Riviera</h1>
-            <p>Connect with golfers, join games, and discover the finest courses on the Côte d'Azur.</p>
+            <h1>${isFr ? "Trouvez Vos Partenaires de Golf sur la Côte d'Azur" : "Find Your Perfect Golf Partners on the French Riviera"}</h1>
+            <p>${isFr ? "Connectez-vous avec des golfeurs, rejoignez des parties et découvrez les plus beaux parcours de la Côte d'Azur." : "Connect with golfers, join games, and discover the finest courses on the Côte d'Azur."}</p>
             <div class="hero-cta">
-                <a href="/auth/register" class="btn btn-primary btn-lg">Get Started Free</a>
-                <a href="/courses" class="btn btn-outline btn-lg">Explore Courses</a>
+                <a href="/auth/register" class="btn btn-primary btn-lg">${isFr ? "Commencer Gratuitement" : "Get Started Free"}</a>
+                <a href="/courses" class="btn btn-outline btn-lg">${isFr ? "Découvrir les Parcours" : "Explore Courses"}</a>
             </div>
         </div>
     </div>
@@ -14,35 +15,35 @@
 
 <section class="features section">
     <div class="container">
-        <h2 class="section-title">How It Works</h2>
+        <h2 class="section-title">${isFr ? "Comment ça Marche" : "How It Works"}</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
-                <h3>Create Your Profile</h3>
-                <p>Set up your golf profile with your handicap, preferences, and playing style.</p>
+                <h3>${isFr ? "Créez Votre Profil" : "Create Your Profile"}</h3>
+                <p>${isFr ? "Configurez votre profil golf avec votre handicap, vos préférences et votre style de jeu." : "Set up your golf profile with your handicap, preferences, and playing style."}</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 </div>
-                <h3>Post or Find Games</h3>
-                <p>Create a tee time and invite players, or browse available games to join.</p>
+                <h3>${isFr ? "Publiez ou Trouvez des Parties" : "Post or Find Games"}</h3>
+                <p>${isFr ? "Créez un départ et invitez des joueurs, ou parcourez les parties disponibles." : "Create a tee time and invite players, or browse available games to join."}</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
-                <h3>Match & Play</h3>
-                <p>Connect with compatible golfers, coordinate via chat, and hit the links.</p>
+                <h3>${isFr ? "Connectez-vous et Jouez" : "Match & Play"}</h3>
+                <p>${isFr ? "Rencontrez des golfeurs compatibles, coordonnez via le chat et allez sur le parcours." : "Connect with compatible golfers, coordinate via chat, and hit the links."}</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 </div>
-                <h3>Rate & Build Trust</h3>
-                <p>Rate your playing partners after each round to build a trusted community.</p>
+                <h3>${isFr ? "Notez et Créez la Confiance" : "Rate & Build Trust"}</h3>
+                <p>${isFr ? "Notez vos partenaires après chaque partie pour bâtir une communauté de confiance." : "Rate your playing partners after each round to build a trusted community."}</p>
             </div>
         </div>
     </div>
@@ -51,8 +52,8 @@
 <section class="courses-preview section section-alt">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Featured Courses</h2>
-            <a href="/courses" class="btn btn-outline">View All Courses</a>
+            <h2 class="section-title">${isFr ? "Parcours en Vedette" : "Featured Courses"}</h2>
+            <a href="/courses" class="btn btn-outline">${isFr ? "Voir Tous les Parcours" : "View All Courses"}</a>
         </div>
         <div class="courses-grid">
             ${featuredCourses && featuredCourses.length > 0 ?
@@ -61,23 +62,23 @@
                         <a href="/courses/${course.slug}">
                             <div class="course-card-image">
                                 ${course.photos && Array.isArray(course.photos) && course.photos.length > 0 ?
-                                    `<img src="${course.photos[0]}" alt="${course.name} golf course in ${course.city}, French Riviera" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                     <div class="course-card-placeholder" style="display:none;"><span>${course.holes} Holes</span></div>` :
-                                    `<div class="course-card-placeholder"><span>${course.holes} Holes</span></div>`
+                                    `<img src="${course.photos[0]}" alt="${course.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                     <div class="course-card-placeholder" style="display:none;"><span>${course.holes} ${isFr ? "Trous" : "Holes"}</span></div>` :
+                                    `<div class="course-card-placeholder"><span>${course.holes} ${isFr ? "Trous" : "Holes"}</span></div>`
                                 }
-                                ${course.featured ? '<span class="badge badge-featured">Featured</span>' : ''}
+                                ${course.featured ? '<span class="badge badge-featured">' + (isFr ? "En Vedette" : "Featured") + '</span>' : ''}
                             </div>
                             <div class="course-card-content">
                                 <h3 class="course-card-title">${course.name}</h3>
                                 <p class="course-card-location">${course.city}, ${course.department_name}</p>
                                 <div class="course-card-details">
-                                    <span>${course.holes} holes</span>
+                                    <span>${course.holes} ${isFr ? "trous" : "holes"}</span>
                                     <span>Par ${course.par}</span>
                                 </div>
                             </div>
                         </a>
                     </article>
-                `).join('') : '<p>No featured courses available.</p>'
+                `).join('') : '<p>' + (isFr ? "Aucun parcours en vedette disponible." : "No featured courses available.") + '</p>'
             }
         </div>
     </div>
@@ -86,9 +87,9 @@
 <section class="cta section">
     <div class="container">
         <div class="cta-content">
-            <h2>Ready to Find Your Golf Partners?</h2>
-            <p>Join the French Riviera Golf community and never play alone again.</p>
-            <a href="/auth/register" class="btn btn-primary btn-lg">Create Free Account</a>
+            <h2>${isFr ? "Prêt à Trouver Vos Partenaires de Golf ?" : "Ready to Find Your Golf Partners?"}</h2>
+            <p>${isFr ? "Rejoignez la communauté French Riviera Golf et ne jouez plus jamais seul." : "Join the French Riviera Golf community and never play alone again."}</p>
+            <a href="/auth/register" class="btn btn-primary btn-lg">${isFr ? "Créer un Compte Gratuit" : "Create Free Account"}</a>
         </div>
     </div>
 </section>

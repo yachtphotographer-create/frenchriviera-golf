@@ -1932,12 +1932,10 @@ h3 { font-size: 1.375rem; }
         bottom: 0;
         background: #ffffff;
         flex-direction: column;
-        padding: 120px var(--spacing-xl) var(--spacing-xl);
-        gap: var(--spacing-md);
+        padding: 140px 30px 40px;
+        gap: 0;
         z-index: 98;
         overflow-y: auto;
-        align-items: center;
-        text-align: center;
     }
 
     .nav-menu.active {
@@ -1946,25 +1944,45 @@ h3 { font-size: 1.375rem; }
 
     .nav-menu li {
         width: 100%;
-        max-width: 300px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .nav-menu li:last-child {
+        border-bottom: none;
     }
 
     .nav-menu .nav-link {
-        font-size: 1.25rem;
-        padding: var(--spacing-md);
-        border-bottom: 1px solid var(--glass-border);
+        font-size: 1.1rem;
+        padding: 18px 10px;
         display: block;
-        color: var(--color-text);
+        color: #333;
+        text-align: left;
     }
 
     .nav-menu .btn {
         width: 100%;
         text-align: center;
-        margin-top: var(--spacing-sm);
+        margin: 10px 0;
+        padding: 15px;
+    }
+
+    .nav-menu .btn-primary {
+        background: var(--color-primary);
+        color: white;
+        border-radius: var(--radius-md);
+    }
+
+    .nav-lang-switcher {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        justify-content: center;
+        display: flex;
     }
 
     .header {
         z-index: 100;
+        background: #fff;
     }
 
     .nav-toggle {
