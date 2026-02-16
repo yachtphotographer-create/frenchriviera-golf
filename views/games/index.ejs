@@ -86,7 +86,8 @@
 <style>
 .page-actions { margin-bottom: var(--spacing-xl); }
 .games-list { display: flex; flex-direction: column; gap: var(--spacing-lg); }
-.game-card { background: white; border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+.game-card { background: #ecfdf5; border: 2px solid #7DD3FC; border-radius: var(--radius-lg); overflow: hidden; transition: background 0.3s ease, transform 0.3s ease; }
+.game-card:hover { background: #e0f2fe; transform: translateY(-4px); }
 .game-card-header { display: flex; align-items: center; gap: var(--spacing-lg); padding: var(--spacing-lg); border-bottom: 1px solid var(--color-border); }
 .game-date { text-align: center; min-width: 60px; }
 .game-day { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
