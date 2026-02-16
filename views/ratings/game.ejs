@@ -28,7 +28,7 @@
                             <div class="rating-item">
                                 <label>Punctuality</label>
                                 <div class="star-rating" data-name="ratings[${index}][punctuality]">
-                                    ${[1,2,3,4,5].map(n => `
+                                    ${[5,4,3,2,1].map(n => `
                                         <input type="radio" name="ratings[${index}][punctuality]" value="${n}" id="punct_${index}_${n}" required>
                                         <label for="punct_${index}_${n}">&#9733;</label>
                                     `).join('')}
@@ -38,7 +38,7 @@
                             <div class="rating-item">
                                 <label>Pace of Play</label>
                                 <div class="star-rating" data-name="ratings[${index}][pace_of_play]">
-                                    ${[1,2,3,4,5].map(n => `
+                                    ${[5,4,3,2,1].map(n => `
                                         <input type="radio" name="ratings[${index}][pace_of_play]" value="${n}" id="pace_${index}_${n}" required>
                                         <label for="pace_${index}_${n}">&#9733;</label>
                                     `).join('')}
@@ -48,7 +48,7 @@
                             <div class="rating-item">
                                 <label>Friendliness</label>
                                 <div class="star-rating" data-name="ratings[${index}][friendliness]">
-                                    ${[1,2,3,4,5].map(n => `
+                                    ${[5,4,3,2,1].map(n => `
                                         <input type="radio" name="ratings[${index}][friendliness]" value="${n}" id="friend_${index}_${n}" required>
                                         <label for="friend_${index}_${n}">&#9733;</label>
                                     `).join('')}
@@ -58,7 +58,7 @@
                             <div class="rating-item">
                                 <label>Would Play Again</label>
                                 <div class="star-rating" data-name="ratings[${index}][would_play_again]">
-                                    ${[1,2,3,4,5].map(n => `
+                                    ${[5,4,3,2,1].map(n => `
                                         <input type="radio" name="ratings[${index}][would_play_again]" value="${n}" id="again_${index}_${n}" required>
                                         <label for="again_${index}_${n}">&#9733;</label>
                                     `).join('')}

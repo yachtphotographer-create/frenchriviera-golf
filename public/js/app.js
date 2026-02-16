@@ -189,7 +189,44 @@ document.addEventListener('DOMContentLoaded', function() {
             playNotificationSound();
         });
     }
+
+    // Poll for new notifications every 30 seconds (for cron-generated notifications)
+    let lastNotificationCount = getCurrentNotificationCount();
+
+    setInterval(async function() {
+        try {
+            const response = await fetch('/notifications/api');
+            if (response.ok) {
+                const data = await response.json();
+                const unreadCount = data.notifications.filter(n => !n.read).length;
+                const currentCount = getCurrentNotificationCount();
+
+                if (unreadCount > currentCount) {
+                    // New notifications arrived
+                    const diff = unreadCount - currentCount;
+                    updateNotificationBadge(diff);
+
+                    // Show toast for the newest notification
+                    if (data.notifications.length > 0 && !data.notifications[0].read) {
+                        showToastNotification(data.notifications[0]);
+                        playNotificationSound();
+                    }
+                }
+            }
+        } catch (e) {
+            // Ignore polling errors
+        }
+    }, 30000);
 });
+
+// Get current notification count from badge
+function getCurrentNotificationCount() {
+    const badge = document.querySelector('.notification-badge');
+    if (!badge) return 0;
+    const text = badge.textContent;
+    if (text.includes('+')) return 10;
+    return parseInt(text) || 0;
+}
 
 // Update notification badge count
 function updateNotificationBadge(increment) {
