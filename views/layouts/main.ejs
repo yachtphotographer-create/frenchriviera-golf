@@ -163,6 +163,9 @@
 
     <%- include('../partials/footer') %>
 
-    <script src="/js/app.js?v=10"></script>
+    <% if (user) { %>
+    <script src="/socket.io/socket.io.js"></script>
+    <% } %>
+    <script src="/js/app.js?v=17"></script>
 </body>
 </html>

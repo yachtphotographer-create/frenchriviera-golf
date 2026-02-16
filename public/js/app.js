@@ -170,3 +170,122 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Real-time notifications via Socket.io
+document.addEventListener('DOMContentLoaded', function() {
+    // Only connect if Socket.io is available and user is logged in
+    if (typeof io !== 'undefined') {
+        const socket = io();
+
+        // Listen for new notifications
+        socket.on('new-notification', function(notification) {
+            // Update notification badge in navbar
+            updateNotificationBadge(1);
+
+            // Show toast notification
+            showToastNotification(notification);
+
+            // Play notification sound
+            playNotificationSound();
+        });
+    }
+});
+
+// Update notification badge count
+function updateNotificationBadge(increment) {
+    const badges = document.querySelectorAll('.notification-badge');
+
+    if (badges.length > 0) {
+        badges.forEach(badge => {
+            let currentCount = parseInt(badge.textContent) || 0;
+            if (badge.textContent.includes('+')) {
+                currentCount = 9;
+            }
+            const newCount = currentCount + increment;
+            badge.textContent = newCount > 9 ? '9+' : newCount;
+            badge.style.display = 'inline-block';
+        });
+    } else {
+        // Create badge if it doesn't exist
+        const notifLinks = document.querySelectorAll('.nav-notifications');
+        notifLinks.forEach(link => {
+            const badge = document.createElement('span');
+            badge.className = 'notification-badge';
+            badge.textContent = '1';
+            link.appendChild(badge);
+        });
+    }
+}
+
+// Show toast notification
+function showToastNotification(notification) {
+    // Create toast container if it doesn't exist
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;';
+        document.body.appendChild(toastContainer);
+    }
+
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.style.cssText = 'background: white; padding: 16px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 320px; cursor: pointer; border-left: 4px solid var(--color-primary, #1B5E20); animation: slideIn 0.3s ease;';
+    toast.innerHTML = `
+        <strong style="display: block; margin-bottom: 4px; color: #1a1a1a;">${notification.title}</strong>
+        <p style="margin: 0; color: #666; font-size: 0.875rem;">${notification.message}</p>
+    `;
+
+    // Add click handler to navigate to notification link
+    if (notification.link) {
+        toast.addEventListener('click', function() {
+            window.location.href = notification.link;
+        });
+    }
+
+    toastContainer.appendChild(toast);
+
+    // Auto-remove after 5 seconds
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(function() {
+            toast.remove();
+        }, 300);
+    }, 5000);
+}
+
+// Play notification sound
+function playNotificationSound() {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        gainNode.gain.value = 0.1;
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (e) {
+        // Audio not supported, ignore
+    }
+}
+
+// Add CSS animation for toast
+(function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+})();

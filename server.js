@@ -228,7 +228,7 @@ app.get('/dashboard', async (req, res) => {
     }
 });
 
-// Socket.io for chat
+// Socket.io for chat and notifications
 io.on('connection', (socket) => {
     const session = socket.request.session;
 
@@ -238,6 +238,9 @@ io.on('connection', (socket) => {
     }
 
     console.log(`User ${session.user.display_name} connected to chat`);
+
+    // Join personal notification room
+    socket.join(`user-${session.user.id}`);
 
     // Join a game chat room
     socket.on('join-game', (gameId) => {
@@ -294,12 +297,21 @@ io.on('connection', (socket) => {
                 for (const p of gamePlayers) {
                     // Don't notify the sender
                     if (p.user_id !== session.user.id && (p.status === 'accepted' || p.role === 'creator')) {
-                        await Notification.create({
+                        const notification = await Notification.create({
                             user_id: p.user_id,
                             type: 'new_message',
                             title: `New message from ${session.user.display_name}`,
                             message: content.trim().substring(0, 100),
                             link: `/games/${gameId}`
+                        });
+
+                        // Push real-time notification to user
+                        io.to(`user-${p.user_id}`).emit('new-notification', {
+                            id: notification.id,
+                            type: notification.type,
+                            title: notification.title,
+                            message: notification.message,
+                            link: notification.link
                         });
                     }
                 }
