@@ -16,6 +16,9 @@ const server = http.createServer(app);
 const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 
+// Make io available to routes
+app.set('io', io);
+
 // Trust proxy (for HTTPS behind Nginx)
 app.set('trust proxy', 1);
 

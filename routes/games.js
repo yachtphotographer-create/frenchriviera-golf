@@ -207,6 +207,17 @@ router.post('/:id/join', isAuthenticated, async (req, res) => {
             `/games/${gameId}`
         );
 
+        // Push real-time notification
+        const io = req.app.get('io');
+        if (io) {
+            io.to(`user-${game.creator_id}`).emit('new-notification', {
+                type: 'game_request',
+                title: 'New join request',
+                message: `${req.session.user.display_name} wants to join your game at ${game.course_name}`,
+                link: `/games/${gameId}`
+            });
+        }
+
         req.session.success = 'Join request sent! The game creator will review your request.';
         res.redirect(`/games/${gameId}`);
 
@@ -239,6 +250,17 @@ router.post('/:id/accept/:playerId', isAuthenticated, async (req, res) => {
             `Your request to join the game at ${game.course_name} was accepted!`,
             `/games/${gameId}`
         );
+
+        // Push real-time notification
+        const io = req.app.get('io');
+        if (io) {
+            io.to(`user-${playerId}`).emit('new-notification', {
+                type: 'game_accepted',
+                title: 'You\'re in!',
+                message: `Your request to join the game at ${game.course_name} was accepted!`,
+                link: `/games/${gameId}`
+            });
+        }
 
         req.session.success = 'Player accepted!';
         res.redirect(`/games/${gameId}`);
@@ -273,6 +295,17 @@ router.post('/:id/decline/:playerId', isAuthenticated, async (req, res) => {
             `/games`
         );
 
+        // Push real-time notification
+        const io = req.app.get('io');
+        if (io) {
+            io.to(`user-${playerId}`).emit('new-notification', {
+                type: 'game_declined',
+                title: 'Request declined',
+                message: `Your request to join the game at ${game.course_name} was declined.`,
+                link: `/games`
+            });
+        }
+
         req.session.success = 'Player declined';
         res.redirect(`/games/${gameId}`);
 
@@ -287,8 +320,69 @@ router.post('/:id/decline/:playerId', isAuthenticated, async (req, res) => {
 router.post('/:id/withdraw', isAuthenticated, async (req, res) => {
     try {
         const gameId = parseInt(req.params.id);
+        const game = await Game.findById(gameId);
+
+        if (!game) {
+            req.session.error = 'Game not found';
+            return res.redirect('/games');
+        }
+
+        // Get players before withdrawal to notify them
+        const players = await Game.getPlayers(gameId);
+        const wasAccepted = players.find(p => p.user_id === req.session.user.id && p.status === 'accepted');
 
         await Game.withdraw(gameId, req.session.user.id);
+
+        // Only notify if the player was actually accepted (not just pending)
+        if (wasAccepted) {
+            // Notify the creator
+            if (game.creator_id !== req.session.user.id) {
+                await createNotification(
+                    game.creator_id,
+                    'player_withdrawn',
+                    'Player withdrew',
+                    `${req.session.user.display_name} has withdrawn from your game at ${game.course_name}`,
+                    `/games/${gameId}`
+                );
+
+                // Push real-time notification
+                const io = req.app.get('io');
+                if (io) {
+                    io.to(`user-${game.creator_id}`).emit('new-notification', {
+                        type: 'player_withdrawn',
+                        title: 'Player withdrew',
+                        message: `${req.session.user.display_name} has withdrawn from your game at ${game.course_name}`,
+                        link: `/games/${gameId}`
+                    });
+                }
+            }
+
+            // Notify other accepted players
+            for (const player of players) {
+                if (player.user_id !== req.session.user.id &&
+                    player.user_id !== game.creator_id &&
+                    (player.status === 'accepted' || player.role === 'creator')) {
+                    await createNotification(
+                        player.user_id,
+                        'player_withdrawn',
+                        'Player withdrew',
+                        `${req.session.user.display_name} has withdrawn from the game at ${game.course_name}`,
+                        `/games/${gameId}`
+                    );
+
+                    // Push real-time notification
+                    const io = req.app.get('io');
+                    if (io) {
+                        io.to(`user-${player.user_id}`).emit('new-notification', {
+                            type: 'player_withdrawn',
+                            title: 'Player withdrew',
+                            message: `${req.session.user.display_name} has withdrawn from the game at ${game.course_name}`,
+                            link: `/games/${gameId}`
+                        });
+                    }
+                }
+            }
+        }
 
         req.session.success = 'You have withdrawn from this game';
         res.redirect(`/games/${gameId}`);
@@ -313,6 +407,8 @@ router.post('/:id/cancel', isAuthenticated, async (req, res) => {
 
         // Notify all accepted players
         const players = await Game.getPlayers(gameId);
+        const io = req.app.get('io');
+
         for (const player of players) {
             if (player.user_id !== req.session.user.id && player.status === 'accepted') {
                 await createNotification(
@@ -322,6 +418,16 @@ router.post('/:id/cancel', isAuthenticated, async (req, res) => {
                     `The game at ${game.course_name} on ${new Date(game.game_date).toLocaleDateString()} has been cancelled.`,
                     `/games`
                 );
+
+                // Push real-time notification
+                if (io) {
+                    io.to(`user-${player.user_id}`).emit('new-notification', {
+                        type: 'game_cancelled',
+                        title: 'Game cancelled',
+                        message: `The game at ${game.course_name} on ${new Date(game.game_date).toLocaleDateString()} has been cancelled.`,
+                        link: `/games`
+                    });
+                }
             }
         }
 
@@ -359,6 +465,17 @@ router.post('/:id/invite/:userId', isAuthenticated, async (req, res) => {
             `${req.session.user.display_name} invited you to play at ${game.course_name}`,
             `/games/${gameId}`
         );
+
+        // Push real-time notification
+        const io = req.app.get('io');
+        if (io) {
+            io.to(`user-${userId}`).emit('new-notification', {
+                type: 'invitation',
+                title: 'Game invitation',
+                message: `${req.session.user.display_name} invited you to play at ${game.course_name}`,
+                link: `/games/${gameId}`
+            });
+        }
 
         req.session.success = 'Invitation sent!';
         res.redirect(req.get('Referer') || `/games/${gameId}`);
