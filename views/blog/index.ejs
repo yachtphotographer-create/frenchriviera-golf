@@ -1,9 +1,14 @@
+<% const isFr = typeof lang !== 'undefined' && lang === 'fr'; %>
+<% const subtitleFr = "Conseils, guides et actualités du golf sur la Côte d'Azur"; %>
+<% const subtitleEn = "Tips, guides, and news from the French Riviera golf scene"; %>
+<% const emptyFr = "Pas encore d'articles. Revenez bientôt pour des conseils et guides de golf !"; %>
+<% const emptyEn = "No blog posts yet. Check back soon for golf tips and guides!"; %>
 <%- include('../layouts/main', { body: `
 <div class="blog-page">
     <div class="container">
         <div class="page-header">
-            <h1>Golf Blog</h1>
-            <p class="page-subtitle">Tips, guides, and news from the French Riviera golf scene</p>
+            <h1>${isFr ? 'Blog Golf' : 'Golf Blog'}</h1>
+            <p class="page-subtitle">${isFr ? subtitleFr : subtitleEn}</p>
         </div>
 
         <div class="blog-grid">
@@ -14,7 +19,7 @@
                             <div class="blog-card-image">
                                 ${post.featured_image ?
                                     `<img src="${post.featured_image}" alt="${post.title}" loading="lazy">` :
-                                    `<div class="blog-card-placeholder"><span>Golf Blog</span></div>`
+                                    `<div class="blog-card-placeholder"><span>${isFr ? 'Blog Golf' : 'Golf Blog'}</span></div>`
                                 }
                                 ${post.category ? `<span class="blog-category">${post.category}</span>` : ''}
                             </div>
@@ -22,15 +27,15 @@
                                 <h2 class="blog-card-title">${post.title}</h2>
                                 <p class="blog-card-excerpt">${post.excerpt || ''}</p>
                                 <div class="blog-card-meta">
-                                    <span class="blog-date">${new Date(post.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                                    <span class="blog-read-more">Read more →</span>
+                                    <span class="blog-date">${new Date(post.published_at).toLocaleDateString(isFr ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                    <span class="blog-read-more">${isFr ? 'Lire la suite' : 'Read more'} &rarr;</span>
                                 </div>
                             </div>
                         </a>
                     </article>
                 `).join('') :
                 `<div class="empty-state">
-                    <p>No blog posts yet. Check back soon for golf tips and guides!</p>
+                    <p>${isFr ? emptyFr : emptyEn}</p>
                 </div>`
             }
         </div>

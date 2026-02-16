@@ -1,24 +1,27 @@
+<% const isFr = typeof lang !== 'undefined' && lang === 'fr'; %>
+<% const subtitleFr = "Découvrez les plus beaux parcours de la Côte d'Azur"; %>
+<% const subtitleEn = "Discover the finest courses on the French Riviera"; %>
 <%- include('../layouts/main', { body: `
 <div class="courses-page">
     <div class="container">
         <div class="page-header">
-            <h1>Golf Courses</h1>
-            <p class="page-subtitle">Discover the finest courses on the French Riviera</p>
+            <h1>${isFr ? 'Parcours de Golf' : 'Golf Courses'}</h1>
+            <p class="page-subtitle">${isFr ? subtitleFr : subtitleEn}</p>
         </div>
 
         <div class="filters-bar">
             <form action="/courses" method="GET" class="filters-form">
                 <div class="filter-group">
                     <select name="department" onchange="this.form.submit()">
-                        <option value="">All Departments</option>
+                        <option value="">${isFr ? 'Tous les Départements' : 'All Departments'}</option>
                         <option value="06" ${selectedDepartment === '06' ? 'selected' : ''}>Alpes-Maritimes (06)</option>
                         <option value="83" ${selectedDepartment === '83' ? 'selected' : ''}>Var (83)</option>
                     </select>
                 </div>
                 <div class="filter-group search-group">
-                    <input type="text" name="search" placeholder="Search courses..."
+                    <input type="text" name="search" placeholder="${isFr ? 'Rechercher un parcours...' : 'Search courses...'}"
                            value="${searchQuery || ''}">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary">${isFr ? 'Rechercher' : 'Search'}</button>
                 </div>
             </form>
         </div>
@@ -26,22 +29,15 @@
         <div class="courses-grid">
             ${courses && courses.length > 0 ?
                 courses.map(course => `
-                    <article class="course-card">
+                    <article class="course-card course-card-no-image">
                         <a href="/courses/${course.slug}">
-                            <div class="course-card-image">
-                                ${course.photos && Array.isArray(course.photos) && course.photos.length > 0 ?
-                                    `<img src="${course.photos[0]}" alt="${course.name} golf course in ${course.city}, French Riviera" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                     <div class="course-card-placeholder" style="display:none;"><span>${course.holes} Holes</span></div>` :
-                                    `<div class="course-card-placeholder"><span>${course.holes} Holes</span></div>`
-                                }
-                                ${course.featured ? '<span class="badge badge-featured">Featured</span>' : ''}
-                            </div>
                             <div class="course-card-content">
                                 <h3 class="course-card-title">${course.name}</h3>
                                 <p class="course-card-location">${course.city}, ${course.department_name}</p>
                                 <div class="course-card-details">
-                                    <span>${course.holes} holes</span>
+                                    <span>${course.holes} ${isFr ? 'trous' : 'holes'}</span>
                                     <span>Par ${course.par}</span>
+                                    ${course.featured ? '<span class="badge badge-featured-inline">' + (isFr ? 'En Vedette' : 'Featured') + '</span>' : ''}
                                     ${course.avg_rating && parseFloat(course.avg_rating) > 0 ?
                                         `<span class="course-rating"><span class="star">&#9733;</span> ${parseFloat(course.avg_rating).toFixed(1)}</span>` : ''
                                     }
@@ -50,9 +46,33 @@
                         </a>
                     </article>
                 `).join('') :
-                '<p class="no-results">No courses found. Try a different search.</p>'
+                '<p class="no-results">' + (isFr ? 'Aucun parcours trouvé. Essayez une autre recherche.' : 'No courses found. Try a different search.') + '</p>'
             }
         </div>
     </div>
 </div>
+
+<style>
+.course-card-no-image {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    transition: all 0.3s ease;
+}
+.course-card-no-image:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glass-hover);
+}
+.course-card-no-image .course-card-content {
+    padding: 1.5rem;
+}
+.badge-featured-inline {
+    background: var(--color-primary);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+</style>
 ` }) %>

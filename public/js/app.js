@@ -5,9 +5,25 @@ function toggleMobileMenu(e) {
         e.stopPropagation();
     }
     const menu = document.getElementById('nav-menu');
+    const overlay = document.getElementById('mobile-menu-overlay');
     const toggle = document.querySelector('.nav-toggle');
-    menu.classList.toggle('active');
-    toggle.classList.toggle('active');
+
+    if (menu) {
+        menu.classList.toggle('active');
+    }
+    if (overlay) {
+        overlay.classList.toggle('active');
+    }
+    if (toggle) {
+        toggle.classList.toggle('active');
+    }
+
+    // Prevent body scroll when menu is open
+    if (menu && menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
 }
 
 // Initialize mobile menu with touch support
@@ -25,16 +41,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { passive: false });
     }
 
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-        const menu = document.getElementById('nav-menu');
-        const toggle = document.querySelector('.nav-toggle');
-        if (menu && menu.classList.contains('active')) {
-            if (!menu.contains(e.target) && !toggle.contains(e.target)) {
-                menu.classList.remove('active');
-                toggle.classList.remove('active');
-            }
-        }
+    // Close menu when clicking a link
+    const menuLinks = document.querySelectorAll('.nav-menu-mobile a');
+    menuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            const menu = document.getElementById('nav-menu');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            const toggle = document.querySelector('.nav-toggle');
+            if (menu) menu.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+            if (toggle) toggle.classList.remove('active');
+            document.body.style.overflow = '';
+        });
     });
 });
 

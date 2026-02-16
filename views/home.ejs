@@ -58,16 +58,8 @@
         <div class="courses-grid">
             ${featuredCourses && featuredCourses.length > 0 ?
                 featuredCourses.map(course => `
-                    <article class="course-card">
+                    <article class="course-card course-card-no-image">
                         <a href="/courses/${course.slug}">
-                            <div class="course-card-image">
-                                ${course.photos && Array.isArray(course.photos) && course.photos.length > 0 ?
-                                    `<img src="${course.photos[0]}" alt="${course.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                     <div class="course-card-placeholder" style="display:none;"><span>${course.holes} ${isFr ? "Trous" : "Holes"}</span></div>` :
-                                    `<div class="course-card-placeholder"><span>${course.holes} ${isFr ? "Trous" : "Holes"}</span></div>`
-                                }
-                                ${course.featured ? '<span class="badge badge-featured">' + (isFr ? "En Vedette" : "Featured") + '</span>' : ''}
-                            </div>
                             <div class="course-card-content">
                                 <h3 class="course-card-title">${course.name}</h3>
                                 <p class="course-card-location">${course.city}, ${course.department_name}</p>
@@ -93,4 +85,20 @@
         </div>
     </div>
 </section>
+
+<style>
+.course-card-no-image {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    transition: all 0.3s ease;
+}
+.course-card-no-image:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glass-hover);
+}
+.course-card-no-image .course-card-content {
+    padding: 1.5rem;
+}
+</style>
 ` }) %>

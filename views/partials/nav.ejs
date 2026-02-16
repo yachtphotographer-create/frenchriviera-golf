@@ -10,7 +10,8 @@
             <span></span>
         </button>
 
-        <ul class="nav-menu" id="nav-menu">
+        <!-- Desktop menu stays here -->
+        <ul class="nav-menu nav-menu-desktop">
             <li><a href="/courses" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.courses : 'Courses' %></a></li>
             <li><a href="/blog" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.blog : 'Blog' %></a></li>
             <% if (user) { %>
@@ -57,6 +58,30 @@
         </ul>
     </nav>
 </header>
+
+<!-- Mobile menu OUTSIDE header to fix iOS backdrop-filter bug -->
+<div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+<ul class="nav-menu nav-menu-mobile" id="nav-menu">
+    <li><a href="/courses" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.courses : 'Courses' %></a></li>
+    <li><a href="/blog" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.blog : 'Blog' %></a></li>
+    <% if (user) { %>
+        <li><a href="/games" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.findGames : 'Find Games' %></a></li>
+        <li><a href="/available" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.players : 'Players' %></a></li>
+        <li><a href="/notifications" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.notifications : 'Notifications' %></a></li>
+        <li><a href="/dashboard" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.dashboard : 'Dashboard' %></a></li>
+        <li><a href="/profile" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.myProfile : 'My Profile' %></a></li>
+        <li><a href="/games/mine" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.myGames : 'My Games' %></a></li>
+        <li><a href="/auth/logout" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.logout : 'Logout' %></a></li>
+    <% } else { %>
+        <li><a href="/auth/login" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.login : 'Login' %></a></li>
+        <li><a href="/auth/register" class="btn btn-primary"><%= typeof t !== 'undefined' ? t.nav.signUp : 'Sign Up' %></a></li>
+    <% } %>
+    <li class="nav-lang-switcher">
+        <a href="?lang=en" class="lang-btn <%= (typeof lang !== 'undefined' && lang === 'en') ? 'active' : '' %>" title="English">EN</a>
+        <span class="lang-divider">|</span>
+        <a href="?lang=fr" class="lang-btn <%= (typeof lang !== 'undefined' && lang === 'fr') ? 'active' : '' %>" title="Français">FR</a>
+    </li>
+</ul>
 
 <style>
 .nav-notifications { position: relative; display: flex; align-items: center; }

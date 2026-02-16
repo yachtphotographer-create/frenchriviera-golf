@@ -1,8 +1,11 @@
+<% const isFr = typeof lang !== 'undefined' && lang === 'fr'; %>
+<% const sidebarTextFr = "Vous cherchez des partenaires de jeu sur la Côte d'Azur ?"; %>
+<% const sidebarTextEn = "Looking for playing partners on the French Riviera?"; %>
 <%- include('../layouts/main', { body: `
 <article class="blog-post-page">
     <div class="container">
         <nav class="breadcrumb">
-            <a href="/">Home</a> &rsaquo;
+            <a href="/">${isFr ? 'Accueil' : 'Home'}</a> &rsaquo;
             <a href="/blog">Blog</a> &rsaquo;
             <span>${post.title}</span>
         </nav>
@@ -10,7 +13,7 @@
         <header class="blog-post-header">
             <div class="blog-post-meta">
                 ${post.category ? `<span class="blog-category">${post.category}</span>` : ''}
-                <span class="blog-date">${new Date(post.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                <span class="blog-date">${new Date(post.published_at).toLocaleDateString(isFr ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
             </div>
             <h1>${post.title}</h1>
             ${post.excerpt ? `<p class="blog-post-excerpt">${post.excerpt}</p>` : ''}
@@ -29,14 +32,14 @@
 
             <aside class="blog-sidebar">
                 <div class="sidebar-card">
-                    <h3>Find Golf Partners</h3>
-                    <p>Looking for playing partners on the French Riviera?</p>
-                    <a href="/auth/register" class="btn btn-primary btn-block">Join Free</a>
+                    <h3>${isFr ? 'Trouvez des Partenaires' : 'Find Golf Partners'}</h3>
+                    <p>${isFr ? sidebarTextFr : sidebarTextEn}</p>
+                    <a href="/auth/register" class="btn btn-primary btn-block">${isFr ? 'Rejoindre Gratuitement' : 'Join Free'}</a>
                 </div>
 
                 ${recentPosts && recentPosts.length > 0 ? `
                     <div class="sidebar-card">
-                        <h3>Recent Posts</h3>
+                        <h3>${isFr ? 'Articles Récents' : 'Recent Posts'}</h3>
                         <ul class="recent-posts-list">
                             ${recentPosts.filter(p => p.slug !== post.slug).slice(0, 4).map(p => `
                                 <li><a href="/blog/${p.slug}">${p.title}</a></li>
@@ -46,7 +49,7 @@
                 ` : ''}
 
                 <div class="sidebar-card">
-                    <h3>Popular Courses</h3>
+                    <h3>${isFr ? 'Parcours Populaires' : 'Popular Courses'}</h3>
                     <ul class="recent-posts-list">
                         <li><a href="/courses/monte-carlo-golf-club">Monte-Carlo Golf Club</a></li>
                         <li><a href="/courses/terre-blanche-chateau">Terre Blanche</a></li>
@@ -58,7 +61,7 @@
         </div>
 
         <div class="blog-post-footer">
-            <a href="/blog" class="btn btn-outline">&larr; Back to Blog</a>
+            <a href="/blog" class="btn btn-outline">&larr; ${isFr ? 'Retour au Blog' : 'Back to Blog'}</a>
         </div>
     </div>
 </article>

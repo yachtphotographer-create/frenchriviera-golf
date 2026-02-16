@@ -474,6 +474,15 @@ h3 { font-size: 1.375rem; }
     gap: var(--spacing-sm);
 }
 
+/* Hide mobile menu on desktop */
+.nav-menu-mobile {
+    display: none;
+}
+
+.mobile-menu-overlay {
+    display: none;
+}
+
 .nav-link {
     color: var(--color-text-secondary);
     font-family: var(--font-body);
@@ -1923,67 +1932,93 @@ h3 { font-size: 1.375rem; }
         font-size: 1rem;
     }
 
-    .nav-menu {
+    /* Hide desktop menu on mobile */
+    .nav-menu-desktop {
+        display: none !important;
+    }
+
+    /* Mobile menu overlay */
+    .mobile-menu-overlay {
         display: none;
         position: fixed;
-        top: 130px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 9998;
+    }
+
+    .mobile-menu-overlay.active {
+        display: block;
+    }
+
+    /* Mobile menu - outside header */
+    .nav-menu-mobile {
+        display: none;
+        position: fixed;
+        top: 0;
         left: 0;
         right: 0;
         bottom: 0;
         background: #ffffff;
         flex-direction: column;
-        padding: 20px 30px 40px;
+        padding: 140px 25px 40px;
         gap: 0;
-        z-index: 98;
+        z-index: 9999;
         overflow-y: auto;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        list-style: none;
+        margin: 0;
     }
 
-    .nav-menu.active {
+    .nav-menu-mobile.active {
         display: flex;
     }
 
-    .nav-menu li {
+    .nav-menu-mobile li {
         width: 100%;
         border-bottom: 1px solid #eee;
     }
 
-    .nav-menu li:last-child {
+    .nav-menu-mobile li:last-child {
         border-bottom: none;
     }
 
-    .nav-menu .nav-link {
+    .nav-menu-mobile .nav-link {
         font-size: 1.1rem;
-        padding: 18px 10px;
+        padding: 16px 10px;
         display: block;
         color: #333;
         text-align: left;
     }
 
-    .nav-menu .btn {
+    .nav-menu-mobile .btn {
         width: 100%;
         text-align: center;
         margin: 10px 0;
-        padding: 15px;
+        padding: 14px;
+        display: block;
     }
 
-    .nav-menu .btn-primary {
+    .nav-menu-mobile .btn-primary {
         background: var(--color-primary);
         color: white;
         border-radius: var(--radius-md);
     }
 
-    .nav-lang-switcher {
+    .nav-menu-mobile .nav-lang-switcher {
         margin-top: 20px;
         padding-top: 20px;
         border-top: 1px solid #eee;
+        border-bottom: none;
         justify-content: center;
         display: flex;
     }
 
     .header {
-        z-index: 100;
+        z-index: 10000;
         background: #fff;
+        position: relative;
     }
 
     .nav-toggle {
@@ -2006,7 +2041,7 @@ h3 { font-size: 1.375rem; }
     }
 
     .nav-logo-img {
-        height: 100px;
+        height: 80px;
     }
 
     .features-grid,
