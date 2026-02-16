@@ -8,6 +8,13 @@ class GameChat {
         this.messageInput = document.getElementById('chat-input');
 
         this.init();
+        this.requestNotificationPermission();
+    }
+
+    requestNotificationPermission() {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
     }
 
     init() {
@@ -18,6 +25,11 @@ class GameChat {
         this.socket.on('new-message', (message) => {
             this.appendMessage(message);
             this.scrollToBottom();
+
+            // Show notification if message is from someone else and page is not focused
+            if (message.sender_id !== window.currentUserId) {
+                this.showNotification(message);
+            }
         });
 
         // Handle form submission
@@ -85,6 +97,54 @@ class GameChat {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    showNotification(message) {
+        // Play notification sound
+        this.playNotificationSound();
+
+        // Show browser notification if permitted and page not focused
+        if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
+            const notification = new Notification('New message from ' + message.display_name, {
+                body: message.content.substring(0, 100),
+                icon: '/images/logo.png',
+                tag: 'chat-' + this.gameId
+            });
+
+            notification.onclick = () => {
+                window.focus();
+                notification.close();
+            };
+
+            // Auto close after 5 seconds
+            setTimeout(() => notification.close(), 5000);
+        }
+
+        // Update page title to show unread count
+        if (document.hidden) {
+            document.title = '(New message) ' + document.title.replace(/^\(New message\) /, '');
+        }
+    }
+
+    playNotificationSound() {
+        // Create a simple notification sound using Web Audio API
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            gainNode.gain.value = 0.1;
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.1);
+        } catch (e) {
+            // Audio not supported, ignore
+        }
     }
 }
 
