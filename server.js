@@ -4,10 +4,12 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const sessionConfig = require('./config/session');
+const languageMiddleware = require('./middleware/language');
 
 const app = express();
 const server = http.createServer(app);
@@ -74,9 +76,13 @@ app.use(express.static(path.join(__dirname, 'public'), {
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 const sessionMiddleware = session(sessionConfig);
 app.use(sessionMiddleware);
+
+// Language middleware (must be after cookie-parser)
+app.use(languageMiddleware);
 
 // Share session with Socket.io
 io.use((socket, next) => {

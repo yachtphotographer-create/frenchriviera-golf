@@ -2,12 +2,12 @@
     <div class="container">
         <div class="footer-grid">
             <div class="footer-brand">
-                <span class="footer-logo">French Riviera Golf</span>
-                <p>The premier golf partner matching platform for the Côte d'Azur. Connect with fellow golfers from Monaco to Saint-Tropez.</p>
+                <img src="/images/logo.png" alt="French Riviera Golf" class="footer-logo-img">
+                <p><%= typeof t !== 'undefined' ? t.footer.tagline : 'The premier golf partner matching platform for the Côte d\'Azur. Connect with fellow golfers from Monaco to Saint-Tropez.' %></p>
             </div>
 
             <div class="footer-links">
-                <h4>Golf by City</h4>
+                <h4><%= typeof t !== 'undefined' ? t.footer.golfByCity : 'Golf by City' %></h4>
                 <ul>
                     <li><a href="/golf-in-nice">Golf in Nice</a></li>
                     <li><a href="/golf-in-monaco">Golf in Monaco</a></li>
@@ -18,7 +18,7 @@
             </div>
 
             <div class="footer-links">
-                <h4>Popular Courses</h4>
+                <h4><%= typeof t !== 'undefined' ? t.footer.popularCourses : 'Popular Courses' %></h4>
                 <ul>
                     <li><a href="/courses/monte-carlo-golf-club">Monte-Carlo Golf Club</a></li>
                     <li><a href="/courses/terre-blanche-chateau">Terre Blanche</a></li>
@@ -28,26 +28,26 @@
             </div>
 
             <div class="footer-links">
-                <h4>Play Golf</h4>
+                <h4><%= typeof t !== 'undefined' ? t.footer.playGolf : 'Play Golf' %></h4>
                 <ul>
-                    <li><a href="/auth/register">Create Free Account</a></li>
-                    <li><a href="/games">Find a Game</a></li>
-                    <li><a href="/available">Available Players</a></li>
+                    <li><a href="/auth/register"><%= typeof t !== 'undefined' ? t.footer.createAccount : 'Create Free Account' %></a></li>
+                    <li><a href="/games"><%= typeof t !== 'undefined' ? t.footer.findGame : 'Find a Game' %></a></li>
+                    <li><a href="/available"><%= typeof t !== 'undefined' ? t.footer.availablePlayers : 'Available Players' %></a></li>
                 </ul>
             </div>
 
             <div class="footer-links">
-                <h4>About</h4>
+                <h4><%= typeof t !== 'undefined' ? t.footer.about : 'About' %></h4>
                 <ul>
-                    <li><a href="/about">About Us</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                    <li><a href="/privacy">Privacy Policy</a></li>
-                    <li><a href="/sitemap.xml">Sitemap</a></li>
+                    <li><a href="/about"><%= typeof t !== 'undefined' ? t.footer.aboutUs : 'About Us' %></a></li>
+                    <li><a href="/contact"><%= typeof t !== 'undefined' ? t.footer.contact : 'Contact' %></a></li>
+                    <li><a href="/privacy"><%= typeof t !== 'undefined' ? t.footer.privacy : 'Privacy Policy' %></a></li>
+                    <li><a href="/sitemap.xml"><%= typeof t !== 'undefined' ? t.footer.sitemap : 'Sitemap' %></a></li>
                 </ul>
             </div>
 
             <div class="footer-links">
-                <h4>Follow Us</h4>
+                <h4><%= typeof t !== 'undefined' ? t.footer.followUs : 'Follow Us' %></h4>
                 <ul>
                     <li><a href="https://instagram.com/frenchrivieragolf" target="_blank" rel="noopener">Instagram</a></li>
                 </ul>
@@ -55,7 +55,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; <%= new Date().getFullYear() %> French Riviera Golf. All rights reserved. Find golf partners on the French Riviera, Côte d'Azur, France.</p>
+            <p>&copy; <%= new Date().getFullYear() %> French Riviera Golf. <%= typeof t !== 'undefined' ? t.footer.copyright : 'All rights reserved. Find golf partners on the French Riviera, Côte d\'Azur, France.' %></p>
             <div class="footer-social">
                 <a href="https://instagram.com/frenchrivieragolf" target="_blank" rel="noopener" aria-label="Instagram">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>

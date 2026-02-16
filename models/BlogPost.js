@@ -1,15 +1,22 @@
 const db = require('../config/database');
 
 const BlogPost = {
-    // Get all published posts
-    async findAll(limit = 20) {
-        const result = await db.query(
-            `SELECT * FROM blog_posts
-             WHERE published = true
-             ORDER BY published_at DESC
-             LIMIT $1`,
-            [limit]
-        );
+    // Get all published posts (optionally filtered by language)
+    async findAll(limit = 20, language = null) {
+        let query = `SELECT * FROM blog_posts WHERE published = true`;
+        const params = [];
+        let paramIndex = 1;
+
+        if (language) {
+            query += ` AND language = $${paramIndex}`;
+            params.push(language);
+            paramIndex++;
+        }
+
+        query += ` ORDER BY published_at DESC LIMIT $${paramIndex}`;
+        params.push(limit);
+
+        const result = await db.query(query, params);
         return result.rows;
     },
 
@@ -23,16 +30,22 @@ const BlogPost = {
         return result.rows[0];
     },
 
-    // Get recent posts for sidebar
-    async getRecent(limit = 5) {
-        const result = await db.query(
-            `SELECT slug, title, published_at
-             FROM blog_posts
-             WHERE published = true
-             ORDER BY published_at DESC
-             LIMIT $1`,
-            [limit]
-        );
+    // Get recent posts for sidebar (optionally filtered by language)
+    async getRecent(limit = 5, language = null) {
+        let query = `SELECT slug, title, published_at FROM blog_posts WHERE published = true`;
+        const params = [];
+        let paramIndex = 1;
+
+        if (language) {
+            query += ` AND language = $${paramIndex}`;
+            params.push(language);
+            paramIndex++;
+        }
+
+        query += ` ORDER BY published_at DESC LIMIT $${paramIndex}`;
+        params.push(limit);
+
+        const result = await db.query(query, params);
         return result.rows;
     },
 

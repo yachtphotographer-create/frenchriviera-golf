@@ -7,17 +7,26 @@ const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
 // GET /blog - Blog index
 router.get('/', async (req, res) => {
     try {
-        const posts = await BlogPost.findAll();
+        const lang = req.lang || 'en';
+        const posts = await BlogPost.findAll(20, lang);
 
         const breadcrumbs = [
             { "@type": "ListItem", "position": 1, "name": "Home", "item": APP_URL },
-            { "@type": "ListItem", "position": 2, "name": "Blog" }
+            { "@type": "ListItem", "position": 2, "name": lang === 'fr' ? 'Blog' : 'Blog' }
         ];
 
+        const title = lang === 'fr'
+            ? 'Blog Golf - Conseils, Guides & Actualités'
+            : 'Golf Blog - Tips, Guides & News';
+
+        const metaDescription = lang === 'fr'
+            ? 'Conseils de golf experts, guides de parcours et actualités de la Côte d\'Azur. Découvrez les meilleures expériences de golf sur la Riviera française.'
+            : 'Expert golf tips, course guides, and news from the French Riviera. Discover the best golf experiences on the Côte d\'Azur.';
+
         res.render('blog/index', {
-            title: 'Golf Blog - Tips, Guides & News',
+            title,
             posts,
-            metaDescription: 'Expert golf tips, course guides, and news from the French Riviera. Discover the best golf experiences on the Côte d\'Azur.',
+            metaDescription,
             canonicalPath: '/blog',
             keywords: 'french riviera golf blog, golf tips cote d azur, golf guides france, riviera golf news',
             breadcrumbs
@@ -37,7 +46,8 @@ router.get('/:slug', async (req, res) => {
             return res.redirect('/blog');
         }
 
-        const recentPosts = await BlogPost.getRecent(5);
+        // Get recent posts in the same language as the current post
+        const recentPosts = await BlogPost.getRecent(5, post.language || 'en');
 
         const breadcrumbs = [
             { "@type": "ListItem", "position": 1, "name": "Home", "item": APP_URL },

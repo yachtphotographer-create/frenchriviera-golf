@@ -1,7 +1,7 @@
 <header class="header">
     <nav class="nav container">
         <a href="/" class="nav-logo">
-            <span class="logo-text">French Riviera Golf</span>
+            <img src="/images/logo.png" alt="French Riviera Golf" class="nav-logo-img">
         </a>
 
         <button class="nav-toggle" aria-label="Toggle menu" onclick="toggleMobileMenu()">
@@ -11,11 +11,11 @@
         </button>
 
         <ul class="nav-menu" id="nav-menu">
-            <li><a href="/courses" class="nav-link">Courses</a></li>
-            <li><a href="/blog" class="nav-link">Blog</a></li>
+            <li><a href="/courses" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.courses : 'Courses' %></a></li>
+            <li><a href="/blog" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.blog : 'Blog' %></a></li>
             <% if (user) { %>
-                <li><a href="/games" class="nav-link">Find Games</a></li>
-                <li><a href="/available" class="nav-link">Players</a></li>
+                <li><a href="/games" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.findGames : 'Find Games' %></a></li>
+                <li><a href="/available" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.players : 'Players' %></a></li>
                 <li>
                     <a href="/notifications" class="nav-link nav-notifications">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -34,19 +34,26 @@
                         <span><%= user.display_name %></span>
                     </button>
                     <ul class="nav-dropdown-menu">
-                        <li><a href="/dashboard">Dashboard</a></li>
-                        <li><a href="/profile">My Profile</a></li>
-                        <li><a href="/profile/edit">Edit Profile</a></li>
-                        <li><a href="/games/mine">My Games</a></li>
-                        <li><a href="/availability/create">Set Availability</a></li>
+                        <li><a href="/dashboard"><%= typeof t !== 'undefined' ? t.nav.dashboard : 'Dashboard' %></a></li>
+                        <li><a href="/profile"><%= typeof t !== 'undefined' ? t.nav.myProfile : 'My Profile' %></a></li>
+                        <li><a href="/profile/edit"><%= typeof t !== 'undefined' ? t.nav.editProfile : 'Edit Profile' %></a></li>
+                        <li><a href="/games/mine"><%= typeof t !== 'undefined' ? t.nav.myGames : 'My Games' %></a></li>
+                        <li><a href="/availability/create"><%= typeof t !== 'undefined' ? t.nav.setAvailability : 'Set Availability' %></a></li>
                         <li class="nav-dropdown-divider"></li>
-                        <li><a href="/auth/logout">Logout</a></li>
+                        <li><a href="/auth/logout"><%= typeof t !== 'undefined' ? t.nav.logout : 'Logout' %></a></li>
                     </ul>
                 </li>
             <% } else { %>
-                <li><a href="/auth/login" class="nav-link">Login</a></li>
-                <li><a href="/auth/register" class="btn btn-primary btn-sm">Sign Up</a></li>
+                <li><a href="/auth/login" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.login : 'Login' %></a></li>
+                <li><a href="/auth/register" class="btn btn-primary btn-sm"><%= typeof t !== 'undefined' ? t.nav.signUp : 'Sign Up' %></a></li>
             <% } %>
+
+            <!-- Language Switcher -->
+            <li class="nav-lang-switcher">
+                <a href="?lang=en" class="lang-btn <%= (typeof lang !== 'undefined' && lang === 'en') ? 'active' : '' %>" title="English">EN</a>
+                <span class="lang-divider">|</span>
+                <a href="?lang=fr" class="lang-btn <%= (typeof lang !== 'undefined' && lang === 'fr') ? 'active' : '' %>" title="Français">FR</a>
+            </li>
         </ul>
     </nav>
 </header>

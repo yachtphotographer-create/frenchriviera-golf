@@ -166,6 +166,12 @@ router.get('/:slug', async (req, res) => {
             return res.redirect('/courses');
         }
 
+        // Set localized description based on language preference
+        const lang = req.lang || 'en';
+        course.description = (lang === 'fr' && course.description_fr)
+            ? course.description_fr
+            : (course.description_en || '');
+
         // Calculate average rating for schema
         const avgRating = course.reviews && course.reviews.length > 0
             ? (course.reviews.reduce((a, r) => a + r.rating, 0) / course.reviews.length).toFixed(1)
