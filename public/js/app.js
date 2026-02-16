@@ -141,3 +141,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Favorite courses checkbox limit (max 3)
+document.addEventListener('DOMContentLoaded', function() {
+    const courseCheckboxes = document.querySelectorAll('.course-checkbox');
+    const maxCourses = 3;
+
+    if (courseCheckboxes.length > 0) {
+        courseCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const checked = document.querySelectorAll('.course-checkbox:checked');
+                const parent = this.closest('.course-checkbox-item');
+
+                // Toggle selected class on parent
+                if (this.checked) {
+                    parent.classList.add('selected');
+                } else {
+                    parent.classList.remove('selected');
+                }
+
+                // Limit to max 3 selections
+                if (checked.length > maxCourses) {
+                    this.checked = false;
+                    parent.classList.remove('selected');
+                    alert('You can select up to ' + maxCourses + ' favorite courses.');
+                }
+            });
+        });
+    }
+});

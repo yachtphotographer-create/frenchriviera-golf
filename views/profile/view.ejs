@@ -79,6 +79,20 @@
                 </div>
             </section>
 
+            ${typeof favoriteCourses !== 'undefined' && favoriteCourses && favoriteCourses.length > 0 ?
+                '<section class="profile-section">' +
+                    '<h2>Favorite Courses</h2>' +
+                    '<div class="favorite-courses-display">' +
+                        favoriteCourses.map(function(course) {
+                            return '<a href="/courses/' + course.slug + '" class="favorite-course-badge">' +
+                                '<span class="course-name">' + course.name + '</span>' +
+                                '<span class="course-city">' + course.city + '</span>' +
+                            '</a>';
+                        }).join('') +
+                    '</div>' +
+                '</section>' : ''
+            }
+
             ${profile.vibe || profile.group_preference || profile.post_round ?
                 `<section class="profile-section">
                     <h2>Playing Style</h2>

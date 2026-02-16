@@ -88,7 +88,7 @@ const User = {
             'location_type', 'location_city', 'visiting_from', 'visiting_until', 'phone',
             'handicap', 'handicap_type', 'playing_level', 'pace_preference',
             'transport_preference', 'typical_tee_time', 'usual_days',
-            'vibe', 'group_preference', 'post_round'
+            'vibe', 'group_preference', 'post_round', 'favorite_courses'
         ];
 
         for (const field of allowedFields) {
@@ -147,7 +147,7 @@ const User = {
                     location_type, location_city, handicap, handicap_type, playing_level,
                     pace_preference, transport_preference, typical_tee_time, usual_days,
                     vibe, group_preference, post_round, games_played, average_rating,
-                    total_ratings, created_at
+                    total_ratings, favorite_courses, created_at
              FROM users WHERE id = $1`,
             [userId]
         );

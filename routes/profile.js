@@ -11,10 +11,20 @@ const fs = require('fs');
 router.get('/', isAuthenticated, async (req, res) => {
     try {
         const user = await User.findById(req.session.user.id);
+
+        // Fetch favorite courses if user has any
+        let favoriteCourses = [];
+        if (user.favorite_courses && user.favorite_courses.length > 0) {
+            const coursePromises = user.favorite_courses.map(id => Course.findById(id));
+            const courses = await Promise.all(coursePromises);
+            favoriteCourses = courses.filter(c => c !== null);
+        }
+
         res.render('profile/view', {
             title: 'My Profile',
             profile: user,
-            isOwnProfile: true
+            isOwnProfile: true,
+            favoriteCourses
         });
     } catch (err) {
         console.error('Profile error:', err);
@@ -49,13 +59,20 @@ router.post('/edit', isAuthenticated, async (req, res) => {
             location_type, location_city, visiting_from, visiting_until, phone,
             handicap, handicap_type, playing_level, pace_preference,
             transport_preference, typical_tee_time, usual_days,
-            vibe, group_preference, post_round
+            vibe, group_preference, post_round, favorite_courses
         } = req.body;
 
         // Process languages array
         const languagesArray = languages ?
             (Array.isArray(languages) ? languages : languages.split(',').map(l => l.trim()).filter(Boolean)) :
             null;
+
+        // Process favorite courses array (max 3)
+        let favoriteCoursesArray = null;
+        if (favorite_courses) {
+            const coursesArr = Array.isArray(favorite_courses) ? favorite_courses : [favorite_courses];
+            favoriteCoursesArray = coursesArr.map(id => parseInt(id)).filter(id => !isNaN(id)).slice(0, 3);
+        }
 
         const profileData = {
             display_name: display_name || undefined,
@@ -76,7 +93,8 @@ router.post('/edit', isAuthenticated, async (req, res) => {
             usual_days: usual_days || null,
             vibe: vibe || null,
             group_preference: group_preference || null,
-            post_round: post_round || null
+            post_round: post_round || null,
+            favorite_courses: favoriteCoursesArray
         };
 
         await User.updateProfile(req.session.user.id, profileData);
@@ -143,10 +161,19 @@ router.get('/:id', async (req, res) => {
 
         const isOwnProfile = req.session.user && req.session.user.id === userId;
 
+        // Fetch favorite courses if user has any
+        let favoriteCourses = [];
+        if (profile.favorite_courses && profile.favorite_courses.length > 0) {
+            const coursePromises = profile.favorite_courses.map(id => Course.findById(id));
+            const courses = await Promise.all(coursePromises);
+            favoriteCourses = courses.filter(c => c !== null);
+        }
+
         res.render('profile/view', {
             title: profile.display_name,
             profile,
-            isOwnProfile
+            isOwnProfile,
+            favoriteCourses
         });
 
     } catch (err) {

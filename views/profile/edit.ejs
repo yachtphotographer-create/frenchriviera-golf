@@ -186,6 +186,21 @@
                 </div>
             </section>
 
+            <section class="form-section">
+                <h2>Favorite Courses</h2>
+                <p class="form-hint">Select up to 3 courses you enjoy playing (optional)</p>
+                <div class="favorite-courses-list">
+                    ${courses.map(course => {
+                        const isChecked = profile.favorite_courses && profile.favorite_courses.includes(course.id);
+                        return '<label class="course-checkbox-item' + (isChecked ? ' selected' : '') + '">' +
+                            '<input type="checkbox" name="favorite_courses" value="' + course.id + '"' + (isChecked ? ' checked' : '') + ' class="course-checkbox">' +
+                            '<span class="course-checkbox-name">' + course.name + '</span>' +
+                            '<span class="course-checkbox-location">' + course.city + '</span>' +
+                        '</label>';
+                    }).join('')}
+                </div>
+            </section>
+
             <div class="form-actions">
                 <a href="/profile" class="btn btn-outline">Cancel</a>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
