@@ -260,9 +260,9 @@ io.on('connection', (socket) => {
             const Message = require('./models/Message');
             const Game = require('./models/Game');
 
-            // Check if user is in the game
+            // Check if user is in the game (accepted or creator)
             const player = await Game.isPlayerInGame(gameId, session.user.id);
-            if (!player || player.status !== 'accepted') {
+            if (!player || (player.status !== 'accepted' && player.role !== 'creator')) {
                 return;
             }
 
@@ -285,6 +285,27 @@ io.on('connection', (socket) => {
                 profile_photo: fullMessage.profile_photo,
                 created_at: fullMessage.created_at
             });
+
+            // Create database notifications for other players in the game
+            try {
+                const Notification = require('./models/Notification');
+                const gamePlayers = await Game.getPlayers(gameId);
+
+                for (const p of gamePlayers) {
+                    // Don't notify the sender
+                    if (p.user_id !== session.user.id && (p.status === 'accepted' || p.role === 'creator')) {
+                        await Notification.create({
+                            user_id: p.user_id,
+                            type: 'new_message',
+                            title: `New message from ${session.user.display_name}`,
+                            message: content.trim().substring(0, 100),
+                            link: `/games/${gameId}`
+                        });
+                    }
+                }
+            } catch (notifErr) {
+                console.error('Error creating chat notifications:', notifErr);
+            }
 
         } catch (err) {
             console.error('Error sending message:', err);
