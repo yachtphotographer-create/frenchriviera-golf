@@ -162,7 +162,9 @@ const Game = {
         const result = await db.query(
             `INSERT INTO game_players (game_id, user_id, role, status)
              VALUES ($1, $2, 'player', 'pending')
-             ON CONFLICT (game_id, user_id) DO NOTHING
+             ON CONFLICT (game_id, user_id) DO UPDATE
+             SET status = 'pending', updated_at = NOW()
+             WHERE game_players.status IN ('withdrawn', 'declined')
              RETURNING *`,
             [gameId, userId]
         );
