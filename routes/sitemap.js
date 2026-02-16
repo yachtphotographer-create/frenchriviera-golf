@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Course = require('../models/Course');
+const BlogPost = require('../models/BlogPost');
 
 const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
 
@@ -48,6 +49,18 @@ router.get('/sitemap.xml', async (req, res) => {
                 changefreq: 'weekly',
                 priority: '0.8',
                 lastmod: course.updated_at ? new Date(course.updated_at).toISOString().split('T')[0] : null
+            });
+        });
+
+        // Add blog posts
+        const blogPosts = await BlogPost.findAll();
+        urls.push({ loc: '/blog', changefreq: 'weekly', priority: '0.7' });
+        blogPosts.forEach(post => {
+            urls.push({
+                loc: `/blog/${post.slug}`,
+                changefreq: 'monthly',
+                priority: '0.6',
+                lastmod: post.updated_at ? new Date(post.updated_at).toISOString().split('T')[0] : null
             });
         });
 
