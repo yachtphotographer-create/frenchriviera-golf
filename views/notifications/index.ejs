@@ -13,9 +13,8 @@
         <div class="notifications-list">
             ${notifications && notifications.length > 0 ?
                 notifications.map(notif => `
-                    <a href="${notif.link || '#'}"
-                       class="notification-item ${notif.read ? 'read' : 'unread'}"
-                       onclick="${!notif.read ? `fetch('/notifications/${notif.id}/read', {method:'POST'})` : ''}">
+                    <a href="${!notif.read && notif.link ? '/notifications/' + notif.id + '/click?redirect=' + encodeURIComponent(notif.link) : (notif.link || '#')}"
+                       class="notification-item ${notif.read ? 'read' : 'unread'}">
                         <div class="notification-icon ${notif.type}">
                             ${notif.type === 'game_request' ? '&#128101;' :
                               notif.type === 'game_accepted' ? '&#9989;' :

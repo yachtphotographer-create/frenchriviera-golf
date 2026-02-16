@@ -40,6 +40,22 @@ router.post('/:id/read', isAuthenticated, async (req, res) => {
     }
 });
 
+// GET /notifications/:id/click - Mark as read and redirect to link (for clicking on notifications)
+router.get('/:id/click', isAuthenticated, async (req, res) => {
+    try {
+        const notificationId = parseInt(req.params.id);
+        await markAsRead(notificationId, req.session.user.id);
+
+        // Redirect to the notification link
+        const redirect = req.query.redirect || '/notifications';
+        res.redirect(redirect);
+
+    } catch (err) {
+        console.error('Notification click error:', err);
+        res.redirect('/notifications');
+    }
+});
+
 // POST /notifications/read-all - Mark all as read
 router.post('/read-all', isAuthenticated, async (req, res) => {
     try {
