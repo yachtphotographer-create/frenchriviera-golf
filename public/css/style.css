@@ -867,7 +867,7 @@ h3 { font-size: 1.375rem; }
 }
 
 .course-card {
-    background: var(--glass-bg);
+    background: #f0f9ff;
     border: 2px solid #7DD3FC;
     border-radius: var(--radius-xl);
     overflow: hidden;
@@ -878,7 +878,7 @@ h3 { font-size: 1.375rem; }
 
 .course-card:hover {
     transform: translateY(-6px);
-    background: var(--glass-bg-hover);
+    background: #e0f2fe;
     border-color: #38BDF8;
     box-shadow: var(--shadow-glass-hover);
 }
