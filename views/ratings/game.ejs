@@ -27,41 +27,49 @@
                         <div class="rating-criteria">
                             <div class="rating-item">
                                 <label>Punctuality</label>
-                                <div class="star-rating" data-name="ratings[${index}][punctuality]">
-                                    ${[5,4,3,2,1].map(n => `
-                                        <input type="radio" name="ratings[${index}][punctuality]" value="${n}" id="punct_${index}_${n}" required>
-                                        <label for="punct_${index}_${n}">&#9733;</label>
-                                    `).join('')}
+                                <div class="star-rating">
+                                    <input type="hidden" name="ratings[${index}][punctuality]" value="" required>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
                                 </div>
                             </div>
 
                             <div class="rating-item">
                                 <label>Pace of Play</label>
-                                <div class="star-rating" data-name="ratings[${index}][pace_of_play]">
-                                    ${[5,4,3,2,1].map(n => `
-                                        <input type="radio" name="ratings[${index}][pace_of_play]" value="${n}" id="pace_${index}_${n}" required>
-                                        <label for="pace_${index}_${n}">&#9733;</label>
-                                    `).join('')}
+                                <div class="star-rating">
+                                    <input type="hidden" name="ratings[${index}][pace_of_play]" value="" required>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
                                 </div>
                             </div>
 
                             <div class="rating-item">
                                 <label>Friendliness</label>
-                                <div class="star-rating" data-name="ratings[${index}][friendliness]">
-                                    ${[5,4,3,2,1].map(n => `
-                                        <input type="radio" name="ratings[${index}][friendliness]" value="${n}" id="friend_${index}_${n}" required>
-                                        <label for="friend_${index}_${n}">&#9733;</label>
-                                    `).join('')}
+                                <div class="star-rating">
+                                    <input type="hidden" name="ratings[${index}][friendliness]" value="" required>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
                                 </div>
                             </div>
 
                             <div class="rating-item">
                                 <label>Would Play Again</label>
-                                <div class="star-rating" data-name="ratings[${index}][would_play_again]">
-                                    ${[5,4,3,2,1].map(n => `
-                                        <input type="radio" name="ratings[${index}][would_play_again]" value="${n}" id="again_${index}_${n}" required>
-                                        <label for="again_${index}_${n}">&#9733;</label>
-                                    `).join('')}
+                                <div class="star-rating">
+                                    <input type="hidden" name="ratings[${index}][would_play_again]" value="" required>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
+                                    <span class="star">&#9733;</span>
                                 </div>
                             </div>
                         </div>
@@ -93,12 +101,60 @@
 .rating-avatar-placeholder { width: 56px; height: 56px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 600; }
 .rating-player h3 { margin: 0; }
 .rating-criteria { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg); margin-bottom: var(--spacing-lg); }
-.rating-item label:first-child { display: block; font-weight: 500; margin-bottom: var(--spacing-sm); }
-.star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+.rating-item > label:first-child { display: block; font-weight: 500; margin-bottom: var(--spacing-sm); }
+.star-rating { display: flex; gap: 4px; }
 .star-rating input { display: none; }
-.star-rating label { font-size: 1.5rem; color: var(--color-border); cursor: pointer; padding: 0 2px; }
-.star-rating label:hover, .star-rating label:hover ~ label,
-.star-rating input:checked ~ label { color: var(--color-secondary); }
+.star-rating .star { font-size: 1.75rem; color: #ddd; cursor: pointer; transition: color 0.15s; }
+.star-rating .star:hover, .star-rating .star.active { color: #f4c430; }
+.star-rating .star.hovered { color: #f4c430; }
 @media (max-width: 768px) { .rating-criteria { grid-template-columns: 1fr; } }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.star-rating').forEach(function(container) {
+        const stars = container.querySelectorAll('.star');
+        const input = container.querySelector('input[type="hidden"]');
+
+        stars.forEach(function(star, index) {
+            star.addEventListener('click', function() {
+                const value = index + 1;
+                input.value = value;
+                updateStars(container, value);
+            });
+
+            star.addEventListener('mouseenter', function() {
+                const value = index + 1;
+                highlightStars(container, value);
+            });
+
+            star.addEventListener('mouseleave', function() {
+                const currentValue = parseInt(input.value) || 0;
+                updateStars(container, currentValue);
+            });
+        });
+    });
+
+    function updateStars(container, value) {
+        container.querySelectorAll('.star').forEach(function(star, index) {
+            if (index < value) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+            star.classList.remove('hovered');
+        });
+    }
+
+    function highlightStars(container, value) {
+        container.querySelectorAll('.star').forEach(function(star, index) {
+            if (index < value) {
+                star.classList.add('hovered');
+            } else {
+                star.classList.remove('hovered');
+            }
+        });
+    }
+});
+</script>
 ` }) %>
