@@ -402,8 +402,8 @@ h3 { font-size: 1.375rem; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-md) 0;
-    height: 56px;
+    padding: var(--spacing-sm) 0;
+    min-height: 90px;
 }
 
 .nav-logo {
@@ -418,7 +418,7 @@ h3 { font-size: 1.375rem; }
 }
 
 .nav-logo-img {
-    height: 44px;
+    height: 80px;
     width: auto;
     object-fit: contain;
 }
@@ -1926,27 +1926,40 @@ h3 { font-size: 1.375rem; }
     .nav-menu {
         display: none;
         position: fixed;
-        top: 56px;
+        top: 90px;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
+        background: #ffffff;
         flex-direction: column;
         padding: var(--spacing-xl);
-        gap: var(--spacing-md);
+        gap: var(--spacing-sm);
         z-index: 99;
+        overflow-y: auto;
+        align-items: center;
+        text-align: center;
     }
 
     .nav-menu.active {
         display: flex;
     }
 
+    .nav-menu li {
+        width: 100%;
+        max-width: 300px;
+    }
+
     .nav-menu .nav-link {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
         padding: var(--spacing-md);
         border-bottom: 1px solid var(--glass-border);
+        display: block;
+    }
+
+    .nav-menu .btn {
+        width: 100%;
+        text-align: center;
+        margin-top: var(--spacing-sm);
     }
 
     .nav-toggle {
@@ -1969,7 +1982,7 @@ h3 { font-size: 1.375rem; }
     }
 
     .nav-logo-img {
-        height: 36px;
+        height: 60px;
     }
 
     .features-grid,
