@@ -82,13 +82,17 @@ router.get('/:slug', async (req, res) => {
             }
         };
 
+        // Default OG image for blog posts without featured images
+        const defaultBlogOgImage = APP_URL + '/images/og-default.png';
+        const blogOgImage = post.featured_image ? APP_URL + post.featured_image : defaultBlogOgImage;
+
         res.render('blog/post', {
             title: post.title,
             post,
             recentPosts,
             metaDescription: post.meta_description || post.excerpt,
             canonicalPath: '/blog/' + post.slug,
-            ogImage: post.featured_image ? APP_URL + post.featured_image : null,
+            ogImage: blogOgImage,
             keywords: `${post.title}, french riviera golf, ${post.category || 'golf tips'}`,
             breadcrumbs,
             schema

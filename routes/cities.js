@@ -166,6 +166,41 @@ router.get('/golf-in-:city', async (req, res) => {
             name: cityConfig[slug]?.name || slug
         }));
 
+        // FAQPage schema for city pages
+        const faqSchema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": `How many golf courses are there in ${config.name}?`,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": `There are ${courses.length} golf courses in the ${config.name} area of the French Riviera.`
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": `What is the best time to play golf in ${config.name}?`,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": `The best time to play golf in ${config.name} is from April to June and September to November when the weather is pleasant and courses are in excellent condition.`
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": `Can I find playing partners in ${config.name}?`,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": `Yes! French Riviera Golf connects golfers looking for playing partners in ${config.name}. You can join open games or post your availability to find others.`
+                    }
+                }
+            ]
+        };
+
+        // Default OG image (city-specific if available, fallback to default)
+        const ogImage = (process.env.APP_URL || 'https://frenchriviera.golf') + '/images/og-default.png';
+
         res.render('courses/city-landing', {
             title: `Golf in ${config.name} - French Riviera Golf Courses`,
             cityName: config.name,
@@ -175,9 +210,10 @@ router.get('/golf-in-:city', async (req, res) => {
             nearbyCities,
             metaDescription: `Discover ${courses.length} golf courses in ${config.name} on the French Riviera. ${config.description.substring(0, 100)}...`,
             canonicalPath: `/golf-in-${citySlug}`,
+            ogImage,
             keywords: `golf ${config.name.toLowerCase()}, golf courses ${config.name.toLowerCase()}, ${config.name.toLowerCase()} golf club, golf french riviera ${config.name.toLowerCase()}, tee times ${config.name.toLowerCase()}, golf holidays ${config.name.toLowerCase()}`,
             breadcrumbs,
-            schema: [schema, itemListSchema]
+            schema: [schema, itemListSchema, faqSchema]
         });
 
     } catch (err) {

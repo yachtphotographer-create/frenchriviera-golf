@@ -239,7 +239,35 @@ router.get('/:slug', async (req, res) => {
         if (course.holes) schema.numberOfHoles = course.holes;
         if (course.year_opened) schema.foundingDate = course.year_opened.toString();
         if (course.photos && course.photos.length > 0) {
-            schema.image = course.photos.map(p => (process.env.APP_URL || 'https://frenchriviera.golf') + p);
+            // Handle both absolute URLs (http...) and relative paths
+            const baseUrl = process.env.APP_URL || 'https://frenchriviera.golf';
+            schema.image = course.photos.map(p => p.startsWith('http') ? p : baseUrl + p);
+        }
+
+        // Add PriceSpecification schema for green fees (SEO for pricing)
+        if (course.green_fee_info) {
+            // Extract price range from green_fee_info text (e.g., "€80-140")
+            const priceMatch = course.green_fee_info.match(/€(\d+)(?:-(\d+))?/);
+            if (priceMatch) {
+                const minPrice = priceMatch[1];
+                const maxPrice = priceMatch[2] || priceMatch[1];
+                schema.priceRange = `€${minPrice}-€${maxPrice}`;
+                schema.offers = {
+                    "@type": "Offer",
+                    "name": "Green Fee",
+                    "description": course.green_fee_info,
+                    "priceCurrency": "EUR",
+                    "price": minPrice,
+                    "priceSpecification": {
+                        "@type": "PriceSpecification",
+                        "minPrice": minPrice,
+                        "maxPrice": maxPrice,
+                        "priceCurrency": "EUR"
+                    },
+                    "availability": "https://schema.org/InStock",
+                    "validFrom": new Date().toISOString().split('T')[0]
+                };
+            }
         }
 
         // Add FAQ Schema for rich snippets
@@ -307,13 +335,27 @@ router.get('/:slug', async (req, res) => {
         // SEO keywords specific to this course
         const keywords = `${course.name}, golf ${course.city}, golf ${course.department_name}, ${course.holes} hole golf course france, golf french riviera, tee time ${course.city}, green fee ${course.city}`;
 
+        // Get related courses for internal linking
+        const relatedCourses = await Course.getRelated(course.id, course.department, 4);
+
+        // Default OG image for courses without photos
+        const appUrl = process.env.APP_URL || 'https://frenchriviera.golf';
+        const defaultOgImage = appUrl + '/images/og-default.png';
+        let courseOgImage = defaultOgImage;
+        if (course.photos && course.photos.length > 0) {
+            // Check if photo URL is already absolute (starts with http)
+            const photoUrl = course.photos[0];
+            courseOgImage = photoUrl.startsWith('http') ? photoUrl : appUrl + photoUrl;
+        }
+
         res.render('courses/detail', {
             title: course.name,
             course,
+            relatedCourses,
             metaDescription: course.description_en || `Play golf at ${course.name} in ${course.city}, French Riviera. ${course.holes} holes, par ${course.par}. Book tee times, find playing partners, read reviews.`,
             canonicalPath: `/courses/${course.slug}`,
             ogType: 'place',
-            ogImage: course.photos && course.photos.length > 0 ? (process.env.APP_URL || 'https://frenchriviera.golf') + course.photos[0] : null,
+            ogImage: courseOgImage,
             keywords,
             breadcrumbs,
             schema: combinedSchema

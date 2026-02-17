@@ -170,6 +170,23 @@ const Course = {
             [lat, lng, radiusKm, limit]
         );
         return result.rows;
+    },
+
+    // Get related courses (same department, excluding current course)
+    async getRelated(courseId, department, limit = 4) {
+        const result = await db.query(
+            `SELECT c.id, c.name, c.slug, c.city, c.holes, c.par,
+                    COALESCE(AVG(cr.rating), 0) as avg_rating,
+                    COUNT(cr.id) as review_count
+             FROM courses c
+             LEFT JOIN course_reviews cr ON c.id = cr.course_id AND cr.approved = true
+             WHERE c.active = true AND c.department = $1 AND c.id != $2
+             GROUP BY c.id
+             ORDER BY RANDOM()
+             LIMIT $3`,
+            [department, courseId, limit]
+        );
+        return result.rows;
     }
 };
 

@@ -324,6 +324,24 @@
                     <p class="text-muted">Looking for playing partners at ${course.name}?</p>
                     <a href="/available?course=${course.id}" class="btn btn-outline btn-block btn-sm">Find Available Players</a>
                 </div>
+
+                ${typeof relatedCourses !== 'undefined' && relatedCourses && relatedCourses.length > 0 ? `
+                <div class="card related-courses-card">
+                    <h3>Nearby Courses</h3>
+                    <ul class="related-courses-list">
+                        ${relatedCourses.map(rc => `
+                            <li>
+                                <a href="/courses/${rc.slug}">
+                                    <span class="rc-name">${rc.name}</span>
+                                    <span class="rc-meta">${rc.city} • ${rc.holes} holes</span>
+                                    ${parseFloat(rc.avg_rating) > 0 ? `<span class="rc-rating">${'★'.repeat(Math.round(parseFloat(rc.avg_rating)))}</span>` : ''}
+                                </a>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <a href="/courses?department=${course.department}" class="btn btn-outline btn-block btn-sm">All ${course.department_name} Courses</a>
+                </div>
+                ` : ''}
             </aside>
         </div>
     </div>
