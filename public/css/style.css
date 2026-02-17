@@ -1471,6 +1471,27 @@ h3 { font-size: 1.375rem; }
     font-size: 1.125rem;
 }
 
+.course-hero-image {
+    margin: var(--spacing-lg) 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-glass);
+}
+
+.course-hero-image img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .course-hero-image img {
+        max-height: 250px;
+    }
+}
+
 .course-description {
     font-size: 1.1rem;
     line-height: 1.8;
