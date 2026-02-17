@@ -4,6 +4,12 @@
 <%- include('../layouts/main', { body: `
 <div class="courses-page">
     <div class="container">
+        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+            <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a href="/">${isFr ? 'Accueil' : 'Home'}</a></li>
+                <li class="breadcrumb-item active"><span>${isFr ? 'Parcours de Golf' : 'Golf Courses'}</span></li>
+            </ol>
+        </nav>
         <div class="page-header">
             <h1>${isFr ? 'Parcours de Golf' : 'Golf Courses'}</h1>
             <p class="page-subtitle">${isFr ? subtitleFr : subtitleEn}</p>

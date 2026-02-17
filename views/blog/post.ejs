@@ -4,10 +4,12 @@
 <%- include('../layouts/main', { body: `
 <article class="blog-post-page">
     <div class="container">
-        <nav class="breadcrumb">
-            <a href="/">${isFr ? 'Accueil' : 'Home'}</a> &rsaquo;
-            <a href="/blog">Blog</a> &rsaquo;
-            <span>${post.title}</span>
+        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+            <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a href="/">${isFr ? 'Accueil' : 'Home'}</a></li>
+                <li class="breadcrumb-item"><a href="/blog">Blog</a></li>
+                <li class="breadcrumb-item active"><span>${post.title}</span></li>
+            </ol>
         </nav>
 
         <header class="blog-post-header">

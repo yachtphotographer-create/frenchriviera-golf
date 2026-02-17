@@ -2,10 +2,12 @@
 <div class="city-landing-page">
     <div class="city-hero">
         <div class="container">
-            <nav class="breadcrumb">
-                <a href="/">Home</a> &rsaquo;
-                <a href="/courses">Golf Courses</a> &rsaquo;
-                <span>Golf in ${cityName}</span>
+            <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/courses">Golf Courses</a></li>
+                    <li class="breadcrumb-item active"><span>Golf in ${cityName}</span></li>
+                </ol>
             </nav>
             <h1>Golf in ${cityName}</h1>
             <p class="city-hero-subtitle">${courses.length} golf course${courses.length !== 1 ? 's' : ''} on the French Riviera</p>

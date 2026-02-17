@@ -187,6 +187,20 @@ const Course = {
             [department, courseId, limit]
         );
         return result.rows;
+    },
+
+    // Get aggregate review stats across all courses (for directory page schema)
+    async getAggregateStats() {
+        const result = await db.query(
+            `SELECT
+                COUNT(DISTINCT c.id) as course_count,
+                COUNT(cr.id) as total_reviews,
+                COALESCE(AVG(cr.rating), 0) as overall_avg_rating
+             FROM courses c
+             LEFT JOIN course_reviews cr ON c.id = cr.course_id AND cr.approved = true
+             WHERE c.active = true`
+        );
+        return result.rows[0];
     }
 };
 

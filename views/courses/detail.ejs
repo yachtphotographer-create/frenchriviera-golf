@@ -2,10 +2,13 @@
 <div class="course-detail-page">
     <div class="course-hero">
         <div class="container">
-            <nav class="breadcrumb">
-                <a href="/courses">Courses</a> &rsaquo;
-                <a href="/courses?department=${course.department}">${course.department_name}</a> &rsaquo;
-                <span>${course.name}</span>
+            <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
+                    <li class="breadcrumb-item"><a href="/courses?department=${course.department}">${course.department_name}</a></li>
+                    <li class="breadcrumb-item active"><span>${course.name}</span></li>
+                </ol>
             </nav>
             <h1>${course.name}</h1>
             <p class="course-hero-location">

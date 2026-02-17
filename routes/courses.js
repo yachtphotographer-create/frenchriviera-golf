@@ -8,6 +8,7 @@ const { isAuthenticated } = require('../middleware/auth');
 router.get('/', async (req, res) => {
     try {
         const { department, search } = req.query;
+        const appUrl = process.env.APP_URL || 'https://frenchriviera.golf';
 
         let courses;
         if (search) {
@@ -18,13 +19,16 @@ router.get('/', async (req, res) => {
             courses = await Course.getWithReviewStats();
         }
 
-        // Breadcrumbs
+        // Get aggregate stats for schema
+        const aggregateStats = await Course.getAggregateStats();
+
+        // Breadcrumbs (with item URLs for all but last)
         const breadcrumbs = [
             {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": process.env.APP_URL || 'https://frenchriviera.golf'
+                "item": appUrl
             },
             {
                 "@type": "ListItem",
@@ -33,28 +37,83 @@ router.get('/', async (req, res) => {
             }
         ];
 
-        // ItemList schema for course directory
-        const itemListSchema = {
+        // CollectionPage schema with aggregate rating
+        const collectionSchema = {
             "@context": "https://schema.org",
-            "@type": "ItemList",
+            "@type": "CollectionPage",
             "name": "Golf Courses on the French Riviera",
             "description": "Complete directory of golf courses on the Côte d'Azur",
+            "url": appUrl + '/courses',
             "numberOfItems": courses.length,
-            "itemListElement": courses.slice(0, 10).map((course, index) => ({
-                "@type": "ListItem",
-                "position": index + 1,
-                "item": {
-                    "@type": "GolfCourse",
-                    "name": course.name,
-                    "url": (process.env.APP_URL || 'https://frenchriviera.golf') + '/courses/' + course.slug,
-                    "address": {
-                        "@type": "PostalAddress",
-                        "addressLocality": course.city,
-                        "addressRegion": course.department_name,
-                        "addressCountry": "FR"
+            "mainEntity": {
+                "@type": "ItemList",
+                "name": "Golf Courses on the French Riviera",
+                "numberOfItems": courses.length,
+                "itemListElement": courses.slice(0, 10).map((course, index) => ({
+                    "@type": "ListItem",
+                    "position": index + 1,
+                    "item": {
+                        "@type": "GolfCourse",
+                        "name": course.name,
+                        "url": appUrl + '/courses/' + course.slug,
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": course.city,
+                            "addressRegion": course.department_name,
+                            "addressCountry": "FR"
+                        }
                     }
+                }))
+            }
+        };
+
+        // Add aggregate rating if reviews exist
+        if (aggregateStats.total_reviews > 0) {
+            collectionSchema.aggregateRating = {
+                "@type": "AggregateRating",
+                "ratingValue": parseFloat(aggregateStats.overall_avg_rating).toFixed(1),
+                "reviewCount": parseInt(aggregateStats.total_reviews),
+                "bestRating": "5",
+                "worstRating": "1",
+                "itemReviewed": {
+                    "@type": "ItemList",
+                    "name": "Golf Courses on the French Riviera"
                 }
-            }))
+            };
+        }
+
+        // Faceted search schema for department filter
+        const filterSchema = {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "url": appUrl + '/courses',
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": appUrl + "/courses?search={search_term}"
+                },
+                "query-input": "required name=search_term"
+            },
+            "hasPart": [
+                {
+                    "@type": "WebPageElement",
+                    "name": "Department Filter",
+                    "description": "Filter golf courses by French department",
+                    "potentialAction": [
+                        {
+                            "@type": "Action",
+                            "name": "Alpes-Maritimes (06)",
+                            "target": appUrl + "/courses?department=06"
+                        },
+                        {
+                            "@type": "Action",
+                            "name": "Var (83)",
+                            "target": appUrl + "/courses?department=83"
+                        }
+                    ]
+                }
+            ]
         };
 
         res.render('courses/index', {
@@ -66,7 +125,7 @@ router.get('/', async (req, res) => {
             canonicalPath: '/courses',
             keywords: 'golf courses french riviera, golf cote d azur, best golf courses monaco, cannes golf, nice golf courses, saint tropez golf, golf holidays france',
             breadcrumbs,
-            schema: itemListSchema
+            schema: [collectionSchema, filterSchema]
         });
 
     } catch (err) {
