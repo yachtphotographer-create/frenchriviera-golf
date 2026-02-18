@@ -2458,6 +2458,7 @@ a.favorite-course-badge:hover {
     padding: var(--spacing-2xl) var(--spacing-md);
     max-width: 800px;
     margin: 0 auto;
+    text-align: center;
 }
 
 .static-page .page-header {
@@ -2490,8 +2491,9 @@ a.favorite-course-badge:hover {
 .static-page .content-section ul {
     color: var(--color-text-secondary);
     line-height: 1.7;
-    padding-left: var(--spacing-lg);
+    padding-left: 0;
     margin-bottom: var(--spacing-md);
+    list-style-position: inside;
 }
 
 .static-page .content-section ul li {
@@ -2504,6 +2506,7 @@ a.favorite-course-badge:hover {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--spacing-lg);
     margin-top: var(--spacing-lg);
+    justify-content: center;
 }
 
 .feature-card {
@@ -2625,4 +2628,9 @@ a.favorite-course-badge:hover {
 
 .legal-content a:hover {
     text-decoration: underline;
+}
+
+.legal-content ul {
+    text-align: left;
+    display: inline-block;
 }
