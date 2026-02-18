@@ -129,6 +129,7 @@ const notificationsRoutes = require('./routes/notifications');
 const sitemapRoutes = require('./routes/sitemap');
 const blogRoutes = require('./routes/blog');
 const cityRoutes = require('./routes/cities');
+const pagesRoutes = require('./routes/pages');
 
 app.use('/auth', authLimiter, authRoutes);
 app.use('/profile', profileRoutes);
@@ -141,6 +142,7 @@ app.use('/notifications', notificationsRoutes);
 app.use('/blog', blogRoutes);
 app.use('/', cityRoutes);
 app.use('/', sitemapRoutes);
+app.use('/', pagesRoutes);
 
 // Home page
 app.get('/', async (req, res) => {
