@@ -1,0 +1,28 @@
+<%- include('../layouts/main', { body: `
+<div class="container error-page">
+    <div class="error-content">
+        <h1>500</h1>
+        <h2>${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Erreur serveur' : 'Server Error'}</h2>
+        <p>${typeof htmlLang !== 'undefined' && htmlLang === 'fr'
+            ? 'Une erreur inattendue s\\'est produite. Notre équipe a été notifiée.'
+            : 'An unexpected error occurred. Our team has been notified.'}</p>
+
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">
+                ${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Retour à l\\'accueil' : 'Back to Home'}
+            </a>
+            <a href="javascript:location.reload()" class="btn btn-secondary">
+                ${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Réessayer' : 'Try Again'}
+            </a>
+        </div>
+
+        ${typeof errorId !== 'undefined' && errorId ? `
+        <div class="error-reference">
+            <p>${typeof htmlLang !== 'undefined' && htmlLang === 'fr'
+                ? 'Référence de l\\'erreur :'
+                : 'Error reference:'} <code>${errorId}</code></p>
+        </div>
+        ` : ''}
+    </div>
+</div>
+` }) %>

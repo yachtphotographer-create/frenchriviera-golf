@@ -1,0 +1,31 @@
+<%- include('../layouts/main', { body: `
+<div class="container error-page">
+    <div class="error-content">
+        <h1>404</h1>
+        <h2>${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Page non trouvée' : 'Page Not Found'}</h2>
+        <p>${typeof htmlLang !== 'undefined' && htmlLang === 'fr'
+            ? 'La page que vous recherchez n\\'existe pas ou a été déplacée.'
+            : 'The page you\\'re looking for doesn\\'t exist or has been moved.'}</p>
+
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">
+                ${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Retour à l\\'accueil' : 'Back to Home'}
+            </a>
+            <a href="/games" class="btn btn-secondary">
+                ${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Voir les parties' : 'Browse Games'}
+            </a>
+        </div>
+
+        <div class="error-help">
+            <p>${typeof htmlLang !== 'undefined' && htmlLang === 'fr'
+                ? 'Vous cherchiez peut-être :'
+                : 'You might be looking for:'}</p>
+            <ul>
+                <li><a href="/courses">${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Parcours de golf' : 'Golf Courses'}</a></li>
+                <li><a href="/games">${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Parties disponibles' : 'Available Games'}</a></li>
+                <li><a href="/available">${typeof htmlLang !== 'undefined' && htmlLang === 'fr' ? 'Joueurs disponibles' : 'Available Players'}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+` }) %>

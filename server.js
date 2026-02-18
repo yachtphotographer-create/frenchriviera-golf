@@ -334,18 +334,26 @@ io.on('connection', (socket) => {
 
 // 404 handler
 app.use((req, res) => {
-    res.status(404).render('layouts/main', {
+    console.log(`404 - Page not found: ${req.method} ${req.originalUrl}`);
+    res.status(404).render('errors/404', {
         title: 'Page Not Found',
-        body: '<div class="container"><h1>404 - Page Not Found</h1><p>The page you are looking for does not exist.</p><a href="/">Go Home</a></div>'
+        canonicalPath: req.path
     });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render('layouts/main', {
+    // Generate error ID for tracking
+    const errorId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+
+    // Log with error ID for debugging
+    console.error(`[Error ${errorId}] ${req.method} ${req.originalUrl}`);
+    console.error(`[Error ${errorId}] ${err.stack}`);
+
+    res.status(500).render('errors/500', {
         title: 'Error',
-        body: '<div class="container"><h1>Something went wrong</h1><p>Please try again later.</p><a href="/">Go Home</a></div>'
+        errorId: errorId,
+        canonicalPath: req.path
     });
 });
 
