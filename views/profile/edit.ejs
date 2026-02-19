@@ -14,6 +14,7 @@
                     }
                 </div>
                 <form action="/profile/photo" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
                     <input type="file" name="photo" id="photo" accept="image/*">
                     <label for="photo" class="btn btn-outline">Choose Photo</label>
                     <button type="submit" class="btn btn-primary">Upload</button>
@@ -23,6 +24,7 @@
 
         <!-- Profile Form -->
         <form action="/profile/edit" method="POST" class="profile-form">
+            <input type="hidden" name="_csrf" value="${csrfToken}">
             <section class="form-section">
                 <h2>Basic Info</h2>
 

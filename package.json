@@ -21,6 +21,7 @@
     "bcrypt": "^6.0.0",
     "connect-pg-simple": "^9.0.1",
     "cookie-parser": "^1.4.7",
+    "csrf-csrf": "^3.0.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.0",

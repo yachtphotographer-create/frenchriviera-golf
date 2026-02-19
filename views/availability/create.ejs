@@ -5,6 +5,7 @@
         <p class="text-muted">Let other golfers know when you're free to play</p>
 
         <form action="/availability/create" method="POST" class="availability-form">
+            <input type="hidden" name="_csrf" value="${csrfToken}">
             <section class="form-section">
                 <h2>When are you available?</h2>
 
@@ -75,6 +76,7 @@
                                 ${avail.course_name ? `<span>@ ${avail.course_name}</span>` : ''}
                             </div>
                             <form action="/availability/${avail.id}/delete" method="POST">
+                                <input type="hidden" name="_csrf" value="${csrfToken}">
                                 <button type="submit" class="btn btn-outline btn-sm">Remove</button>
                             </form>
                         </div>

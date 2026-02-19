@@ -2,20 +2,33 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 const { sendEmail } = require('../utils/email');
+const { validateId } = require('../utils/security');
 
-// Simple admin auth - check if user is admin
-const isAdmin = (req, res, next) => {
+// Admin auth middleware - check is_admin flag in database
+const isAdmin = async (req, res, next) => {
     if (!req.session.user) {
         req.session.error = 'Please log in to access admin';
         return res.redirect('/auth/login');
     }
-    // Admin email
-    const adminEmail = 'yachtphotographer@gmail.com';
-    if (req.session.user.email !== adminEmail) {
+
+    try {
+        // Check admin status from database
+        const result = await db.query(
+            'SELECT is_admin FROM users WHERE id = $1',
+            [req.session.user.id]
+        );
+
+        if (!result.rows[0] || !result.rows[0].is_admin) {
+            req.session.error = 'Access denied';
+            return res.redirect('/dashboard');
+        }
+
+        next();
+    } catch (err) {
+        console.error('Admin check error:', err);
         req.session.error = 'Access denied';
         return res.redirect('/dashboard');
     }
-    next();
 };
 
 // Admin dashboard
@@ -255,14 +268,27 @@ router.get('/users', isAdmin, async (req, res) => {
 // Suspend user
 router.post('/users/:id/suspend', isAdmin, async (req, res) => {
     try {
-        const userId = parseInt(req.params.id);
+        const userId = validateId(req.params.id);
+        if (!userId) {
+            req.session.error = 'Invalid user ID';
+            return res.redirect('/admin/users');
+        }
+
+        // Prevent admin from suspending themselves
+        if (userId === req.session.user.id) {
+            req.session.error = 'You cannot suspend yourself';
+            return res.redirect('/admin/users');
+        }
+
         const { reason } = req.body;
+        // Sanitize reason - limit length
+        const sanitizedReason = reason ? reason.substring(0, 500) : 'No reason provided';
 
         await db.query(`
             UPDATE users
             SET suspended = true, suspended_at = NOW(), suspended_reason = $1
             WHERE id = $2
-        `, [reason || 'No reason provided', userId]);
+        `, [sanitizedReason, userId]);
 
         req.session.success = 'User suspended';
         res.redirect('/admin/users');
@@ -276,7 +302,11 @@ router.post('/users/:id/suspend', isAdmin, async (req, res) => {
 // Unsuspend user
 router.post('/users/:id/unsuspend', isAdmin, async (req, res) => {
     try {
-        const userId = parseInt(req.params.id);
+        const userId = validateId(req.params.id);
+        if (!userId) {
+            req.session.error = 'Invalid user ID';
+            return res.redirect('/admin/users');
+        }
 
         await db.query(`
             UPDATE users

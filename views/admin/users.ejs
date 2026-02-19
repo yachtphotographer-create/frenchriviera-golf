@@ -46,7 +46,7 @@
                         <td>${new Date(u.created_at).toLocaleDateString()}</td>
                         <td>
                             ${u.suspended
-                                ? '<form action="/admin/users/' + u.id + '/unsuspend" method="POST" style="display:inline;"><button type="submit" class="btn btn-sm btn-success">Unsuspend</button></form>'
+                                ? '<form action="/admin/users/' + u.id + '/unsuspend" method="POST" style="display:inline;"><input type="hidden" name="_csrf" value="' + csrfToken + '"><button type="submit" class="btn btn-sm btn-success">Unsuspend</button></form>'
                                 : '<button type="button" class="btn btn-sm btn-danger" onclick="showSuspendModal(' + u.id + ', \\'' + u.display_name.replace(/'/g, "\\\\'") + '\\')">Suspend</button>'
                             }
                         </td>
@@ -64,6 +64,7 @@
         <h3>Suspend User</h3>
         <p>Suspend user: <strong id="suspendUserName"></strong></p>
         <form id="suspendForm" method="POST">
+            <input type="hidden" name="_csrf" value="${csrfToken}">
             <div class="form-group">
                 <label for="reason">Reason (optional)</label>
                 <textarea id="reason" name="reason" rows="3" placeholder="Reason for suspension..."></textarea>

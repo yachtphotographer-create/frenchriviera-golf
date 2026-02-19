@@ -27,7 +27,7 @@
                     <h1><a href="/courses/${game.course_slug}">${game.course_name}</a></h1>
                     <p class="game-location">${game.course_city}</p>
 
-                    ${game.note ? `<p class="game-note">"${game.note}"</p>` : ''}
+                    ${game.note ? `<p class="game-note">"${escapeHtml(game.note)}"</p>` : ''}
 
                     <div class="game-meta">
                         <div class="meta-item">
@@ -98,9 +98,11 @@
                                     </div>
                                     <div class="player-actions">
                                         <form action="/games/${game.id}/accept/${player.user_id}" method="POST" style="display:inline;">
+                                            <input type="hidden" name="_csrf" value="${csrfToken}">
                                             <button type="submit" class="btn btn-primary btn-sm">Accept</button>
                                         </form>
                                         <form action="/games/${game.id}/decline/${player.user_id}" method="POST" style="display:inline;">
+                                            <input type="hidden" name="_csrf" value="${csrfToken}">
                                             <button type="submit" class="btn btn-outline btn-sm">Decline</button>
                                         </form>
                                     </div>
@@ -129,7 +131,7 @@
                                                 <span class="message-author">${msg.display_name}</span>
                                                 <span class="message-time">${new Date(msg.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
                                             </div>
-                                            <p class="message-text">${msg.content}</p>
+                                            <p class="message-text">${escapeHtml(msg.content)}</p>
                                         </div>
                                     </div>
                                 `).join('') :
@@ -167,6 +169,7 @@
                         ${game.status === 'open' || game.status === 'full' ? `
                             <form action="/games/${game.id}/cancel" method="POST"
                                   onsubmit="return confirm('Are you sure you want to cancel this game?');">
+                                <input type="hidden" name="_csrf" value="${csrfToken}">
                                 <button type="submit" class="btn btn-outline btn-block">Cancel Game</button>
                             </form>
                         ` : ''}
@@ -174,11 +177,13 @@
                         <p class="text-success">You're playing!</p>
                         <form action="/games/${game.id}/withdraw" method="POST"
                               onsubmit="return confirm('Are you sure you want to withdraw from this game?');">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
                             <button type="submit" class="btn btn-outline btn-block">Withdraw</button>
                         </form>
                     ` : userStatus === 'pending' ? `
                         <p class="text-muted">Your request is pending...</p>
                         <form action="/games/${game.id}/withdraw" method="POST">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
                             <button type="submit" class="btn btn-outline btn-block">Cancel Request</button>
                         </form>
                     ` : userStatus === 'declined' ? `
@@ -187,6 +192,7 @@
                         <p class="text-muted">This game is full.</p>
                     ` : `
                         <form action="/games/${game.id}/join" method="POST">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
                             <button type="submit" class="btn btn-primary btn-block">Request to Join</button>
                         </form>
                     `}

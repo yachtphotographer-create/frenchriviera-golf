@@ -8,8 +8,10 @@ const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { doubleCsrf } = require('csrf-csrf');
 const sessionConfig = require('./config/session');
 const languageMiddleware = require('./middleware/language');
+const { escapeHtml } = require('./utils/security');
 
 const app = express();
 const server = http.createServer(app);
@@ -84,6 +86,29 @@ app.use(cookieParser());
 const sessionMiddleware = session(sessionConfig);
 app.use(sessionMiddleware);
 
+// CSRF Protection
+const { generateToken, doubleCsrfProtection } = doubleCsrf({
+    getSecret: () => process.env.SESSION_SECRET || 'csrf-secret-change-me',
+    cookieName: '__csrf',
+    cookieOptions: {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/'
+    },
+    getTokenFromRequest: (req) => req.body._csrf || req.headers['x-csrf-token']
+});
+
+// Apply CSRF protection to all routes except Socket.io and static files
+app.use((req, res, next) => {
+    // Skip CSRF for GET, HEAD, OPTIONS requests
+    if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+        return next();
+    }
+    // Apply CSRF protection for state-changing requests
+    doubleCsrfProtection(req, res, next);
+});
+
 // Language middleware (must be after cookie-parser)
 app.use(languageMiddleware);
 
@@ -92,11 +117,17 @@ io.use((socket, next) => {
     sessionMiddleware(socket.request, {}, next);
 });
 
-// Make user and notifications available to all templates
+// Make user, notifications, CSRF token, and escape helper available to all templates
 app.use(async (req, res, next) => {
     res.locals.user = req.session.user || null;
     res.locals.appName = process.env.APP_NAME || 'French Riviera Golf';
     res.locals.appUrl = process.env.APP_URL || 'http://localhost:3000';
+
+    // Generate CSRF token for forms
+    res.locals.csrfToken = generateToken(req, res);
+
+    // Make escapeHtml available in templates
+    res.locals.escapeHtml = escapeHtml;
 
     // Get unread notifications count
     if (req.session.user) {

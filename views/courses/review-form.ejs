@@ -12,6 +12,7 @@
             <p class="text-muted">Share your experience to help other golfers</p>
 
             <form action="/courses/${course.slug}/review" method="POST" class="review-form">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <div class="form-group">
                     <label>Overall Rating *</label>
                     <div class="star-rating-input large">

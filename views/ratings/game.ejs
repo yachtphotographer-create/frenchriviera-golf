@@ -10,6 +10,7 @@
                 <a href="/games/${game.id}" class="btn btn-outline">Back to Game</a>
             </div>` :
             `<form action="/ratings/submit" method="POST" class="ratings-form">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <input type="hidden" name="game_id" value="${game.id}">
 
                 ${playersToRate.filter(p => !p.already_rated).map((player, index) => `

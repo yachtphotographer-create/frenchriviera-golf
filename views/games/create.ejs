@@ -5,6 +5,7 @@
         <p class="text-muted">Post a tee time and find playing partners</p>
 
         <form action="/games/create" method="POST" class="game-form">
+            <input type="hidden" name="_csrf" value="${csrfToken}">
             <section class="form-section">
                 <h2>When & Where</h2>
 

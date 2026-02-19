@@ -5,6 +5,7 @@
             <h1>Notifications</h1>
             ${notifications && notifications.some(n => !n.read) ?
                 `<form action="/notifications/read-all" method="POST">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
                     <button type="submit" class="btn btn-outline btn-sm">Mark all as read</button>
                 </form>` : ''
             }
@@ -28,8 +29,8 @@
                               '&#128276;'}
                         </div>
                         <div class="notification-content">
-                            <strong>${notif.title}</strong>
-                            <p>${notif.message}</p>
+                            <strong>${escapeHtml(notif.title)}</strong>
+                            <p>${escapeHtml(notif.message)}</p>
                             <span class="notification-time" data-time="${notif.created_at}">${new Date(notif.created_at).toLocaleDateString()}</span>
                         </div>
                         ${!notif.read ? '<span class="notification-dot"></span>' : ''}

@@ -33,7 +33,7 @@
             ${profile.bio ?
                 `<section class="profile-section">
                     <h2>About</h2>
-                    <p>${profile.bio}</p>
+                    <p>${escapeHtml(profile.bio)}</p>
                 </section>` : ''
             }
 

@@ -12,10 +12,10 @@ const sessionConfig = {
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (reduced from 30)
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
+        sameSite: 'strict' // Stricter CSRF protection
     }
 };
 
