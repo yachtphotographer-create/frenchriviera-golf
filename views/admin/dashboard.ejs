@@ -1,0 +1,85 @@
+<%- include('../layouts/main', { body: `
+<div class="admin-page">
+    <div class="container">
+        <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <a href="/admin/users" class="btn btn-secondary">View All Users</a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">${stats.users}</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${stats.games}</div>
+                <div class="stat-label">Total Games</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${stats.courses}</div>
+                <div class="stat-label">Golf Courses</div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Recent Users</h2>
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Verified</th>
+                            <th>Joined</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${recentUsers.map(u => `
+                        <tr>
+                            <td>${u.id}</td>
+                            <td><a href="/profile/${u.id}">${u.display_name}</a></td>
+                            <td>${u.email}</td>
+                            <td>${u.email_verified ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-warning">No</span>'}</td>
+                            <td>${new Date(u.created_at).toLocaleDateString()}</td>
+                            <td>${u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never'}</td>
+                        </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Recent Games</h2>
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Course</th>
+                            <th>Creator</th>
+                            <th>Status</th>
+                            <th>Spots</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${recentGames.length > 0 ? recentGames.map(g => `
+                        <tr>
+                            <td>${g.id}</td>
+                            <td>${new Date(g.game_date).toLocaleDateString()}</td>
+                            <td>${g.course_name || 'N/A'}</td>
+                            <td>${g.creator_name}</td>
+                            <td><span class="badge badge-${g.status === 'completed' ? 'success' : g.status === 'open' ? 'primary' : 'secondary'}">${g.status}</span></td>
+                            <td>${g.spots_filled}/${g.spots_total}</td>
+                        </tr>
+                        `).join('') : '<tr><td colspan="6" style="text-align:center">No games yet</td></tr>'}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+` }) %>

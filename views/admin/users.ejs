@@ -1,0 +1,43 @@
+<%- include('../layouts/main', { body: `
+<div class="admin-page">
+    <div class="container">
+        <div class="admin-header">
+            <h1>All Users</h1>
+            <a href="/admin" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+
+        <p class="admin-count">${users.length} registered users</p>
+
+        <div class="admin-table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Handicap</th>
+                        <th>Games</th>
+                        <th>Rating</th>
+                        <th>Verified</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${users.map(u => `
+                    <tr>
+                        <td>${u.id}</td>
+                        <td><a href="/profile/${u.id}">${u.display_name}</a></td>
+                        <td>${u.email}</td>
+                        <td>${u.handicap !== null ? u.handicap : '-'}</td>
+                        <td>${u.games_played || 0}</td>
+                        <td>${u.average_rating ? parseFloat(u.average_rating).toFixed(1) : '-'}</td>
+                        <td>${u.email_verified ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-warning">No</span>'}</td>
+                        <td>${new Date(u.created_at).toLocaleDateString()}</td>
+                    </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+` }) %>

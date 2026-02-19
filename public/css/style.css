@@ -2657,3 +2657,140 @@ a.favorite-course-badge:hover {
     text-align: left;
     display: inline-block;
 }
+
+/* ===== Admin Panel ===== */
+.admin-page {
+    padding: var(--spacing-xl) 0;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.admin-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.admin-count {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.stat-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-sm);
+}
+
+.admin-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.admin-section h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-lg);
+}
+
+.admin-table-wrapper {
+    overflow-x: auto;
+    background: var(--color-bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.admin-table th {
+    background: var(--color-surface);
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+.admin-table tbody tr:hover {
+    background: var(--color-surface);
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.admin-table a:hover {
+    text-decoration: underline;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    text-transform: capitalize;
+}
+
+.badge-success {
+    background: rgba(52, 199, 89, 0.15);
+    color: var(--color-success);
+}
+
+.badge-warning {
+    background: rgba(255, 149, 0, 0.15);
+    color: var(--color-warning);
+}
+
+.badge-primary {
+    background: rgba(52, 199, 89, 0.15);
+    color: var(--color-primary);
+}
+
+.badge-secondary {
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+}
