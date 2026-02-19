@@ -45,7 +45,7 @@
                     </button>
                     <ul class="nav-dropdown-menu">
                         <li><a href="/dashboard"><%= typeof t !== 'undefined' ? t.nav.dashboard : 'Dashboard' %></a></li>
-                        <% if (user.id === 1 || user.id === 2) { %>
+                        <% if (user.email === 'yachtphotographer@gmail.com') { %>
                         <li><a href="/admin">Admin Panel</a></li>
                         <% } %>
                         <li><a href="/profile"><%= typeof t !== 'undefined' ? t.nav.myProfile : 'My Profile' %></a></li>
@@ -81,7 +81,7 @@
         <li><a href="/available" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.players : 'Players' %></a></li>
         <li><a href="/notifications" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.notifications : 'Notifications' %></a></li>
         <li><a href="/dashboard" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.dashboard : 'Dashboard' %></a></li>
-        <% if (user.id === 1 || user.id === 2) { %>
+        <% if (user.email === 'yachtphotographer@gmail.com') { %>
         <li><a href="/admin" class="nav-link">Admin Panel</a></li>
         <% } %>
         <li><a href="/profile" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.myProfile : 'My Profile' %></a></li>

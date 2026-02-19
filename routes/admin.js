@@ -8,9 +8,9 @@ const isAdmin = (req, res, next) => {
         req.session.error = 'Please log in to access admin';
         return res.redirect('/auth/login');
     }
-    // Add your admin user IDs here
-    const adminIds = [1, 2]; // User IDs that can access admin
-    if (!adminIds.includes(req.session.user.id)) {
+    // Admin email
+    const adminEmail = 'yachtphotographer@gmail.com';
+    if (req.session.user.email !== adminEmail) {
         req.session.error = 'Access denied';
         return res.redirect('/dashboard');
     }
