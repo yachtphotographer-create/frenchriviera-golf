@@ -175,17 +175,23 @@ router.post('/forgot-password', isGuest, async (req, res) => {
 
 // GET /auth/reset-password/:token
 router.get('/reset-password/:token', isGuest, async (req, res) => {
-    const user = await User.findByResetToken(req.params.token);
+    try {
+        const user = await User.findByResetToken(req.params.token);
 
-    if (!user) {
-        req.session.error = 'Invalid or expired reset link';
-        return res.redirect('/auth/forgot-password');
+        if (!user) {
+            req.session.error = 'Invalid or expired reset link';
+            return res.redirect('/auth/forgot-password');
+        }
+
+        res.render('auth/reset-password', {
+            title: 'Reset Password',
+            token: req.params.token
+        });
+    } catch (err) {
+        console.error('Reset password page error:', err);
+        req.session.error = 'An error occurred. Please try again.';
+        res.redirect('/auth/forgot-password');
     }
-
-    res.render('auth/reset-password', {
-        title: 'Reset Password',
-        token: req.params.token
-    });
 });
 
 // POST /auth/reset-password/:token

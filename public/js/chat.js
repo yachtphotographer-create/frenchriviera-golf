@@ -61,23 +61,51 @@ class GameChat {
     appendMessage(message) {
         const isOwn = message.sender_id === window.currentUserId;
 
+        // Build DOM elements safely (no innerHTML with user data)
         const messageEl = document.createElement('div');
         messageEl.className = `chat-message ${isOwn ? 'own' : ''}`;
-        messageEl.innerHTML = `
-            <div class="message-avatar">
-                ${message.profile_photo ?
-                    `<img src="${message.profile_photo}" alt="">` :
-                    `<span>${message.display_name.charAt(0)}</span>`
-                }
-            </div>
-            <div class="message-content">
-                <div class="message-header">
-                    <span class="message-author">${message.display_name}</span>
-                    <span class="message-time">${this.formatTime(message.created_at)}</span>
-                </div>
-                <p class="message-text">${this.escapeHtml(message.content)}</p>
-            </div>
-        `;
+
+        // Avatar
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'message-avatar';
+        if (message.profile_photo) {
+            const img = document.createElement('img');
+            img.src = message.profile_photo;
+            img.alt = '';
+            avatarDiv.appendChild(img);
+        } else {
+            const span = document.createElement('span');
+            span.textContent = (message.display_name || '?').charAt(0);
+            avatarDiv.appendChild(span);
+        }
+
+        // Content
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'message-header';
+
+        const authorSpan = document.createElement('span');
+        authorSpan.className = 'message-author';
+        authorSpan.textContent = message.display_name || '';
+
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'message-time';
+        timeSpan.textContent = this.formatTime(message.created_at);
+
+        headerDiv.appendChild(authorSpan);
+        headerDiv.appendChild(timeSpan);
+
+        const textP = document.createElement('p');
+        textP.className = 'message-text';
+        textP.textContent = message.content || '';
+
+        contentDiv.appendChild(headerDiv);
+        contentDiv.appendChild(textP);
+
+        messageEl.appendChild(avatarDiv);
+        messageEl.appendChild(contentDiv);
 
         this.messagesContainer.appendChild(messageEl);
     }

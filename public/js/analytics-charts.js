@@ -17,12 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     var colors = {
-        primary: '#1B5E20',
-        secondary: '#4CAF50',
-        light: '#C8E6C9',
+        primary: '#34c759',
+        secondary: '#28a745',
+        light: 'rgba(52, 199, 89, 0.15)',
         blue: '#2196F3',
         orange: '#FF9800',
-        red: '#f44336',
+        red: '#ff3b30',
         purple: '#9C27B0',
         teal: '#009688',
         pink: '#E91E63'
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Game Status
     var el8 = document.getElementById('gameStatusChart');
     if (el8 && chartData.gameStatus && chartData.gameStatus.length > 0) {
-        var statusColors = {'open':'#4CAF50','full':'#FF9800','confirmed':'#2196F3','completed':'#1B5E20','cancelled':'#f44336'};
+        var statusColors = {'open':'#34c759','full':'#FF9800','confirmed':'#2196F3','completed':'#28a745','cancelled':'#ff3b30'};
         new Chart(el8, {
             type: 'doughnut',
             data: {

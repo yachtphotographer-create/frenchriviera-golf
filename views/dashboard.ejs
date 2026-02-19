@@ -100,11 +100,11 @@
                     </div>
                     <div class="profile-stats">
                         <div class="stat">
-                            <span class="stat-value">0</span>
+                            <span class="stat-value">${user.games_played || 0}</span>
                             <span class="stat-label">Games</span>
                         </div>
                         <div class="stat">
-                            <span class="stat-value">-</span>
+                            <span class="stat-value">${user.average_rating ? parseFloat(user.average_rating).toFixed(1) : '-'}</span>
                             <span class="stat-label">Rating</span>
                         </div>
                     </div>

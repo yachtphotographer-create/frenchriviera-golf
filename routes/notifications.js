@@ -30,9 +30,10 @@ router.post('/:id/read', isAuthenticated, async (req, res) => {
         const notificationId = parseInt(req.params.id);
         await markAsRead(notificationId, req.session.user.id);
 
-        // If there's a redirect URL in the query, go there
+        // If there's a redirect URL in the query, go there (validate it's a safe local path)
         const redirect = req.query.redirect || '/notifications';
-        res.redirect(redirect);
+        const safeRedirect = (typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//')) ? redirect : '/notifications';
+        res.redirect(safeRedirect);
 
     } catch (err) {
         console.error('Mark read error:', err);
@@ -46,9 +47,10 @@ router.get('/:id/click', isAuthenticated, async (req, res) => {
         const notificationId = parseInt(req.params.id);
         await markAsRead(notificationId, req.session.user.id);
 
-        // Redirect to the notification link
+        // Redirect to the notification link (validate it's a safe local path)
         const redirect = req.query.redirect || '/notifications';
-        res.redirect(redirect);
+        const safeRedirect = (typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//')) ? redirect : '/notifications';
+        res.redirect(safeRedirect);
 
     } catch (err) {
         console.error('Notification click error:', err);

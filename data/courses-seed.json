@@ -16,7 +16,8 @@
         "driving_range": true,
         "putting_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-monte-carlo.jpg"]
     },
     {
         "name": "Royal Mougins Golf Club",
@@ -38,7 +39,8 @@
         "restaurant": true,
         "hotel_onsite": true,
         "spa": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-royal-mougins.jpg"]
     },
     {
         "name": "Golf Country Club Cannes-Mougins",
@@ -60,7 +62,8 @@
         "chipping_green": true,
         "restaurant": true,
         "pro_shop": true,
-        "golf_lessons": true
+        "golf_lessons": true,
+        "photos": ["/images/courses/golf-cannes-mougins.jpg"]
     },
     {
         "name": "Terre Blanche — Château Course",
@@ -85,7 +88,8 @@
         "spa": true,
         "swimming_pool": true,
         "pro_shop": true,
-        "golf_lessons": true
+        "golf_lessons": true,
+        "photos": ["/images/courses/golf-terre-blanche-chateau.jpg"]
     },
     {
         "name": "Terre Blanche — Le Riou",
@@ -103,7 +107,8 @@
         "putting_green": true,
         "restaurant": true,
         "hotel_onsite": true,
-        "spa": true
+        "spa": true,
+        "photos": ["/images/courses/golf-terre-blanche-riou.jpg"]
     },
     {
         "name": "Old Course Golf Club Mandelieu",
@@ -123,7 +128,8 @@
         "driving_range": true,
         "putting_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-old-course-mandelieu.jpg"]
     },
     {
         "name": "Riviera Golf de Barbossi",
@@ -141,7 +147,8 @@
         "driving_range": true,
         "putting_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-barbossi.jpg"]
     },
     {
         "name": "Golf Opio Valbonne",
@@ -158,7 +165,8 @@
         "putting_green": true,
         "restaurant": true,
         "pro_shop": true,
-        "golf_lessons": true
+        "golf_lessons": true,
+        "photos": ["/images/courses/golf-opio-valbonne.jpg"]
     },
     {
         "name": "Golf de la Grande Bastide",
@@ -175,7 +183,8 @@
         "putting_green": true,
         "restaurant": true,
         "pro_shop": true,
-        "golf_lessons": true
+        "golf_lessons": true,
+        "photos": ["/images/courses/golf-grande-bastide.jpg"]
     },
     {
         "name": "Golf Club de Biot",
@@ -193,7 +202,8 @@
         "driving_range": true,
         "putting_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-biot.jpg"]
     },
     {
         "name": "Golf de Saint Donat",
@@ -213,7 +223,8 @@
         "chipping_green": true,
         "restaurant": true,
         "pro_shop": true,
-        "golf_lessons": true
+        "golf_lessons": true,
+        "photos": ["/images/courses/golf-de-saint-donat.jpg"]
     },
     {
         "name": "Golf de Roquebrune",
@@ -231,7 +242,8 @@
         "restaurant": true,
         "hotel_onsite": true,
         "spa": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-roquebrune.jpg"]
     },
     {
         "name": "Golf de Saint Endréol",
@@ -251,7 +263,8 @@
         "putting_green": true,
         "restaurant": true,
         "hotel_onsite": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-saint-endreol.jpg"]
     },
     {
         "name": "Golf de Valescure",
@@ -269,7 +282,8 @@
         "driving_range": true,
         "putting_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-valescure.jpg"]
     },
     {
         "name": "Château de Taulane",
@@ -289,7 +303,8 @@
         "putting_green": true,
         "restaurant": true,
         "hotel_onsite": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-chateau-taulane.jpg"]
     },
     {
         "name": "Golf de Saint-Tropez",
@@ -306,7 +321,8 @@
         "driving_range": true,
         "putting_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-saint-tropez.jpg"]
     },
     {
         "name": "Nice Golf Country Club",
@@ -320,7 +336,8 @@
         "longitude": 7.2178,
         "description_en": "Located just 10 minutes from the Nice seafront. Ideal 9-hole course for beginner golfers and quick rounds. Perfect if you're short on time but want to squeeze in some golf.",
         "putting_green": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-nice.jpg"]
     },
     {
         "name": "Golf Claux-Amic",
@@ -336,7 +353,8 @@
         "driving_range": true,
         "putting_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-claux-amic.jpg"]
     },
     {
         "name": "Golf de Barbaroux",
@@ -354,7 +372,8 @@
         "putting_green": true,
         "chipping_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-de-barbaroux.jpg"]
     },
     {
         "name": "Estérel Latitudes Golf",
@@ -372,6 +391,7 @@
         "driving_range": true,
         "putting_green": true,
         "restaurant": true,
-        "pro_shop": true
+        "pro_shop": true,
+        "photos": ["/images/courses/golf-esterel-latitudes.jpg"]
     }
 ]

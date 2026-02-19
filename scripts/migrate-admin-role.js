@@ -3,7 +3,7 @@
  * Run: node scripts/migrate-admin-role.js
  */
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const db = require('../config/database');
 
 async function migrate() {

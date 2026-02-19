@@ -190,33 +190,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Poll for new notifications every 30 seconds (for cron-generated notifications)
-    let lastNotificationCount = getCurrentNotificationCount();
+    // Poll for new notifications every 30 seconds (only for logged-in users)
+    if (document.querySelector('.nav-notifications')) {
+        setInterval(async function() {
+            try {
+                const response = await fetch('/notifications/api');
+                if (response.ok) {
+                    const data = await response.json();
+                    const unreadCount = data.notifications.filter(n => !n.read).length;
+                    const currentCount = getCurrentNotificationCount();
 
-    setInterval(async function() {
-        try {
-            const response = await fetch('/notifications/api');
-            if (response.ok) {
-                const data = await response.json();
-                const unreadCount = data.notifications.filter(n => !n.read).length;
-                const currentCount = getCurrentNotificationCount();
+                    if (unreadCount > currentCount) {
+                        const diff = unreadCount - currentCount;
+                        updateNotificationBadge(diff);
 
-                if (unreadCount > currentCount) {
-                    // New notifications arrived
-                    const diff = unreadCount - currentCount;
-                    updateNotificationBadge(diff);
-
-                    // Show toast for the newest notification
-                    if (data.notifications.length > 0 && !data.notifications[0].read) {
-                        showToastNotification(data.notifications[0]);
-                        playNotificationSound();
+                        if (data.notifications.length > 0 && !data.notifications[0].read) {
+                            showToastNotification(data.notifications[0]);
+                            playNotificationSound();
+                        }
                     }
                 }
+            } catch (e) {
+                // Ignore polling errors
             }
-        } catch (e) {
-            // Ignore polling errors
-        }
-    }, 30000);
+        }, 30000);
+    }
 });
 
 // Get current notification count from badge
@@ -265,14 +263,21 @@ function showToastNotification(notification) {
         document.body.appendChild(toastContainer);
     }
 
-    // Create toast element
+    // Create toast element using safe DOM methods (no innerHTML with user data)
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
-    toast.style.cssText = 'background: white; padding: 16px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 320px; cursor: pointer; border-left: 4px solid var(--color-primary, #1B5E20); animation: slideIn 0.3s ease;';
-    toast.innerHTML = `
-        <strong style="display: block; margin-bottom: 4px; color: #1a1a1a;">${notification.title}</strong>
-        <p style="margin: 0; color: #666; font-size: 0.875rem;">${notification.message}</p>
-    `;
+    toast.style.cssText = 'background: white; padding: 16px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 320px; cursor: pointer; border-left: 4px solid var(--color-primary, #34c759); animation: slideIn 0.3s ease;';
+
+    const titleEl = document.createElement('strong');
+    titleEl.style.cssText = 'display: block; margin-bottom: 4px; color: #1a1a1a;';
+    titleEl.textContent = notification.title || '';
+
+    const msgEl = document.createElement('p');
+    msgEl.style.cssText = 'margin: 0; color: #666; font-size: 0.875rem;';
+    msgEl.textContent = notification.message || '';
+
+    toast.appendChild(titleEl);
+    toast.appendChild(msgEl);
 
     // Add click handler to navigate to notification link
     if (notification.link) {

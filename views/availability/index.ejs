@@ -1,23 +1,29 @@
 <%- include('../layouts/main', { body: `
-<div class="available-page">
+<div class="players-page">
     <div class="container">
+        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+            <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a href="/">${lang === 'fr' ? 'Accueil' : 'Home'}</a></li>
+                <li class="breadcrumb-item active"><span>${t.players.title}</span></li>
+            </ol>
+        </nav>
         <div class="page-header">
-            <h1>Available Players</h1>
-            <p class="page-subtitle">Find golfers looking for a game</p>
+            <h1>${t.players.title}</h1>
+            <p class="page-subtitle">${t.players.subtitle}</p>
         </div>
 
         <div class="page-actions">
-            <a href="/availability/create" class="btn btn-primary">Set Your Availability</a>
+            <a href="/availability/create" class="btn btn-primary">${t.players.setAvailability}</a>
         </div>
 
         <div class="filters-bar">
             <form action="/available" method="GET" class="filters-form">
                 <div class="filter-group">
-                    <input type="date" name="date" value="${filters.date || ''}" placeholder="Any date">
+                    <input type="date" name="date" value="${filters.date || ''}" placeholder="${t.players.anyDate}">
                 </div>
                 <div class="filter-group">
                     <select name="area">
-                        <option value="">All Areas</option>
+                        <option value="">${t.players.allAreas}</option>
                         <option value="nice" ${filters.area === 'nice' ? 'selected' : ''}>Nice</option>
                         <option value="cannes" ${filters.area === 'cannes' ? 'selected' : ''}>Cannes</option>
                         <option value="monaco" ${filters.area === 'monaco' ? 'selected' : ''}>Monaco</option>
@@ -26,14 +32,14 @@
                 </div>
                 <div class="filter-group">
                     <select name="time_window">
-                        <option value="">Any Time</option>
-                        <option value="early_bird" ${filters.time_window === 'early_bird' ? 'selected' : ''}>Early Bird</option>
-                        <option value="morning" ${filters.time_window === 'morning' ? 'selected' : ''}>Morning</option>
-                        <option value="afternoon" ${filters.time_window === 'afternoon' ? 'selected' : ''}>Afternoon</option>
+                        <option value="">${t.players.anyTime}</option>
+                        <option value="early_bird" ${filters.time_window === 'early_bird' ? 'selected' : ''}>${t.players.earlyBird}</option>
+                        <option value="morning" ${filters.time_window === 'morning' ? 'selected' : ''}>${t.players.morning}</option>
+                        <option value="afternoon" ${filters.time_window === 'afternoon' ? 'selected' : ''}>${t.players.afternoon}</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-outline">Filter</button>
-                ${(filters.date || filters.area || filters.time_window) ? '<a href="/available" class="btn btn-outline">Clear</a>' : ''}
+                <button type="submit" class="btn btn-outline">${t.players.filter}</button>
+                ${(filters.date || filters.area || filters.time_window) ? `<a href="/available" class="btn btn-outline">${t.players.clear}</a>` : ''}
             </form>
         </div>
 
@@ -41,49 +47,45 @@
             ${availablePlayers && availablePlayers.length > 0 ?
                 availablePlayers.map(avail => `
                     <article class="player-card">
-                        <div class="player-card-header">
-                            ${avail.profile_photo ?
-                                `<img src="${avail.profile_photo}" alt="" class="player-photo">` :
-                                `<span class="player-photo-placeholder">${avail.display_name.charAt(0)}</span>`
-                            }
-                            <div class="player-basic">
-                                <h3><a href="/profile/${avail.user_id}">${avail.display_name}</a></h3>
-                                <p class="player-location">
-                                    ${avail.nationality || ''}
-                                    ${avail.handicap ? ` · HCP ${avail.handicap}` : ''}
-                                </p>
+                        <a href="/profile/${avail.user_id}">
+                            <div class="player-card-image">
+                                ${avail.profile_photo ?
+                                    `<img src="${avail.profile_photo}" alt="${avail.display_name}">` :
+                                    `<div class="player-card-placeholder"><span>${avail.display_name.charAt(0)}</span></div>`
+                                }
+                                ${avail.handicap ? `<span class="player-hcp-badge">HCP ${avail.handicap}</span>` : ''}
                             </div>
-                        </div>
-                        <div class="player-card-body">
-                            <div class="availability-info">
-                                <div class="avail-date">
-                                    <span class="avail-label">Available</span>
-                                    <span class="avail-value">${new Date(avail.available_date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                            <div class="player-card-content">
+                                <h2 class="player-card-title">${avail.display_name}</h2>
+                                <p class="player-card-subtitle">${avail.nationality || ''}</p>
+                                <div class="player-card-info">
+                                    <div class="player-info-item">
+                                        <span class="player-info-label">${t.players.available}</span>
+                                        <span class="player-info-value">${new Date(avail.available_date).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                                    </div>
+                                    <div class="player-info-item">
+                                        <span class="player-info-label">${t.players.time}</span>
+                                        <span class="player-info-value">${avail.time_window.replace('_', ' ')}</span>
+                                    </div>
                                 </div>
-                                <div class="avail-time">
-                                    <span class="avail-label">Time</span>
-                                    <span class="avail-value">${avail.time_window.replace('_', ' ')}</span>
+                                ${avail.course_name ? `<p class="player-card-detail">${t.players.prefers} : ${avail.course_name}</p>` : ''}
+                                ${avail.area ? `<p class="player-card-detail">${t.players.area} : ${avail.area}</p>` : ''}
+                                ${avail.note ? `<p class="player-card-note">&laquo; ${avail.note} &raquo;</p>` : ''}
+                                <div class="player-card-tags">
+                                    ${avail.playing_level ? `<span class="tag">${avail.playing_level}</span>` : ''}
+                                    ${avail.languages && avail.languages.length > 0 ? avail.languages.map(l => `<span class="tag">${l}</span>`).join('') : ''}
+                                </div>
+                                <div class="player-card-meta">
+                                    <span class="player-card-date">${new Date(avail.available_date).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'short' })}</span>
+                                    <span class="player-card-action">${t.players.viewProfile} &rarr;</span>
                                 </div>
                             </div>
-                            ${avail.course_name ? `<p class="avail-course">Prefers: ${avail.course_name}</p>` : ''}
-                            ${avail.area ? `<p class="avail-area">Area: ${avail.area}</p>` : ''}
-                            ${avail.note ? `<p class="avail-note">"${avail.note}"</p>` : ''}
-                            <div class="player-tags">
-                                ${avail.playing_level ? `<span class="tag">${avail.playing_level}</span>` : ''}
-                                ${avail.languages && avail.languages.length > 0 ? avail.languages.map(l => `<span class="tag">${l}</span>`).join('') : ''}
-                            </div>
-                        </div>
-                        <div class="player-card-footer">
-                            <a href="/profile/${avail.user_id}" class="btn btn-outline btn-sm">View Profile</a>
-                            ${user ? `
-                                <a href="/games/create" class="btn btn-primary btn-sm">Invite to Game</a>
-                            ` : ''}
-                        </div>
+                        </a>
                     </article>
                 `).join('') :
-                `<div class="empty-state full-width">
-                    <p>No available players found for these criteria.</p>
-                    <a href="/availability/create" class="btn btn-primary">Set Your Availability</a>
+                `<div class="empty-state">
+                    <p>${t.players.noPlayers}</p>
+                    <a href="/availability/create" class="btn btn-primary">${t.players.setAvailability}</a>
                 </div>`
             }
         </div>
@@ -91,26 +93,125 @@
 </div>
 
 <style>
-.available-page { padding: var(--spacing-2xl) 0; }
-.page-actions { margin-bottom: var(--spacing-xl); }
-.players-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg); }
-.player-card { background: white; border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
-.player-card-header { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-lg); background: var(--color-bg-alt); }
-.player-photo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
-.player-photo-placeholder { width: 56px; height: 56px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 600; }
-.player-basic h3 { margin-bottom: 0; font-size: 1rem; }
-.player-basic h3 a { color: inherit; }
-.player-location { font-size: 0.875rem; color: var(--color-text-muted); margin: 0; }
-.player-card-body { padding: var(--spacing-lg); }
-.availability-info { display: flex; gap: var(--spacing-lg); margin-bottom: var(--spacing-md); }
-.avail-label { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
-.avail-value { font-weight: 500; text-transform: capitalize; }
-.avail-course, .avail-area { font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: var(--spacing-sm); }
-.avail-note { font-style: italic; color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: var(--spacing-md); }
-.player-tags { display: flex; flex-wrap: wrap; gap: var(--spacing-xs); }
-.player-card-footer { padding: var(--spacing-md) var(--spacing-lg); border-top: 1px solid var(--color-border); display: flex; gap: var(--spacing-sm); }
-.full-width { grid-column: 1 / -1; }
-@media (max-width: 1024px) { .players-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px) { .players-grid { grid-template-columns: 1fr; } }
+.players-page { padding: 2rem 0 4rem; }
+.players-page .page-actions { margin-bottom: 1.5rem; text-align: center; }
+.players-page .filters-bar { max-width: 900px; margin-left: auto; margin-right: auto; }
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.player-card {
+    background: #ecfdf5;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 2px solid #7DD3FC;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.player-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glass-hover);
+    background: #e0f2fe;
+}
+.player-card a { text-decoration: none; color: inherit; }
+.player-card-image {
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+}
+.player-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.player-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 2rem;
+}
+.player-hcp-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.player-card-content { padding: 1rem; }
+.player-card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.15rem;
+    color: var(--color-text);
+}
+.player-card-subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+.player-card-info {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.player-info-label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.player-info-value {
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-transform: capitalize;
+}
+.player-card-detail {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.25rem;
+}
+.player-card-note {
+    font-style: italic;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+.player-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+}
+.tag {
+    background: rgba(0,0,0,0.06);
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    text-transform: capitalize;
+}
+.player-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+.player-card-date { color: var(--color-text-muted); }
+.player-card-action { color: var(--color-primary); font-weight: 500; }
+.players-grid .empty-state { grid-column: 1 / -1; }
+@media (max-width: 768px) {
+    .players-grid { grid-template-columns: 1fr; }
+}
 </style>
 ` }) %>

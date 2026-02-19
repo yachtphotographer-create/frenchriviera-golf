@@ -3,7 +3,7 @@
  * Run: node scripts/migrate-suspend.js
  */
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const { Pool } = require('pg');
 
 const pool = new Pool({

@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const express = require('express');
 const http = require('http');
@@ -43,7 +43,7 @@ app.use(helmet({
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
+    max: process.env.NODE_ENV !== 'production' ? 1000 : 100,
     message: 'Too many requests, please try again later.',
     standardHeaders: true,
     legacyHeaders: false
@@ -53,7 +53,7 @@ app.use(limiter);
 // Stricter rate limit for auth routes
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10, // Limit each IP to 10 auth requests per windowMs
+    max: process.env.NODE_ENV !== 'production' ? 100 : 10, // More lenient in development
     message: 'Too many login attempts, please try again later.',
     standardHeaders: true,
     legacyHeaders: false
@@ -64,17 +64,22 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Middleware - Static files with caching
+const isDev = process.env.NODE_ENV !== 'production';
 app.use(express.static(path.join(__dirname, 'public'), {
-    maxAge: '7d', // Cache static assets for 7 days
+    maxAge: isDev ? 0 : '7d',
     etag: true,
     lastModified: true,
-    setHeaders: (res, path) => {
-        // Longer cache for images
-        if (path.endsWith('.jpg') || path.endsWith('.png') || path.endsWith('.svg') || path.endsWith('.webp')) {
+    setHeaders: (res, filePath) => {
+        if (isDev) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            return;
+        }
+        // Longer cache for images in production
+        if (filePath.endsWith('.jpg') || filePath.endsWith('.png') || filePath.endsWith('.svg') || filePath.endsWith('.webp')) {
             res.setHeader('Cache-Control', 'public, max-age=2592000'); // 30 days
         }
-        // Shorter cache for CSS/JS (might change more often)
-        if (path.endsWith('.css') || path.endsWith('.js')) {
+        // Shorter cache for CSS/JS in production (versioned via ?v=)
+        if (filePath.endsWith('.css') || filePath.endsWith('.js')) {
             res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 days
         }
     }
@@ -87,16 +92,19 @@ const sessionMiddleware = session(sessionConfig);
 app.use(sessionMiddleware);
 
 // CSRF Protection
-const { generateToken, doubleCsrfProtection } = doubleCsrf({
+const { generateCsrfToken, doubleCsrfProtection } = doubleCsrf({
     getSecret: () => process.env.SESSION_SECRET || 'csrf-secret-change-me',
     cookieName: '__csrf',
     cookieOptions: {
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
         path: '/'
     },
-    getTokenFromRequest: (req) => req.body._csrf || req.headers['x-csrf-token']
+    getCsrfTokenFromRequest: (req) => req.body._csrf || req.headers['x-csrf-token'],
+    // Use empty string to avoid session ID mismatch when saveUninitialized is false
+    // The double-submit cookie pattern already provides CSRF protection without session binding
+    getSessionIdentifier: () => ''
 });
 
 // Apply CSRF protection to all routes except Socket.io and static files
@@ -124,7 +132,7 @@ app.use(async (req, res, next) => {
     res.locals.appUrl = process.env.APP_URL || 'http://localhost:3000';
 
     // Generate CSRF token for forms
-    res.locals.csrfToken = generateToken(req, res);
+    res.locals.csrfToken = generateCsrfToken(req, res);
 
     // Make escapeHtml available in templates
     res.locals.escapeHtml = escapeHtml;
@@ -204,7 +212,7 @@ app.get('/', async (req, res) => {
                 "@context": "https://schema.org",
                 "@type": "SportsActivityLocation",
                 "name": "French Riviera Golf",
-                "description": "Golf player matching platform for the French Riviera and Côte d'Azur",
+                "description": "Golf player matching platform for the French Riviera and Cote d'Azur",
                 "url": APP_URL,
                 "sport": "Golf",
                 "areaServed": {
@@ -212,7 +220,7 @@ app.get('/', async (req, res) => {
                     "name": "French Riviera",
                     "address": {
                         "@type": "PostalAddress",
-                        "addressRegion": "Provence-Alpes-Côte d'Azur",
+                        "addressRegion": "Provence-Alpes-Cote d'Azur",
                         "addressCountry": "FR"
                     }
                 }
@@ -246,6 +254,14 @@ app.get('/dashboard', async (req, res) => {
     try {
         const Game = require('./models/Game');
         const Rating = require('./models/Rating');
+        const User = require('./models/User');
+
+        // Fetch fresh user data with stats
+        const freshUser = await User.findById(req.session.user.id);
+        if (freshUser) {
+            req.session.user.games_played = freshUser.games_played || 0;
+            req.session.user.average_rating = freshUser.average_rating || null;
+        }
 
         const games = await Game.findByPlayer(req.session.user.id);
         const now = new Date();
@@ -385,11 +401,34 @@ app.use((err, req, res, next) => {
     console.error(`[Error ${errorId}] ${req.method} ${req.originalUrl}`);
     console.error(`[Error ${errorId}] ${err.stack}`);
 
-    res.status(500).render('errors/500', {
-        title: 'Error',
-        errorId: errorId,
-        canonicalPath: req.path
-    });
+    // Handle CSRF errors specifically - redirect back with error message
+    if (err.code === 'EBADCSRFTOKEN' || err.message === 'invalid csrf token') {
+        req.session.error = 'Form expired. Please try again.';
+        const referer = req.get('Referer') || '/';
+        return res.redirect(referer);
+    }
+
+    // Try to render error page, fall back to plain text if template fails
+    try {
+        res.status(500).render('errors/500', {
+            title: 'Error',
+            errorId: errorId,
+            canonicalPath: req.path,
+            appName: res.locals.appName || process.env.APP_NAME || 'French Riviera Golf',
+            appUrl: res.locals.appUrl || process.env.APP_URL || 'http://localhost:3000',
+            user: res.locals.user || null,
+            unreadNotifications: res.locals.unreadNotifications || 0,
+            csrfToken: res.locals.csrfToken || '',
+            lang: res.locals.lang || 'en',
+            t: res.locals.t || require('./locales/en.json'),
+            htmlLang: res.locals.htmlLang || 'en',
+            success: null,
+            error: null
+        });
+    } catch (renderErr) {
+        console.error(`[Error ${errorId}] Error page render failed:`, renderErr.message);
+        res.status(500).send(`<h1>Server Error</h1><p>Error ID: ${errorId}</p><p><a href="/">Back to Home</a></p>`);
+    }
 });
 
 server.listen(PORT, () => {

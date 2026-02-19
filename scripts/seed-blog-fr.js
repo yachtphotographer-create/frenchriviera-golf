@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const db = require('../config/database');
 
 const blogPostsFR = [
@@ -516,8 +516,8 @@ async function seedBlogFR() {
             }
 
             await db.query(
-                `INSERT INTO blog_posts (slug, title, excerpt, content, category, featured_image, meta_description, author, published, published_at)
-                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, true, NOW())`,
+                `INSERT INTO blog_posts (slug, title, excerpt, content, category, featured_image, meta_description, author, language, published, published_at)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'fr', true, NOW())`,
                 [post.slug, post.title, post.excerpt, post.content, post.category, post.featured_image || null, post.meta_description, post.author]
             );
             console.log(`✓ Created "${post.title}"`);

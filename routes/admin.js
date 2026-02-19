@@ -59,6 +59,7 @@ router.get('/', isAdmin, async (req, res) => {
 
         res.render('admin/dashboard', {
             title: 'Admin Dashboard',
+            adminPage: 'overview',
             stats: {
                 users: usersResult.rows[0].count,
                 games: gamesResult.rows[0].count,
@@ -215,6 +216,7 @@ router.get('/analytics', isAdmin, async (req, res) => {
 
         res.render('admin/analytics', {
             title: 'Analytics Dashboard',
+            adminPage: 'analytics',
             stats: {
                 totalUsers: totalUsers.rows[0].count,
                 totalGames: totalGames.rows[0].count,
@@ -256,6 +258,7 @@ router.get('/users', isAdmin, async (req, res) => {
 
         res.render('admin/users', {
             title: 'All Users',
+            adminPage: 'users',
             users: users.rows
         });
     } catch (err) {
@@ -335,6 +338,7 @@ router.get('/email', isAdmin, async (req, res) => {
 
         res.render('admin/email', {
             title: 'Email Users',
+            adminPage: 'email',
             users: users.rows
         });
     } catch (err) {

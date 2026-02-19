@@ -1,90 +1,91 @@
 <%- include('../layouts/main', { body: `
 <div class="games-page">
     <div class="container">
+        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+            <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a href="/">${lang === 'fr' ? 'Accueil' : 'Home'}</a></li>
+                <li class="breadcrumb-item active"><span>${t.games.title}</span></li>
+            </ol>
+        </nav>
         <div class="page-header">
-            <h1>Find a Game</h1>
-            <p class="page-subtitle">Browse open tee times and join other golfers</p>
+            <h1>${t.games.title}</h1>
+            <p class="page-subtitle">${t.games.subtitle}</p>
         </div>
 
         <div class="page-actions">
-            <a href="/games/create" class="btn btn-primary">Create a Game</a>
+            <a href="/games/create" class="btn btn-primary">${t.games.createGame}</a>
         </div>
 
         <div class="filters-bar">
             <form action="/games" method="GET" class="filters-form">
                 <div class="filter-group">
                     <select name="department">
-                        <option value="">All Areas</option>
+                        <option value="">${t.games.allAreas}</option>
                         <option value="06" ${filters.department === '06' ? 'selected' : ''}>Alpes-Maritimes</option>
                         <option value="83" ${filters.department === '83' ? 'selected' : ''}>Var</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <select name="course">
-                        <option value="">All Courses</option>
+                        <option value="">${t.games.allCourses}</option>
                         ${courses.map(c => `<option value="${c.id}" ${filters.course == c.id ? 'selected' : ''}>${c.name}</option>`).join('')}
                     </select>
                 </div>
                 <div class="filter-group">
-                    <input type="date" name="date" value="${filters.date || ''}" placeholder="Any date">
+                    <input type="date" name="date" value="${filters.date || ''}" placeholder="${t.games.anyDate}">
                 </div>
                 <div class="filter-group">
                     <select name="gender">
-                        <option value="">All Games</option>
-                        <option value="male" ${filters.gender === 'male' ? 'selected' : ''}>Men Only</option>
-                        <option value="female" ${filters.gender === 'female' ? 'selected' : ''}>Women Only</option>
+                        <option value="">${t.games.allGames}</option>
+                        <option value="male" ${filters.gender === 'male' ? 'selected' : ''}>${t.games.menOnly}</option>
+                        <option value="female" ${filters.gender === 'female' ? 'selected' : ''}>${t.games.womenOnly}</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-outline">Filter</button>
-                ${(filters.department || filters.course || filters.date || filters.gender) ? '<a href="/games" class="btn btn-outline">Clear</a>' : ''}
+                <button type="submit" class="btn btn-outline">${t.games.filter}</button>
+                ${(filters.department || filters.course || filters.date || filters.gender) ? `<a href="/games" class="btn btn-outline">${t.games.clear}</a>` : ''}
             </form>
         </div>
 
-        <div class="games-list">
+        <div class="games-grid">
             ${games && games.length > 0 ?
                 games.map(game => `
                     <article class="game-card">
-                        <div class="game-card-header">
-                            <div class="game-date">
-                                <span class="game-day">${new Date(game.game_date).toLocaleDateString('en-GB', { weekday: 'short' })}</span>
-                                <span class="game-date-num">${new Date(game.game_date).getDate()}</span>
-                                <span class="game-month">${new Date(game.game_date).toLocaleDateString('en-GB', { month: 'short' })}</span>
+                        <a href="/games/${game.id}">
+                            <div class="game-card-image">
+                                <div class="game-card-placeholder">
+                                    <span class="game-card-date">${new Date(game.game_date).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                                    <span class="game-card-time">${game.tee_time.slice(0, 5)}</span>
+                                </div>
+                                <span class="game-spots-badge">${game.spots_total - game.spots_filled} ${(game.spots_total - game.spots_filled) !== 1 ? t.games.spotsLeft : t.games.spotLeft}</span>
                             </div>
-                            <div class="game-info">
-                                <h3><a href="/games/${game.id}">${game.course_name}</a></h3>
-                                <p class="game-location">${game.course_city}</p>
-                                <p class="game-time">${game.tee_time.slice(0, 5)}</p>
+                            <div class="game-card-content">
+                                <h2 class="game-card-title">${game.course_name}</h2>
+                                <p class="game-card-location">${game.course_city}</p>
+                                <div class="game-card-creator">
+                                    ${game.creator_photo ?
+                                        `<img src="${game.creator_photo}" alt="" class="creator-avatar">` :
+                                        `<span class="creator-avatar-placeholder">${game.creator_name.charAt(0)}</span>`
+                                    }
+                                    <span>${t.games.createdBy} <strong>${game.creator_name}</strong></span>
+                                    ${game.creator_handicap ? `<span class="creator-hcp">HCP ${game.creator_handicap}</span>` : ''}
+                                </div>
+                                ${game.note ? `<p class="game-card-note">${game.note}</p>` : ''}
+                                <div class="game-card-tags">
+                                    ${game.gender_preference && game.gender_preference !== 'mixed' ? `<span class="tag tag-gender">${game.gender_preference === 'male' ? t.games.menOnly : t.games.womenOnly}</span>` : ''}
+                                    ${game.pace_preference ? `<span class="tag">${game.pace_preference} ${t.games.pace}</span>` : ''}
+                                    ${game.transport_preference ? `<span class="tag">${game.transport_preference}</span>` : ''}
+                                </div>
+                                <div class="game-card-meta">
+                                    <span class="game-card-spots">${game.spots_total - game.spots_filled} ${(game.spots_total - game.spots_filled) !== 1 ? t.games.spotsLeft : t.games.spotLeft}</span>
+                                    <span class="game-card-action">${t.games.viewDetails} &rarr;</span>
+                                </div>
                             </div>
-                            <div class="game-spots">
-                                <span class="spots-count">${game.spots_total - game.spots_filled}</span>
-                                <span class="spots-label">spot${game.spots_total - game.spots_filled !== 1 ? 's' : ''} left</span>
-                            </div>
-                        </div>
-                        <div class="game-card-body">
-                            <div class="game-creator">
-                                ${game.creator_photo ?
-                                    `<img src="${game.creator_photo}" alt="" class="creator-avatar">` :
-                                    `<span class="creator-avatar-placeholder">${game.creator_name.charAt(0)}</span>`
-                                }
-                                <span>Created by <strong>${game.creator_name}</strong></span>
-                                ${game.creator_handicap ? `<span class="creator-hcp">HCP ${game.creator_handicap}</span>` : ''}
-                            </div>
-                            ${game.note ? `<p class="game-note">${game.note}</p>` : ''}
-                            <div class="game-tags">
-                                ${game.gender_preference && game.gender_preference !== 'mixed' ? `<span class="tag tag-gender">${game.gender_preference === 'male' ? 'Men Only' : 'Women Only'}</span>` : ''}
-                                ${game.pace_preference ? `<span class="tag">${game.pace_preference} pace</span>` : ''}
-                                ${game.transport_preference ? `<span class="tag">${game.transport_preference}</span>` : ''}
-                                ${game.level_min || game.level_max ? `<span class="tag">${game.level_min || 'Any'} - ${game.level_max || 'Any'}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="game-card-footer">
-                            <a href="/games/${game.id}" class="btn btn-primary btn-sm">View Details</a>
-                        </div>
+                        </a>
                     </article>
                 `).join('') :
                 `<div class="empty-state">
-                    <p>No open games found. Be the first to create one!</p>
-                    <a href="/games/create" class="btn btn-primary">Create a Game</a>
+                    <p>${t.games.noGames}</p>
+                    <a href="/games/create" class="btn btn-primary">${t.games.createGame}</a>
                 </div>`
             }
         </div>
@@ -92,32 +93,129 @@
 </div>
 
 <style>
-.page-actions { margin-bottom: var(--spacing-xl); }
-.games-list { display: flex; flex-direction: column; gap: var(--spacing-lg); }
-.game-card { background: #ecfdf5; border: 2px solid #7DD3FC; border-radius: var(--radius-lg); overflow: hidden; transition: background 0.3s ease, transform 0.3s ease; }
-.game-card:hover { background: #e0f2fe; transform: translateY(-4px); }
-.game-card-header { display: flex; align-items: center; gap: var(--spacing-lg); padding: var(--spacing-lg); border-bottom: 1px solid var(--color-border); }
-.game-date { text-align: center; min-width: 60px; }
-.game-day { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
-.game-date-num { display: block; font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
-.game-month { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
-.game-info { flex: 1; }
-.game-info h3 { margin-bottom: 0; font-size: 1.125rem; }
-.game-info h3 a { color: inherit; }
-.game-location { color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 0; }
-.game-time { font-weight: 600; color: var(--color-primary); }
-.game-spots { text-align: center; background: var(--color-bg-alt); padding: var(--spacing-md); border-radius: var(--radius-md); }
-.spots-count { display: block; font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
-.spots-label { font-size: 0.75rem; color: var(--color-text-muted); }
-.game-card-body { padding: var(--spacing-lg); }
-.game-creator { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); font-size: 0.875rem; }
-.creator-avatar { width: 32px; height: 32px; border-radius: 50%; }
-.creator-avatar-placeholder { width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; }
-.creator-hcp { background: var(--color-bg-alt); padding: 2px 8px; border-radius: var(--radius-full); font-size: 0.75rem; }
-.game-note { color: var(--color-text-muted); font-style: italic; margin-bottom: var(--spacing-md); }
-.game-tags { display: flex; gap: var(--spacing-sm); flex-wrap: wrap; }
-.tag { background: var(--color-bg-alt); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.75rem; text-transform: capitalize; }
+.games-page { padding: 2rem 0 4rem; }
+.games-page .page-actions { margin-bottom: 1.5rem; text-align: center; }
+.games-page .filters-bar { max-width: 900px; margin-left: auto; margin-right: auto; }
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.games-grid .empty-state { grid-column: 1 / -1; }
+.game-card {
+    background: #ecfdf5;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 2px solid #7DD3FC;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glass-hover);
+    background: #e0f2fe;
+}
+.game-card a { text-decoration: none; color: inherit; }
+.game-card-image {
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+}
+.game-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-primary) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    gap: 0.25rem;
+}
+.game-card-date {
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: capitalize;
+}
+.game-card-time {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.game-spots-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.game-card-content { padding: 1rem; }
+.game-card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-text);
+}
+.game-card-location {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+.game-card-creator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+}
+.creator-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.creator-avatar-placeholder {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--color-primary); color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 0.75rem;
+}
+.creator-hcp {
+    background: rgba(0,0,0,0.06);
+    padding: 2px 6px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+}
+.game-card-note {
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+.game-card-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+.tag {
+    background: rgba(0,0,0,0.06);
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    text-transform: capitalize;
+}
 .tag-gender { background: #fce7f3; color: #9d174d; }
-.game-card-footer { padding: var(--spacing-md) var(--spacing-lg); background: var(--color-bg-alt); }
+.game-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+.game-card-spots { color: var(--color-text-muted); }
+.game-card-action { color: var(--color-primary); font-weight: 500; }
+@media (max-width: 768px) {
+    .games-grid { grid-template-columns: 1fr; }
+}
 </style>
 ` }) %>
