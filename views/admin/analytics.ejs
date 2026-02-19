@@ -1,425 +1,237 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Dashboard | <%= appName %></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css?v=20">
-</head>
-<body>
-    <%- include('../partials/nav') %>
-
-    <% if (typeof success !== 'undefined' && success) { %>
-    <div class="alert alert-success">
-        <span><%= success %></span>
-        <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-    </div>
-    <% } %>
-
-    <% if (typeof error !== 'undefined' && error) { %>
-    <div class="alert alert-error">
-        <span><%= error %></span>
-        <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-    </div>
-    <% } %>
-
-    <main>
-        <div class="admin-page analytics-page">
-            <div class="container">
-                <div class="admin-header">
-                    <h1>Analytics Dashboard</h1>
-                    <div class="admin-header-actions">
-                        <a href="/admin" class="btn btn-secondary">Back to Admin</a>
-                    </div>
-                </div>
-
-                <!-- Key Metrics -->
-                <div class="stats-grid stats-grid-4">
-                    <div class="stat-card">
-                        <div class="stat-number"><%= stats.totalUsers %></div>
-                        <div class="stat-label">Total Users</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number"><%= stats.verifiedUsers %></div>
-                        <div class="stat-label">Verified Users</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number"><%= stats.totalGames %></div>
-                        <div class="stat-label">Total Games</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number"><%= stats.completionRate %>%</div>
-                        <div class="stat-label">Completion Rate</div>
-                    </div>
-                </div>
-
-                <!-- Growth Charts Row -->
-                <div class="charts-row">
-                    <div class="chart-card">
-                        <h3>User Growth (Last 12 Months)</h3>
-                        <div class="chart-container"><canvas id="userGrowthChart"></canvas></div>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Games Per Week (Last 12 Weeks)</h3>
-                        <div class="chart-container"><canvas id="gamesWeekChart"></canvas></div>
-                    </div>
-                </div>
-
-                <!-- Demographics Row -->
-                <div class="charts-row charts-row-3">
-                    <div class="chart-card">
-                        <h3>Gender Distribution</h3>
-                        <div class="chart-container"><canvas id="genderChart"></canvas></div>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Age Distribution</h3>
-                        <div class="chart-container"><canvas id="ageChart"></canvas></div>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Top Nationalities</h3>
-                        <div class="chart-container"><canvas id="nationalityChart"></canvas></div>
-                    </div>
-                </div>
-
-                <!-- Golf Stats Row -->
-                <div class="charts-row">
-                    <div class="chart-card">
-                        <h3>Playing Level Distribution</h3>
-                        <div class="chart-container"><canvas id="levelChart"></canvas></div>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Handicap Distribution</h3>
-                        <div class="chart-container"><canvas id="handicapChart"></canvas></div>
-                    </div>
-                </div>
-
-                <!-- Game Stats Row -->
-                <div class="charts-row">
-                    <div class="chart-card">
-                        <h3>Game Status</h3>
-                        <div class="chart-container"><canvas id="gameStatusChart"></canvas></div>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Popular Courses</h3>
-                        <div class="chart-container"><canvas id="coursesChart"></canvas></div>
-                    </div>
-                </div>
+<%- include('../layouts/main', { body: `
+<div class="admin-page analytics-page">
+    <div class="container">
+        <div class="admin-header">
+            <h1>Analytics Dashboard</h1>
+            <div class="admin-header-actions">
+                <a href="/admin" class="btn btn-secondary">Back to Admin</a>
             </div>
         </div>
-    </main>
 
-    <%- include('../partials/footer') %>
+        <!-- Key Metrics -->
+        <div class="stats-grid stats-grid-4">
+            <div class="stat-card">
+                <div class="stat-number">${stats.totalUsers}</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${stats.verifiedUsers}</div>
+                <div class="stat-label">Verified Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${stats.totalGames}</div>
+                <div class="stat-label">Total Games</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${stats.completionRate}%</div>
+                <div class="stat-label">Completion Rate</div>
+            </div>
+        </div>
 
-    <style>
-    .analytics-page { padding: var(--spacing-xl) 0 var(--spacing-2xl); }
-    .stats-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl); }
-    .charts-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl); }
-    .charts-row-3 { grid-template-columns: repeat(3, 1fr); }
-    .chart-card { background: white; padding: var(--spacing-lg); border-radius: var(--radius-lg); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    .chart-card h3 { margin-bottom: var(--spacing-md); font-size: 1rem; color: var(--color-text); }
-    .chart-container { position: relative; height: 250px; width: 100%; }
-    .admin-header-actions { display: flex; gap: var(--spacing-sm); }
+        <!-- Growth Charts Row -->
+        <div class="charts-row">
+            <div class="chart-card">
+                <h3>User Growth (Last 12 Months)</h3>
+                <div class="chart-container"><canvas id="userGrowthChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Games Per Week (Last 12 Weeks)</h3>
+                <div class="chart-container"><canvas id="gamesWeekChart"></canvas></div>
+            </div>
+        </div>
 
-    @media (max-width: 1024px) {
-        .stats-grid-4 { grid-template-columns: repeat(2, 1fr); }
-        .charts-row, .charts-row-3 { grid-template-columns: 1fr; }
+        <!-- Demographics Row -->
+        <div class="charts-row charts-row-3">
+            <div class="chart-card">
+                <h3>Gender Distribution</h3>
+                <div class="chart-container"><canvas id="genderChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Age Distribution</h3>
+                <div class="chart-container"><canvas id="ageChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Top Nationalities</h3>
+                <div class="chart-container"><canvas id="nationalityChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- Golf Stats Row -->
+        <div class="charts-row">
+            <div class="chart-card">
+                <h3>Playing Level Distribution</h3>
+                <div class="chart-container"><canvas id="levelChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Handicap Distribution</h3>
+                <div class="chart-container"><canvas id="handicapChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- Game Stats Row -->
+        <div class="charts-row">
+            <div class="chart-card">
+                <h3>Game Status</h3>
+                <div class="chart-container"><canvas id="gameStatusChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Popular Courses</h3>
+                <div class="chart-container"><canvas id="coursesChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/chart.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var chartData = ${JSON.stringify(data)};
+
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js not loaded');
+        return;
     }
-    @media (max-width: 640px) {
-        .stats-grid-4 { grid-template-columns: 1fr; }
+
+    var colors = {
+        primary: '#1B5E20',
+        secondary: '#4CAF50',
+        light: '#C8E6C9',
+        blue: '#2196F3',
+        orange: '#FF9800',
+        red: '#f44336',
+        purple: '#9C27B0',
+        teal: '#009688',
+        pink: '#E91E63'
+    };
+    var chartColors = [colors.primary, colors.blue, colors.orange, colors.purple, colors.teal, colors.pink, colors.red, colors.secondary];
+
+    Chart.defaults.font.family = 'Inter, sans-serif';
+    Chart.defaults.color = '#374151';
+    Chart.defaults.responsive = true;
+    Chart.defaults.maintainAspectRatio = false;
+
+    // User Growth
+    if (chartData.userGrowth && chartData.userGrowth.length > 0) {
+        new Chart(document.getElementById('userGrowthChart'), {
+            type: 'line',
+            data: {
+                labels: chartData.userGrowth.map(function(d) { return new Date(d.month).toLocaleDateString('en-US', {month:'short',year:'2-digit'}); }),
+                datasets: [{label:'New Users', data: chartData.userGrowth.map(function(d){return parseInt(d.count);}), borderColor: colors.primary, backgroundColor: colors.light, fill: true, tension: 0.3}]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
     }
-    </style>
 
-    <!-- App JS for navigation -->
-    <script src="/js/app.js"></script>
+    // Games Per Week
+    if (chartData.gamesPerWeek && chartData.gamesPerWeek.length > 0) {
+        new Chart(document.getElementById('gamesWeekChart'), {
+            type: 'bar',
+            data: {
+                labels: chartData.gamesPerWeek.map(function(d) { return new Date(d.week).toLocaleDateString('en-US', {month:'short',day:'numeric'}); }),
+                datasets: [{label:'Games', data: chartData.gamesPerWeek.map(function(d){return parseInt(d.count);}), backgroundColor: colors.blue, borderRadius: 4}]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+    }
 
-    <!-- Load Chart.js locally -->
-    <script src="/js/chart.min.js"></script>
+    // Gender
+    if (chartData.genderDist && chartData.genderDist.length > 0) {
+        var genderLabels = {'male':'Male','female':'Female','other':'Other','not_specified':'Not Specified'};
+        new Chart(document.getElementById('genderChart'), {
+            type: 'doughnut',
+            data: {
+                labels: chartData.genderDist.map(function(d){return genderLabels[d.gender]||d.gender||'Not Specified';}),
+                datasets: [{data: chartData.genderDist.map(function(d){return parseInt(d.count);}), backgroundColor: [colors.blue, colors.pink, colors.purple, '#E0E0E0']}]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+    }
 
-    <script>
-    // Wait for DOM and Chart.js to be ready
-    document.addEventListener('DOMContentLoaded', function() {
-        // Debug: Check if Chart.js loaded
-        console.log('Chart.js loaded:', typeof Chart !== 'undefined');
+    // Age
+    if (chartData.ageDist && chartData.ageDist.length > 0) {
+        new Chart(document.getElementById('ageChart'), {
+            type: 'bar',
+            data: {
+                labels: chartData.ageDist.map(function(d){return d.age_group;}),
+                datasets: [{label:'Users', data: chartData.ageDist.map(function(d){return parseInt(d.count);}), backgroundColor: colors.teal, borderRadius: 4}]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+    }
 
-        // Chart data from server
-        var chartData;
-        try {
-            chartData = <%- JSON.stringify(data) %>;
-            console.log('Chart data loaded:', chartData);
-        } catch(e) {
-            console.error('Error parsing chart data:', e);
-            return;
-        }
+    // Nationality
+    if (chartData.nationalityDist && chartData.nationalityDist.length > 0) {
+        new Chart(document.getElementById('nationalityChart'), {
+            type: 'bar',
+            data: {
+                labels: chartData.nationalityDist.map(function(d){return d.nationality||'Not Specified';}),
+                datasets: [{label:'Users', data: chartData.nationalityDist.map(function(d){return parseInt(d.count);}), backgroundColor: colors.orange, borderRadius: 4}]
+            },
+            options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+        });
+    }
 
-        // Check if Chart is available
-        if (typeof Chart === 'undefined') {
-            console.error('Chart.js not loaded');
-            return;
-        }
+    // Level
+    if (chartData.levelDist && chartData.levelDist.length > 0) {
+        var levelLabels = {'beginner':'Beginner','intermediate':'Intermediate','advanced':'Advanced','scratch':'Scratch','not_specified':'Not Specified'};
+        new Chart(document.getElementById('levelChart'), {
+            type: 'doughnut',
+            data: {
+                labels: chartData.levelDist.map(function(d){return levelLabels[d.level]||d.level||'Not Specified';}),
+                datasets: [{data: chartData.levelDist.map(function(d){return parseInt(d.count);}), backgroundColor: chartColors}]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+    }
 
-        // Color palette
-        var colors = {
-            primary: '#1B5E20',
-            secondary: '#4CAF50',
-            accent: '#81C784',
-            light: '#C8E6C9',
-            blue: '#2196F3',
-            orange: '#FF9800',
-            red: '#f44336',
-            purple: '#9C27B0',
-            teal: '#009688',
-            pink: '#E91E63'
-        };
+    // Handicap
+    if (chartData.handicapDist && chartData.handicapDist.length > 0) {
+        new Chart(document.getElementById('handicapChart'), {
+            type: 'bar',
+            data: {
+                labels: chartData.handicapDist.map(function(d){return d.range;}),
+                datasets: [{label:'Users', data: chartData.handicapDist.map(function(d){return parseInt(d.count);}), backgroundColor: colors.primary, borderRadius: 4}]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+    }
 
-        var chartColors = [colors.primary, colors.blue, colors.orange, colors.purple, colors.teal, colors.pink, colors.red, colors.secondary];
+    // Game Status
+    if (chartData.gameStatus && chartData.gameStatus.length > 0) {
+        var statusColors = {'open':'#4CAF50','full':'#FF9800','confirmed':'#2196F3','completed':'#1B5E20','cancelled':'#f44336'};
+        new Chart(document.getElementById('gameStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: chartData.gameStatus.map(function(d){return d.status.charAt(0).toUpperCase()+d.status.slice(1);}),
+                datasets: [{data: chartData.gameStatus.map(function(d){return parseInt(d.count);}), backgroundColor: chartData.gameStatus.map(function(d){return statusColors[d.status]||'#999';})}]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+    }
 
-        // Chart.js default settings
-        Chart.defaults.font.family = 'Inter, sans-serif';
-        Chart.defaults.color = '#374151';
-        Chart.defaults.responsive = true;
-        Chart.defaults.maintainAspectRatio = false;
+    // Popular Courses
+    if (chartData.popularCourses && chartData.popularCourses.length > 0) {
+        new Chart(document.getElementById('coursesChart'), {
+            type: 'bar',
+            data: {
+                labels: chartData.popularCourses.map(function(d){return d.name.length>20?d.name.substring(0,20)+'...':d.name;}),
+                datasets: [{label:'Games', data: chartData.popularCourses.map(function(d){return parseInt(d.games_count);}), backgroundColor: colors.secondary, borderRadius: 4}]
+            },
+            options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+        });
+    }
+});
+</script>
 
-        // User Growth Chart
-        try {
-            var userGrowthCtx = document.getElementById('userGrowthChart');
-            if (userGrowthCtx && chartData.userGrowth && chartData.userGrowth.length > 0) {
-                new Chart(userGrowthCtx, {
-                    type: 'line',
-                    data: {
-                        labels: chartData.userGrowth.map(function(d) {
-                            var date = new Date(d.month);
-                            return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
-                        }),
-                        datasets: [{
-                            label: 'New Users',
-                            data: chartData.userGrowth.map(function(d) { return parseInt(d.count); }),
-                            borderColor: colors.primary,
-                            backgroundColor: colors.light,
-                            fill: true,
-                            tension: 0.3
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
-                    }
-                });
-                console.log('User Growth chart created');
-            }
-        } catch(e) { console.error('User Growth chart error:', e); }
-
-        // Games Per Week Chart
-        try {
-            var gamesWeekCtx = document.getElementById('gamesWeekChart');
-            if (gamesWeekCtx && chartData.gamesPerWeek && chartData.gamesPerWeek.length > 0) {
-                new Chart(gamesWeekCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.gamesPerWeek.map(function(d) {
-                            var date = new Date(d.week);
-                            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                        }),
-                        datasets: [{
-                            label: 'Games Created',
-                            data: chartData.gamesPerWeek.map(function(d) { return parseInt(d.count); }),
-                            backgroundColor: colors.blue,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
-                    }
-                });
-                console.log('Games Per Week chart created');
-            }
-        } catch(e) { console.error('Games Per Week chart error:', e); }
-
-        // Gender Distribution Chart
-        try {
-            var genderCtx = document.getElementById('genderChart');
-            if (genderCtx && chartData.genderDist && chartData.genderDist.length > 0) {
-                var genderLabels = {
-                    'male': 'Male',
-                    'female': 'Female',
-                    'other': 'Other',
-                    'not_specified': 'Not Specified'
-                };
-                new Chart(genderCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: chartData.genderDist.map(function(d) { return genderLabels[d.gender] || d.gender || 'Not Specified'; }),
-                        datasets: [{
-                            data: chartData.genderDist.map(function(d) { return parseInt(d.count); }),
-                            backgroundColor: [colors.blue, colors.pink, colors.purple, '#E0E0E0']
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { position: 'bottom' } }
-                    }
-                });
-                console.log('Gender chart created');
-            }
-        } catch(e) { console.error('Gender chart error:', e); }
-
-        // Age Distribution Chart
-        try {
-            var ageCtx = document.getElementById('ageChart');
-            if (ageCtx && chartData.ageDist && chartData.ageDist.length > 0) {
-                new Chart(ageCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.ageDist.map(function(d) { return d.age_group; }),
-                        datasets: [{
-                            label: 'Users',
-                            data: chartData.ageDist.map(function(d) { return parseInt(d.count); }),
-                            backgroundColor: colors.teal,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
-                    }
-                });
-                console.log('Age chart created');
-            }
-        } catch(e) { console.error('Age chart error:', e); }
-
-        // Nationality Distribution Chart
-        try {
-            var nationalityCtx = document.getElementById('nationalityChart');
-            if (nationalityCtx && chartData.nationalityDist && chartData.nationalityDist.length > 0) {
-                new Chart(nationalityCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.nationalityDist.map(function(d) { return d.nationality || 'Not Specified'; }),
-                        datasets: [{
-                            label: 'Users',
-                            data: chartData.nationalityDist.map(function(d) { return parseInt(d.count); }),
-                            backgroundColor: colors.orange,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        plugins: { legend: { display: false } },
-                        scales: { x: { beginAtZero: true } }
-                    }
-                });
-                console.log('Nationality chart created');
-            }
-        } catch(e) { console.error('Nationality chart error:', e); }
-
-        // Playing Level Distribution Chart
-        try {
-            var levelCtx = document.getElementById('levelChart');
-            if (levelCtx && chartData.levelDist && chartData.levelDist.length > 0) {
-                var levelLabels = {
-                    'beginner': 'Beginner',
-                    'intermediate': 'Intermediate',
-                    'advanced': 'Advanced',
-                    'scratch': 'Scratch',
-                    'not_specified': 'Not Specified'
-                };
-                new Chart(levelCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: chartData.levelDist.map(function(d) { return levelLabels[d.level] || d.level || 'Not Specified'; }),
-                        datasets: [{
-                            data: chartData.levelDist.map(function(d) { return parseInt(d.count); }),
-                            backgroundColor: chartColors
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { position: 'bottom' } }
-                    }
-                });
-                console.log('Level chart created');
-            }
-        } catch(e) { console.error('Level chart error:', e); }
-
-        // Handicap Distribution Chart
-        try {
-            var handicapCtx = document.getElementById('handicapChart');
-            if (handicapCtx && chartData.handicapDist && chartData.handicapDist.length > 0) {
-                new Chart(handicapCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.handicapDist.map(function(d) { return d.range; }),
-                        datasets: [{
-                            label: 'Users',
-                            data: chartData.handicapDist.map(function(d) { return parseInt(d.count); }),
-                            backgroundColor: colors.primary,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
-                    }
-                });
-                console.log('Handicap chart created');
-            }
-        } catch(e) { console.error('Handicap chart error:', e); }
-
-        // Game Status Chart
-        try {
-            var gameStatusCtx = document.getElementById('gameStatusChart');
-            if (gameStatusCtx && chartData.gameStatus && chartData.gameStatus.length > 0) {
-                var statusColors = {
-                    'open': '#4CAF50',
-                    'full': '#FF9800',
-                    'confirmed': '#2196F3',
-                    'completed': '#1B5E20',
-                    'cancelled': '#f44336'
-                };
-                new Chart(gameStatusCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: chartData.gameStatus.map(function(d) { return d.status.charAt(0).toUpperCase() + d.status.slice(1); }),
-                        datasets: [{
-                            data: chartData.gameStatus.map(function(d) { return parseInt(d.count); }),
-                            backgroundColor: chartData.gameStatus.map(function(d) { return statusColors[d.status] || '#999'; })
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { position: 'bottom' } }
-                    }
-                });
-                console.log('Game Status chart created');
-            }
-        } catch(e) { console.error('Game Status chart error:', e); }
-
-        // Popular Courses Chart
-        try {
-            var coursesCtx = document.getElementById('coursesChart');
-            if (coursesCtx && chartData.popularCourses && chartData.popularCourses.length > 0) {
-                new Chart(coursesCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.popularCourses.map(function(d) { return d.name.length > 20 ? d.name.substring(0, 20) + '...' : d.name; }),
-                        datasets: [{
-                            label: 'Games',
-                            data: chartData.popularCourses.map(function(d) { return parseInt(d.games_count); }),
-                            backgroundColor: colors.secondary,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        plugins: { legend: { display: false } },
-                        scales: { x: { beginAtZero: true } }
-                    }
-                });
-                console.log('Popular Courses chart created');
-            }
-        } catch(e) { console.error('Popular Courses chart error:', e); }
-
-        console.log('All charts initialization complete');
-    });
-    </script>
-</body>
-</html>
+<style>
+.analytics-page { padding: var(--spacing-xl) 0 var(--spacing-2xl); }
+.stats-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl); }
+.charts-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg); margin-bottom: var(--spacing-xl); }
+.charts-row-3 { grid-template-columns: repeat(3, 1fr); }
+.chart-card { background: white; padding: var(--spacing-lg); border-radius: var(--radius-lg); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.chart-card h3 { margin-bottom: var(--spacing-md); font-size: 1rem; color: var(--color-text); }
+.chart-container { position: relative; height: 250px; width: 100%; }
+@media (max-width: 1024px) { .stats-grid-4 { grid-template-columns: repeat(2, 1fr); } .charts-row, .charts-row-3 { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .stats-grid-4 { grid-template-columns: 1fr; } }
+</style>
+` }) %>
