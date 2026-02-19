@@ -85,18 +85,19 @@ router.get('/analytics', isAdmin, async (req, res) => {
 
         // Age distribution (using birth_date)
         const ageDist = await db.query(`
-            SELECT
-                CASE
-                    WHEN birth_date IS NULL THEN 'Unknown'
-                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) < 25 THEN 'Under 25'
-                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 25 AND 34 THEN '25-34'
-                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 35 AND 44 THEN '35-44'
-                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 45 AND 54 THEN '45-54'
-                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 55 AND 64 THEN '55-64'
-                    ELSE '65+'
-                END as age_group,
-                COUNT(*) as count
-            FROM users
+            SELECT age_group, COUNT(*) as count FROM (
+                SELECT
+                    CASE
+                        WHEN birth_date IS NULL THEN 'Unknown'
+                        WHEN EXTRACT(YEAR FROM AGE(birth_date)) < 25 THEN 'Under 25'
+                        WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 25 AND 34 THEN '25-34'
+                        WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 35 AND 44 THEN '35-44'
+                        WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 45 AND 54 THEN '45-54'
+                        WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 55 AND 64 THEN '55-64'
+                        ELSE '65+'
+                    END as age_group
+                FROM users
+            ) sub
             GROUP BY age_group
             ORDER BY
                 CASE age_group
@@ -164,19 +165,20 @@ router.get('/analytics', isAdmin, async (req, res) => {
 
         // Handicap distribution
         const handicapDist = await db.query(`
-            SELECT
-                CASE
-                    WHEN handicap IS NULL THEN 'Not specified'
-                    WHEN handicap < 5 THEN '0-4'
-                    WHEN handicap < 10 THEN '5-9'
-                    WHEN handicap < 15 THEN '10-14'
-                    WHEN handicap < 20 THEN '15-19'
-                    WHEN handicap < 25 THEN '20-24'
-                    WHEN handicap < 30 THEN '25-29'
-                    ELSE '30+'
-                END as range,
-                COUNT(*) as count
-            FROM users
+            SELECT range, COUNT(*) as count FROM (
+                SELECT
+                    CASE
+                        WHEN handicap IS NULL THEN 'Not specified'
+                        WHEN handicap < 5 THEN '0-4'
+                        WHEN handicap < 10 THEN '5-9'
+                        WHEN handicap < 15 THEN '10-14'
+                        WHEN handicap < 20 THEN '15-19'
+                        WHEN handicap < 25 THEN '20-24'
+                        WHEN handicap < 30 THEN '25-29'
+                        ELSE '30+'
+                    END as range
+                FROM users
+            ) sub
             GROUP BY range
             ORDER BY
                 CASE range
