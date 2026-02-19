@@ -1,0 +1,77 @@
+<%- include('../layouts/main', { body: `
+<div class="admin-page">
+    <div class="container container-narrow">
+        <div class="admin-header">
+            <h1>Email Users</h1>
+            <a href="/admin/users" class="btn btn-secondary">Back to Users</a>
+        </div>
+
+        <form action="/admin/email" method="POST" class="email-form">
+            <div class="form-section">
+                <h2>Recipients</h2>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="radio" name="user_ids" value="all" id="selectAll">
+                        <strong>All Users (${users.length})</strong>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>Or select specific users:</label>
+                    <div class="user-select-list">
+                        ${users.map(u => `
+                            <label class="checkbox-label user-checkbox">
+                                <input type="checkbox" name="user_ids" value="${u.id}" class="user-checkbox-input">
+                                <span>${u.display_name}</span>
+                                <span class="user-email">${u.email}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Message</h2>
+
+                <div class="form-group">
+                    <label for="subject">Subject *</label>
+                    <input type="text" id="subject" name="subject" required placeholder="Email subject...">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message *</label>
+                    <textarea id="message" name="message" rows="10" required placeholder="Write your message here..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="/admin/users" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">Send Email</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.email-form .form-section { margin-bottom: var(--spacing-xl); }
+.user-select-list { max-height: 300px; overflow-y: auto; border: 1px solid var(--color-border, #e0e0e0); border-radius: var(--radius-md); padding: var(--spacing-sm); }
+.user-checkbox { display: flex; align-items: center; padding: var(--spacing-sm); border-radius: var(--radius-sm); cursor: pointer; }
+.user-checkbox:hover { background: var(--color-bg-alt, #f5f5f5); }
+.user-checkbox input { margin-right: var(--spacing-sm); }
+.user-email { margin-left: auto; color: var(--color-text-muted, #999); font-size: 0.875rem; }
+.checkbox-label { display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer; }
+</style>
+
+<script>
+document.getElementById('selectAll').addEventListener('change', function() {
+    var checkboxes = document.querySelectorAll('.user-checkbox-input');
+    checkboxes.forEach(function(cb) { cb.checked = false; });
+});
+document.querySelectorAll('.user-checkbox-input').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+        document.getElementById('selectAll').checked = false;
+    });
+});
+</script>
+` }) %>

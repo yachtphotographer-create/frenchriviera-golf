@@ -3,7 +3,10 @@
     <div class="container">
         <div class="admin-header">
             <h1>All Users</h1>
-            <a href="/admin" class="btn btn-secondary">Back to Dashboard</a>
+            <div class="admin-header-actions">
+                <a href="/admin/email" class="btn btn-primary">Email Users</a>
+                <a href="/admin" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
         </div>
 
         <p class="admin-count">${users.length} registered users</p>
@@ -18,21 +21,35 @@
                         <th>Handicap</th>
                         <th>Games</th>
                         <th>Rating</th>
-                        <th>Verified</th>
+                        <th>Status</th>
                         <th>Joined</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${users.map(u => `
-                    <tr>
+                    <tr class="${u.suspended ? 'suspended-row' : ''}">
                         <td>${u.id}</td>
                         <td><a href="/profile/${u.id}">${u.display_name}</a></td>
                         <td>${u.email}</td>
                         <td>${u.handicap !== null ? u.handicap : '-'}</td>
                         <td>${u.games_played || 0}</td>
                         <td>${u.average_rating ? parseFloat(u.average_rating).toFixed(1) : '-'}</td>
-                        <td>${u.email_verified ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-warning">No</span>'}</td>
+                        <td>
+                            ${u.suspended
+                                ? '<span class="badge badge-danger">Suspended</span>'
+                                : u.email_verified
+                                    ? '<span class="badge badge-success">Active</span>'
+                                    : '<span class="badge badge-warning">Unverified</span>'
+                            }
+                        </td>
                         <td>${new Date(u.created_at).toLocaleDateString()}</td>
+                        <td>
+                            ${u.suspended
+                                ? '<form action="/admin/users/' + u.id + '/unsuspend" method="POST" style="display:inline;"><button type="submit" class="btn btn-sm btn-success">Unsuspend</button></form>'
+                                : '<button type="button" class="btn btn-sm btn-danger" onclick="showSuspendModal(' + u.id + ', \\'' + u.display_name.replace(/'/g, "\\\\'") + '\\')">Suspend</button>'
+                            }
+                        </td>
                     </tr>
                     `).join('')}
                 </tbody>
@@ -40,4 +57,46 @@
         </div>
     </div>
 </div>
+
+<!-- Suspend Modal -->
+<div id="suspendModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h3>Suspend User</h3>
+        <p>Suspend user: <strong id="suspendUserName"></strong></p>
+        <form id="suspendForm" method="POST">
+            <div class="form-group">
+                <label for="reason">Reason (optional)</label>
+                <textarea id="reason" name="reason" rows="3" placeholder="Reason for suspension..."></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="closeSuspendModal()">Cancel</button>
+                <button type="submit" class="btn btn-danger">Suspend User</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.suspended-row { background-color: #ffebee !important; }
+.badge-danger { background-color: #f44336; color: white; }
+.btn-danger { background-color: #f44336; color: white; border: none; }
+.btn-danger:hover { background-color: #d32f2f; }
+.btn-success { background-color: #4caf50; color: white; border: none; }
+.btn-success:hover { background-color: #388e3c; }
+.btn-sm { padding: 4px 8px; font-size: 0.75rem; }
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; padding: var(--spacing-xl); border-radius: var(--radius-lg); max-width: 400px; width: 90%; }
+.modal-content h3 { margin-bottom: var(--spacing-md); }
+</style>
+
+<script>
+function showSuspendModal(userId, userName) {
+    document.getElementById('suspendUserName').textContent = userName;
+    document.getElementById('suspendForm').action = '/admin/users/' + userId + '/suspend';
+    document.getElementById('suspendModal').style.display = 'flex';
+}
+function closeSuspendModal() {
+    document.getElementById('suspendModal').style.display = 'none';
+}
+</script>
 ` }) %>

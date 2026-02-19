@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
+const { sendEmail } = require('../utils/email');
 
 // Simple admin auth - check if user is admin
 const isAdmin = (req, res, next) => {
@@ -197,7 +198,7 @@ router.get('/analytics', isAdmin, async (req, res) => {
         const totalUsers = await db.query('SELECT COUNT(*) as count FROM users');
         const totalGames = await db.query('SELECT COUNT(*) as count FROM games');
         const completedGames = await db.query("SELECT COUNT(*) as count FROM games WHERE status = 'completed'");
-        const verifiedUsers = await db.query('SELECT COUNT(*) as count FROM users WHERE email_verified = true');
+        const avgHandicap = await db.query('SELECT ROUND(AVG(handicap)::numeric, 1) as avg FROM users WHERE handicap IS NOT NULL');
 
         res.render('admin/analytics', {
             title: 'Analytics Dashboard',
@@ -205,7 +206,7 @@ router.get('/analytics', isAdmin, async (req, res) => {
                 totalUsers: totalUsers.rows[0].count,
                 totalGames: totalGames.rows[0].count,
                 completedGames: completedGames.rows[0].count,
-                verifiedUsers: verifiedUsers.rows[0].count,
+                avgHandicap: avgHandicap.rows[0].avg || 'N/A',
                 completionRate: totalGames.rows[0].count > 0
                     ? Math.round((completedGames.rows[0].count / totalGames.rows[0].count) * 100)
                     : 0
@@ -234,7 +235,8 @@ router.get('/users', isAdmin, async (req, res) => {
     try {
         const users = await db.query(`
             SELECT id, display_name, email, created_at, email_verified, last_login,
-                   handicap, games_played, average_rating
+                   handicap, games_played, average_rating,
+                   COALESCE(suspended, false) as suspended, suspended_at, suspended_reason
             FROM users
             ORDER BY created_at DESC
         `);
@@ -247,6 +249,123 @@ router.get('/users', isAdmin, async (req, res) => {
         console.error('Admin users error:', err);
         req.session.error = 'Error loading users';
         res.redirect('/admin');
+    }
+});
+
+// Suspend user
+router.post('/users/:id/suspend', isAdmin, async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const { reason } = req.body;
+
+        await db.query(`
+            UPDATE users
+            SET suspended = true, suspended_at = NOW(), suspended_reason = $1
+            WHERE id = $2
+        `, [reason || 'No reason provided', userId]);
+
+        req.session.success = 'User suspended';
+        res.redirect('/admin/users');
+    } catch (err) {
+        console.error('Suspend user error:', err);
+        req.session.error = 'Error suspending user';
+        res.redirect('/admin/users');
+    }
+});
+
+// Unsuspend user
+router.post('/users/:id/unsuspend', isAdmin, async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+
+        await db.query(`
+            UPDATE users
+            SET suspended = false, suspended_at = NULL, suspended_reason = NULL
+            WHERE id = $1
+        `, [userId]);
+
+        req.session.success = 'User unsuspended';
+        res.redirect('/admin/users');
+    } catch (err) {
+        console.error('Unsuspend user error:', err);
+        req.session.error = 'Error unsuspending user';
+        res.redirect('/admin/users');
+    }
+});
+
+// Email form page
+router.get('/email', isAdmin, async (req, res) => {
+    try {
+        const users = await db.query(`
+            SELECT id, display_name, email
+            FROM users
+            WHERE COALESCE(suspended, false) = false
+            ORDER BY display_name
+        `);
+
+        res.render('admin/email', {
+            title: 'Email Users',
+            users: users.rows
+        });
+    } catch (err) {
+        console.error('Admin email page error:', err);
+        req.session.error = 'Error loading email page';
+        res.redirect('/admin');
+    }
+});
+
+// Send email to selected users
+router.post('/email', isAdmin, async (req, res) => {
+    try {
+        const { user_ids, subject, message } = req.body;
+
+        if (!subject || !message) {
+            req.session.error = 'Subject and message are required';
+            return res.redirect('/admin/email');
+        }
+
+        // Get selected user IDs
+        let selectedIds = [];
+        if (user_ids === 'all') {
+            const allUsers = await db.query('SELECT email FROM users WHERE COALESCE(suspended, false) = false');
+            selectedIds = allUsers.rows.map(u => u.email);
+        } else if (user_ids) {
+            const ids = Array.isArray(user_ids) ? user_ids : [user_ids];
+            const users = await db.query('SELECT email FROM users WHERE id = ANY($1)', [ids.map(id => parseInt(id))]);
+            selectedIds = users.rows.map(u => u.email);
+        }
+
+        if (selectedIds.length === 0) {
+            req.session.error = 'No users selected';
+            return res.redirect('/admin/email');
+        }
+
+        // Create HTML email
+        const html = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #1B5E20;">French Riviera Golf</h1>
+                <div style="white-space: pre-wrap;">${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                <hr style="border: none; border-top: 1px solid #E0E0E0; margin: 20px 0;">
+                <p style="color: #999; font-size: 12px;">French Riviera Golf - Find your perfect golf partners on the Cote d'Azur</p>
+            </div>
+        `;
+
+        // Send emails
+        let sent = 0;
+        let failed = 0;
+        for (const email of selectedIds) {
+            const success = await sendEmail(email, subject, html);
+            if (success) sent++;
+            else failed++;
+        }
+
+        req.session.success = `Email sent to ${sent} user${sent !== 1 ? 's' : ''}${failed > 0 ? ` (${failed} failed)` : ''}`;
+        res.redirect('/admin/email');
+
+    } catch (err) {
+        console.error('Send email error:', err);
+        req.session.error = 'Error sending emails';
+        res.redirect('/admin/email');
     }
 });
 

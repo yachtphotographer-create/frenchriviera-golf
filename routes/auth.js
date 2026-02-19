@@ -81,6 +81,12 @@ router.post('/login', isGuest, async (req, res) => {
             return res.redirect('/auth/login');
         }
 
+        // Check if user is suspended
+        if (user.suspended) {
+            req.session.error = 'Your account has been suspended. Please contact support.';
+            return res.redirect('/auth/login');
+        }
+
         // Update last login
         await User.updateLastLogin(user.id);
 
