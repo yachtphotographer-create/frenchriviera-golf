@@ -34,6 +34,11 @@
                             <span class="meta-label">Spots Remaining</span>
                             <span class="meta-value">${game.spots_total - game.spots_filled} spot${game.spots_total - game.spots_filled !== 1 ? 's' : ''}</span>
                         </div>
+                        ${game.gender_preference && game.gender_preference !== 'mixed' ? `
+                        <div class="meta-item">
+                            <span class="meta-label">Gender</span>
+                            <span class="meta-value meta-gender">${game.gender_preference === 'male' ? 'Men Only' : 'Women Only'}</span>
+                        </div>` : ''}
                         ${game.pace_preference ? `
                         <div class="meta-item">
                             <span class="meta-label">Pace</span>
@@ -233,6 +238,7 @@
 .meta-item { }
 .meta-label { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
 .meta-value { font-weight: 500; text-transform: capitalize; }
+.meta-gender { background: #fce7f3; color: #9d174d; padding: 2px 8px; border-radius: var(--radius-sm); }
 .players-section h2 { margin-bottom: var(--spacing-lg); }
 .players-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
 .player-item { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-md); background: var(--color-bg-alt); border-radius: var(--radius-md); }

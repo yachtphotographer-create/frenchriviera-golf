@@ -8,13 +8,14 @@ const { createNotification } = require('../utils/notifications');
 // GET /games - Browse open games
 router.get('/', async (req, res) => {
     try {
-        const { course, department, date, level } = req.query;
+        const { course, department, date, level, gender } = req.query;
 
         const filters = {};
         if (course) filters.course_id = parseInt(course);
         if (department) filters.department = department;
         if (date) filters.date = date;
         if (level) filters.level = level;
+        if (gender) filters.gender_preference = gender;
 
         const games = await Game.findOpen(filters);
         const courses = await Course.findAll();
@@ -23,7 +24,7 @@ router.get('/', async (req, res) => {
             title: 'Find a Game',
             games,
             courses,
-            filters: { course, department, date, level },
+            filters: { course, department, date, level, gender },
             metaDescription: 'Find golf games and playing partners on the French Riviera. Browse open tee times and join games at courses across the Côte d\'Azur.',
             canonicalPath: '/games'
         });
@@ -60,7 +61,7 @@ router.post('/create', isAuthenticated, async (req, res) => {
         const {
             course_id, game_date, tee_time, spots_total,
             level_min, level_max, pace_preference, transport_preference,
-            languages, note
+            languages, note, gender_preference
         } = req.body;
 
         // Validation
@@ -84,7 +85,8 @@ router.post('/create', isAuthenticated, async (req, res) => {
             pace_preference: pace_preference || null,
             transport_preference: transport_preference || null,
             language_preference,
-            note: note || null
+            note: note || null,
+            gender_preference: gender_preference || 'mixed'
         });
 
         req.session.success = 'Game created successfully!';

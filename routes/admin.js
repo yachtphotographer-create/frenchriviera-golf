@@ -60,6 +60,173 @@ router.get('/', isAdmin, async (req, res) => {
     }
 });
 
+// Analytics dashboard
+router.get('/analytics', isAdmin, async (req, res) => {
+    try {
+        // User growth - last 12 months
+        const userGrowth = await db.query(`
+            SELECT
+                DATE_TRUNC('month', created_at) as month,
+                COUNT(*) as count
+            FROM users
+            WHERE created_at > NOW() - INTERVAL '12 months'
+            GROUP BY DATE_TRUNC('month', created_at)
+            ORDER BY month
+        `);
+
+        // Gender distribution
+        const genderDist = await db.query(`
+            SELECT
+                COALESCE(gender, 'not_specified') as gender,
+                COUNT(*) as count
+            FROM users
+            GROUP BY gender
+        `);
+
+        // Age distribution (using birth_date)
+        const ageDist = await db.query(`
+            SELECT
+                CASE
+                    WHEN birth_date IS NULL THEN 'Unknown'
+                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) < 25 THEN 'Under 25'
+                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 25 AND 34 THEN '25-34'
+                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 35 AND 44 THEN '35-44'
+                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 45 AND 54 THEN '45-54'
+                    WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 55 AND 64 THEN '55-64'
+                    ELSE '65+'
+                END as age_group,
+                COUNT(*) as count
+            FROM users
+            GROUP BY age_group
+            ORDER BY
+                CASE age_group
+                    WHEN 'Under 25' THEN 1
+                    WHEN '25-34' THEN 2
+                    WHEN '35-44' THEN 3
+                    WHEN '45-54' THEN 4
+                    WHEN '55-64' THEN 5
+                    WHEN '65+' THEN 6
+                    ELSE 7
+                END
+        `);
+
+        // Nationality distribution
+        const nationalityDist = await db.query(`
+            SELECT
+                COALESCE(nationality, 'Not specified') as nationality,
+                COUNT(*) as count
+            FROM users
+            GROUP BY nationality
+            ORDER BY count DESC
+            LIMIT 10
+        `);
+
+        // Games per week - last 12 weeks
+        const gamesPerWeek = await db.query(`
+            SELECT
+                DATE_TRUNC('week', created_at) as week,
+                COUNT(*) as count
+            FROM games
+            WHERE created_at > NOW() - INTERVAL '12 weeks'
+            GROUP BY DATE_TRUNC('week', created_at)
+            ORDER BY week
+        `);
+
+        // Game status distribution
+        const gameStatus = await db.query(`
+            SELECT
+                status,
+                COUNT(*) as count
+            FROM games
+            GROUP BY status
+        `);
+
+        // Popular courses
+        const popularCourses = await db.query(`
+            SELECT
+                c.name,
+                COUNT(g.id) as games_count
+            FROM courses c
+            LEFT JOIN games g ON c.id = g.course_id
+            GROUP BY c.id, c.name
+            ORDER BY games_count DESC
+            LIMIT 10
+        `);
+
+        // Playing level distribution
+        const levelDist = await db.query(`
+            SELECT
+                COALESCE(playing_level, 'not_specified') as level,
+                COUNT(*) as count
+            FROM users
+            GROUP BY playing_level
+        `);
+
+        // Handicap distribution
+        const handicapDist = await db.query(`
+            SELECT
+                CASE
+                    WHEN handicap IS NULL THEN 'Not specified'
+                    WHEN handicap < 5 THEN '0-4'
+                    WHEN handicap < 10 THEN '5-9'
+                    WHEN handicap < 15 THEN '10-14'
+                    WHEN handicap < 20 THEN '15-19'
+                    WHEN handicap < 25 THEN '20-24'
+                    WHEN handicap < 30 THEN '25-29'
+                    ELSE '30+'
+                END as range,
+                COUNT(*) as count
+            FROM users
+            GROUP BY range
+            ORDER BY
+                CASE range
+                    WHEN '0-4' THEN 1
+                    WHEN '5-9' THEN 2
+                    WHEN '10-14' THEN 3
+                    WHEN '15-19' THEN 4
+                    WHEN '20-24' THEN 5
+                    WHEN '25-29' THEN 6
+                    WHEN '30+' THEN 7
+                    ELSE 8
+                END
+        `);
+
+        // Key stats
+        const totalUsers = await db.query('SELECT COUNT(*) as count FROM users');
+        const totalGames = await db.query('SELECT COUNT(*) as count FROM games');
+        const completedGames = await db.query("SELECT COUNT(*) as count FROM games WHERE status = 'completed'");
+        const verifiedUsers = await db.query('SELECT COUNT(*) as count FROM users WHERE email_verified = true');
+
+        res.render('admin/analytics', {
+            title: 'Analytics Dashboard',
+            stats: {
+                totalUsers: totalUsers.rows[0].count,
+                totalGames: totalGames.rows[0].count,
+                completedGames: completedGames.rows[0].count,
+                verifiedUsers: verifiedUsers.rows[0].count,
+                completionRate: totalGames.rows[0].count > 0
+                    ? Math.round((completedGames.rows[0].count / totalGames.rows[0].count) * 100)
+                    : 0
+            },
+            data: {
+                userGrowth: userGrowth.rows,
+                genderDist: genderDist.rows,
+                ageDist: ageDist.rows,
+                nationalityDist: nationalityDist.rows,
+                gamesPerWeek: gamesPerWeek.rows,
+                gameStatus: gameStatus.rows,
+                popularCourses: popularCourses.rows,
+                levelDist: levelDist.rows,
+                handicapDist: handicapDist.rows
+            }
+        });
+    } catch (err) {
+        console.error('Admin analytics error:', err);
+        req.session.error = 'Error loading analytics';
+        res.redirect('/admin');
+    }
+});
+
 // View all users
 router.get('/users', isAdmin, async (req, res) => {
     try {

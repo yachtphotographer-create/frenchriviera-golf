@@ -2678,6 +2678,11 @@ a.favorite-course-badge:hover {
     margin: 0;
 }
 
+.admin-header-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
 .admin-count {
     color: var(--color-text-muted);
     margin-bottom: var(--spacing-lg);

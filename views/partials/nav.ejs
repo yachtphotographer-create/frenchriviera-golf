@@ -47,6 +47,7 @@
                         <li><a href="/dashboard"><%= typeof t !== 'undefined' ? t.nav.dashboard : 'Dashboard' %></a></li>
                         <% if (user.email === 'yachtphotographer@gmail.com') { %>
                         <li><a href="/admin">Admin Panel</a></li>
+                        <li><a href="/admin/analytics">Analytics</a></li>
                         <% } %>
                         <li><a href="/profile"><%= typeof t !== 'undefined' ? t.nav.myProfile : 'My Profile' %></a></li>
                         <li><a href="/profile/edit"><%= typeof t !== 'undefined' ? t.nav.editProfile : 'Edit Profile' %></a></li>
@@ -83,6 +84,7 @@
         <li><a href="/dashboard" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.dashboard : 'Dashboard' %></a></li>
         <% if (user.email === 'yachtphotographer@gmail.com') { %>
         <li><a href="/admin" class="nav-link">Admin Panel</a></li>
+        <li><a href="/admin/analytics" class="nav-link">Analytics</a></li>
         <% } %>
         <li><a href="/profile" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.myProfile : 'My Profile' %></a></li>
         <li><a href="/games/mine" class="nav-link"><%= typeof t !== 'undefined' ? t.nav.myGames : 'My Games' %></a></li>

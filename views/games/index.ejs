@@ -28,8 +28,15 @@
                 <div class="filter-group">
                     <input type="date" name="date" value="${filters.date || ''}" placeholder="Any date">
                 </div>
+                <div class="filter-group">
+                    <select name="gender">
+                        <option value="">All Games</option>
+                        <option value="male" ${filters.gender === 'male' ? 'selected' : ''}>Men Only</option>
+                        <option value="female" ${filters.gender === 'female' ? 'selected' : ''}>Women Only</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-outline">Filter</button>
-                ${(filters.department || filters.course || filters.date) ? '<a href="/games" class="btn btn-outline">Clear</a>' : ''}
+                ${(filters.department || filters.course || filters.date || filters.gender) ? '<a href="/games" class="btn btn-outline">Clear</a>' : ''}
             </form>
         </div>
 
@@ -64,6 +71,7 @@
                             </div>
                             ${game.note ? `<p class="game-note">${game.note}</p>` : ''}
                             <div class="game-tags">
+                                ${game.gender_preference && game.gender_preference !== 'mixed' ? `<span class="tag tag-gender">${game.gender_preference === 'male' ? 'Men Only' : 'Women Only'}</span>` : ''}
                                 ${game.pace_preference ? `<span class="tag">${game.pace_preference} pace</span>` : ''}
                                 ${game.transport_preference ? `<span class="tag">${game.transport_preference}</span>` : ''}
                                 ${game.level_min || game.level_max ? `<span class="tag">${game.level_min || 'Any'} - ${game.level_max || 'Any'}</span>` : ''}
@@ -109,6 +117,7 @@
 .game-note { color: var(--color-text-muted); font-style: italic; margin-bottom: var(--spacing-md); }
 .game-tags { display: flex; gap: var(--spacing-sm); flex-wrap: wrap; }
 .tag { background: var(--color-bg-alt); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.75rem; text-transform: capitalize; }
+.tag-gender { background: #fce7f3; color: #9d174d; }
 .game-card-footer { padding: var(--spacing-md) var(--spacing-lg); background: var(--color-bg-alt); }
 </style>
 ` }) %>

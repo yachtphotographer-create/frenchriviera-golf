@@ -6,7 +6,7 @@ const Game = {
         const {
             creator_id, course_id, game_date, tee_time, spots_total,
             level_min, level_max, pace_preference, transport_preference,
-            language_preference, note
+            language_preference, note, gender_preference
         } = gameData;
 
         const client = await db.pool.connect();
@@ -18,12 +18,12 @@ const Game = {
                 `INSERT INTO games (
                     creator_id, course_id, game_date, tee_time, spots_total,
                     level_min, level_max, pace_preference, transport_preference,
-                    language_preference, note
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                    language_preference, note, gender_preference
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
                 RETURNING *`,
                 [creator_id, course_id, game_date, tee_time, spots_total,
                  level_min, level_max, pace_preference, transport_preference,
-                 language_preference, note]
+                 language_preference, note, gender_preference || 'mixed']
             );
 
             const game = gameResult.rows[0];
@@ -99,6 +99,12 @@ const Game = {
             query += ` AND (g.level_min IS NULL OR g.level_min <= $${paramIndex})
                        AND (g.level_max IS NULL OR g.level_max >= $${paramIndex})`;
             params.push(filters.level);
+            paramIndex++;
+        }
+
+        if (filters.gender_preference) {
+            query += ` AND (g.gender_preference = $${paramIndex} OR g.gender_preference = 'mixed')`;
+            params.push(filters.gender_preference);
             paramIndex++;
         }
 

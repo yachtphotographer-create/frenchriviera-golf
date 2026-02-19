@@ -59,7 +59,8 @@ router.post('/edit', isAuthenticated, async (req, res) => {
             location_type, location_city, visiting_from, visiting_until, phone,
             handicap, handicap_type, playing_level, pace_preference,
             transport_preference, typical_tee_time, usual_days,
-            vibe, group_preference, post_round, favorite_courses
+            vibe, group_preference, post_round, favorite_courses,
+            gender, birth_date
         } = req.body;
 
         // Process languages array
@@ -94,7 +95,9 @@ router.post('/edit', isAuthenticated, async (req, res) => {
             vibe: vibe || null,
             group_preference: group_preference || null,
             post_round: post_round || null,
-            favorite_courses: favoriteCoursesArray
+            favorite_courses: favoriteCoursesArray,
+            gender: gender || null,
+            birth_date: birth_date || null
         };
 
         await User.updateProfile(req.session.user.id, profileData);
