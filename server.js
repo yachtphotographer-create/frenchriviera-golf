@@ -157,6 +157,16 @@ app.use((req, res, next) => {
     next();
 });
 
+// Serve .well-known directory (for brand-facts.json, etc.)
+app.use('/.well-known', express.static(path.join(__dirname, 'public/.well-known'), {
+    dotfiles: 'allow',
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.json')) {
+            res.setHeader('Content-Type', 'application/json');
+        }
+    }
+}));
+
 // Routes
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');

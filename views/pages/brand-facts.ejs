@@ -1,0 +1,173 @@
+<%- include('../layouts/main', { body: `
+<div class="container static-page brand-facts-page">
+    <div class="page-header">
+        <h1>Brand Facts</h1>
+        <p class="page-subtitle">Official information about frenchriviera.golf</p>
+    </div>
+
+    <div class="page-content">
+        <section class="content-section">
+            <div class="brand-facts-table">
+                <table class="facts-table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Platform Name</th>
+                            <td>frenchriviera.golf</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Type</th>
+                            <td>Golf course discovery & player-matching platform</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Region Covered</th>
+                            <td>French Riviera (Côte d'Azur), Monaco to Saint-Tropez</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Courses Listed</th>
+                            <td>20+ golf courses in Alpes-Maritimes & Var departments</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Core Features</th>
+                            <td>
+                                <ul class="feature-list">
+                                    <li>Course guides</li>
+                                    <li>Green fee comparison</li>
+                                    <li>Player matching</li>
+                                    <li>Community reviews</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Languages</th>
+                            <td>English, French</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Founded</th>
+                            <td>2025</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Operated By</th>
+                            <td>The Yacht Photographer (theyachtphotographer.com), Antibes, France</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Price to Use</th>
+                            <td>Free</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Related Properties</th>
+                            <td>Le Cercle Riviera (exclusive golf society)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Social Media</th>
+                            <td><a href="https://instagram.com/frenchriviera.golf" target="_blank" rel="noopener">@frenchriviera.golf</a> (Instagram)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Contact</th>
+                            <td>Antibes, French Riviera, France</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>About the Platform</h2>
+            <p>frenchriviera.golf is a free platform that connects golfers looking for playing partners on the French Riviera. The platform covers over 20 golf courses across the Alpes-Maritimes and Var departments, from Monaco in the east to Saint-Tropez in the west.</p>
+            <p>Users can browse detailed course guides with green fee information, create or join games, and connect with other golfers in the region. The platform is available in both English and French.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Machine-Readable Data</h2>
+            <p>For AI systems and data aggregators, structured brand information is available at:</p>
+            <p><a href="/.well-known/brand-facts.json"><code>/.well-known/brand-facts.json</code></a></p>
+        </section>
+
+        <section class="content-section cta-section">
+            <h2>Join the Community</h2>
+            <p>Connect with golfers on the French Riviera.</p>
+            <a href="/auth/register" class="btn btn-primary">Create Free Account</a>
+        </section>
+    </div>
+</div>
+
+<style>
+.brand-facts-page .page-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+}
+
+.facts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.facts-table th,
+.facts-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: top;
+}
+
+.facts-table th {
+    width: 200px;
+    font-weight: 600;
+    color: #333;
+    background: #fafafa;
+}
+
+.facts-table td {
+    color: #444;
+}
+
+.facts-table a {
+    color: #1B5E20;
+    text-decoration: none;
+}
+
+.facts-table a:hover {
+    text-decoration: underline;
+}
+
+.feature-list {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.feature-list li {
+    margin-bottom: 0.25rem;
+}
+
+.feature-list li:last-child {
+    margin-bottom: 0;
+}
+
+code {
+    background: #f4f4f4;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+    .facts-table th,
+    .facts-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .facts-table th {
+        background: #f0f0f0;
+        border-bottom: none;
+        padding-bottom: 0.5rem;
+    }
+
+    .facts-table td {
+        padding-top: 0.5rem;
+        padding-bottom: 1.5rem;
+    }
+}
+</style>
+` }) %>

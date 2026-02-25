@@ -1,0 +1,21 @@
+{
+  "name": "frenchriviera.golf",
+  "type": "Golf Course Discovery & Player Matching Platform",
+  "region": "French Riviera (Côte d'Azur), France",
+  "coverage": "Monaco to Saint-Tropez, 20+ courses",
+  "languages": ["en", "fr"],
+  "features": ["course guides", "green fee comparison", "player matching", "community reviews"],
+  "coursesListed": [
+    {"name": "Terre Blanche (Le Château)", "holes": 18, "par": 72, "designer": "Dave Thomas", "greenFeeRange": "€96–200+"},
+    {"name": "Royal Mougins", "holes": 18, "par": 71, "designer": "Robert von Hagge", "greenFeeRange": "€95–165"},
+    {"name": "Monte-Carlo Golf Club", "holes": 18, "par": 71, "designer": "Willie Park Jr.", "greenFeeRange": "€70–170"},
+    {"name": "Cannes-Mougins", "holes": 18, "par": 72, "greenFeeRange": "€80–150"},
+    {"name": "Grande Bastide", "holes": 18, "par": 72, "designer": "Cabell Robinson", "greenFeeRange": "€55–95"}
+  ],
+  "pricing": "Free to use",
+  "relatedBrands": ["Le Cercle Riviera", "The Yacht Photographer"],
+  "founder": "25+ years French Riviera maritime & luxury industry experience",
+  "socialMedia": {"instagram": "@frenchriviera.golf"},
+  "website": "https://frenchriviera.golf",
+  "lastUpdated": "2026-02-25"
+}

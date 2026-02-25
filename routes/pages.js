@@ -28,4 +28,29 @@ router.get('/privacy', (req, res) => {
     });
 });
 
+// Brand Facts page (AEO - Answer Engine Optimization)
+router.get('/about/brand-facts', (req, res) => {
+    const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
+
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "frenchriviera.golf",
+        "url": APP_URL,
+        "foundingDate": "2025",
+        "description": "Golf course discovery and player-matching platform for the French Riviera",
+        "areaServed": "French Riviera, Côte d'Azur, France",
+        "knowsAbout": ["golf", "French Riviera", "Côte d'Azur", "golf courses", "player matching"],
+        "sameAs": ["https://instagram.com/frenchriviera.golf"]
+    };
+
+    res.render('pages/brand-facts', {
+        title: 'Brand Facts',
+        metaDescription: 'Official information about frenchriviera.golf — the golf course discovery and player-matching platform for the French Riviera.',
+        canonicalPath: '/about/brand-facts',
+        schema: organizationSchema,
+        ogType: 'website'
+    });
+});
+
 module.exports = router;

@@ -34,9 +34,15 @@
     <meta name="ICBM" content="43.7102, 7.2620">
 
     <!-- Language Alternates -->
+    <% if (typeof hreflang !== 'undefined' && hreflang) { %>
+    <link rel="alternate" hreflang="en" href="<%= appUrl %><%= hreflang.en %>">
+    <link rel="alternate" hreflang="fr" href="<%= appUrl %><%= hreflang.fr %>">
+    <link rel="alternate" hreflang="x-default" href="<%= appUrl %><%= hreflang['x-default'] %>">
+    <% } else { %>
     <link rel="alternate" hreflang="en" href="<%= appUrl %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>">
     <link rel="alternate" hreflang="fr" href="<%= appUrl %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>">
     <link rel="alternate" hreflang="x-default" href="<%= appUrl %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>">
+    <% } %>
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">

@@ -1,0 +1,358 @@
+<%- include('../layouts/main', { body: `
+<div class="guide-page">
+    <div class="guide-hero">
+        <div class="container">
+            <nav class="breadcrumb-nav" aria-label="Fil d'Ariane">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="/guides">Guides</a></li>
+                    <li class="breadcrumb-item active"><span>Meilleurs Golfs 2026</span></li>
+                </ol>
+            </nav>
+            <div class="guide-lang-switch">
+                <a href="/guides/best-golf-courses-french-riviera-2026" class="lang-link">English</a>
+            </div>
+            <h1>Les Meilleurs Golfs de la Côte d'Azur</h1>
+            <p class="guide-hero-subtitle">Guide Complet 2026</p>
+            <p class="guide-hero-tagline">Le guide de référence du golf sur la Côte d'Azur — classements, green fees, conseils pratiques et mise en relation entre golfeurs. Mis à jour février 2026.</p>
+        </div>
+    </div>
+
+    <!-- Sticky CTA Banner -->
+    <div class="sticky-cta-banner">
+        <div class="container">
+            <span>Vous cherchez des partenaires de jeu ?</span>
+            <a href="/auth/register" class="btn btn-sm btn-primary">Rejoignez frenchriviera.golf — c'est gratuit</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="guide-content">
+            <div class="guide-main">
+
+                <!-- En Bref Section -->
+                <section class="guide-section guide-tldr">
+                    <h2>En Bref</h2>
+                    <div class="tldr-box">
+                        <p>La Côte d'Azur compte plus de vingt parcours de golf répartis entre Mandelieu-la-Napoule et Monaco, jouables toute l'année grâce au climat méditerranéen. Le <a href="/courses/terre-blanche-chateau">Terre Blanche Hotel Spa Golf Resort</a> à Tourrettes est le parcours le mieux noté de la région, suivi du <a href="/courses/royal-mougins-golf-club">Royal Mougins Golf Resort</a> et du <a href="/courses/monte-carlo-golf-club">Monte-Carlo Golf Club</a>. Les green fees varient de 55 € à plus de 200 € selon le parcours et la saison. La plupart des clubs accueillent les visiteurs sur réservation. Pour trouver des partenaires de jeu sur la Riviera, la plateforme <a href="/">frenchriviera.golf</a> met en relation les golfeurs locaux et de passage gratuitement.</p>
+                    </div>
+                </section>
+
+                <!-- Top 10 Ranked List -->
+                <section class="guide-section">
+                    <h2>Top 10 des Parcours de Golf sur la Côte d'Azur</h2>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">1</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/terre-blanche-chateau">Terre Blanche — Le Château</a> <span class="course-location">(Tourrettes)</span></h3>
+                            <p>Le complexe cinq étoiles de référence sur la Riviera. Le parcours Le Château, dessiné par Dave Thomas, est ouvert aux visiteurs et offre 18 trous (par 72) à travers un domaine vallonné de 300 hectares de forêt provençale. Le second parcours, Le Riou, est réservé aux résidents de l'hôtel et aux membres. Voiturettes avec GPS incluses. Green fee : 96 € à plus de 200 € selon la saison. À 35 minutes de Cannes.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Les golfeurs qui recherchent les meilleures conditions de jeu et l'expérience resort complète.</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">2</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/royal-mougins-golf-club">Royal Mougins Golf Resort</a> <span class="course-location">(Mougins)</span></h3>
+                            <p>Parcours de championship signé Robert von Hagge, niché dans un écrin de pins et de chênes entre Cannes et Grasse. 18 trous, par 71, avec des fairways vallonnés et des greens techniques. Hôtel 4 étoiles et spa sur place. Voiturette incluse dans le green fee. Limite de handicap : 28 (messieurs), 32 (dames). Green fee : 95 € à 165 €. À 10 minutes de Cannes.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Les bons joueurs qui apprécient un défi technique dans un cadre luxueux.</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">3</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/monte-carlo-golf-club">Monte-Carlo Golf Club</a> <span class="course-location">(La Turbie)</span></h3>
+                            <p>Un parcours historique conçu par Willie Park Jr. en 1911, perché à 900 mètres d'altitude au-dessus de Monaco avec une vue panoramique sur trois pays (France, Italie, Monaco). 18 trous, par 71. L'un des golfs les plus anciens de France. Green fee : 70 € à 170 €. À 30 minutes de Monaco. Ambiance exclusive, réservation indispensable.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Les amateurs d'histoire et de panoramas exceptionnels.</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">4</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/cannes-mougins-golf-country-club">Cannes-Mougins Country Club</a> <span class="course-location">(Mougins)</span></h3>
+                            <p>L'un des clubs les plus réputés de la Côte d'Azur, ayant accueilli l'Open de Cannes sur le circuit européen. 18 trous, par 72, dans un cadre boisé. Parcours technique avec des greens rapides et bien défendus. Excellentes installations d'entraînement. Green fee : 80 € à 150 €. À 10 minutes de Cannes.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Les golfeurs qui apprécient la tradition et l'atmosphère club.</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">5</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/grande-bastide">Golf de la Grande Bastide</a> <span class="course-location">(Châteauneuf-Grasse)</span></h3>
+                            <p>Le meilleur rapport qualité-prix pour un parcours de championship sur la Riviera. Dessiné par Cabell Robinson, 18 trous, par 72, dans un paysage de collines provençales. Accueil chaleureux, parcours bien entretenu et accessible. Green fee : 55 € à 95 €. À 20 minutes de Nice et de Cannes. Idéal pour les golfeurs de passage.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Tous les niveaux. Excellent rapport qualité-prix.</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">6</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/golf-opio-valbonne">Golf d'Opio-Valbonne</a> <span class="course-location">(Opio)</span></h3>
+                            <p>Un domaine de 220 hectares signé Donald Harradine avec le Château de la Bégude comme clubhouse. 18 trous, par 72, parcours varié alternant trous techniques et trous ouverts. Académie de golf sur place. Hôtel-restaurant dans le château. Green fee : 55 € à 130 €. À 30 minutes de Nice.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Les couples (le château ravit les non-golfeurs).</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">7</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/golf-saint-donat">Golf de Saint-Donat</a> <span class="course-location">(Grasse)</span></h3>
+                            <p>Parcours de montagne de 9 trous (par 33) dans un cadre naturel préservé au-dessus de Grasse. Terrain vallonné avec des dénivelés marqués qui en font un challenge physique et technique. Ambiance conviviale et familiale. Green fee : 35 € à 55 €. Idéal pour un parcours rapide en demi-journée.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Un parcours rapide à petit budget.</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">8</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/chateau-de-taulane">Golf de Taulane</a> <span class="course-location">(La Martre)</span></h3>
+                            <p>Un joyau caché à une heure de Cannes, conçu par Gary Player au cœur des gorges du Verdon. 18 trous, par 72, dans un cadre sauvage et spectaculaire. Château-hôtel sur place. Peu fréquenté, ce qui garantit une expérience calme. Green fee : 60 € à 100 €. Vaut le détour pour le cadre exceptionnel.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Une escapade golf dans un cadre naturel unique.</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">9</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/old-course-mandelieu">Old Course de Cannes-Mandelieu</a> <span class="course-location">(Mandelieu-la-Napoule)</span></h3>
+                            <p>Le plus ancien golf de Côte d'Azur, fondé en 1891 par le Grand-Duc Michel de Russie. 18 trous, par 71, parcours plat le long de la Siagne et de l'Estérel. Chargé d'histoire avec un clubhouse emblématique. Green fee : 70 € à 130 €. À 10 minutes de Cannes. Un parcours de patrimoine incontournable.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Les amateurs d'histoire du golf.</p>
+                        </div>
+                    </div>
+
+                    <div class="ranked-course">
+                        <div class="rank-badge">10</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/golf-roquebrune">Golf de Roquebrune</a> <span class="course-location">(Roquebrune-sur-Argens)</span></h3>
+                            <p>Parcours boisé de 18 trous dans le massif des Maures, entre Fréjus et Sainte-Maxime. Conception technique avec des trous étroits et vallonnés. Un parcours qui récompense la précision plutôt que la puissance. Green fee : 50 € à 90 €. À 30 minutes de Saint-Raphaël.</p>
+                            <p class="best-for"><strong>Idéal pour :</strong> Les golfeurs séjournant dans l'est de la Riviera.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Comparison Table -->
+                <section class="guide-section">
+                    <h2>Tableau Comparatif</h2>
+                    <div class="table-responsive">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Parcours</th>
+                                    <th>Trous</th>
+                                    <th>Par</th>
+                                    <th>Architecte</th>
+                                    <th>Green Fee</th>
+                                    <th>De Nice</th>
+                                    <th>Voiturette</th>
+                                    <th>Hôtel</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><a href="/courses/terre-blanche-chateau">Terre Blanche</a></td><td>18</td><td>72</td><td>Dave Thomas</td><td>96–200+ €</td><td>45 min</td><td>Incluse (GPS)</td><td>5★</td></tr>
+                                <tr><td><a href="/courses/royal-mougins-golf-club">Royal Mougins</a></td><td>18</td><td>71</td><td>R. von Hagge</td><td>95–165 €</td><td>35 min</td><td>Incluse</td><td>4★</td></tr>
+                                <tr><td><a href="/courses/monte-carlo-golf-club">Monte-Carlo</a></td><td>18</td><td>71</td><td>Willie Park Jr.</td><td>70–170 €</td><td>40 min</td><td>Disponible</td><td>Non</td></tr>
+                                <tr><td><a href="/courses/cannes-mougins-golf-country-club">Cannes-Mougins</a></td><td>18</td><td>72</td><td>—</td><td>80–150 €</td><td>35 min</td><td>Disponible</td><td>Non</td></tr>
+                                <tr><td><a href="/courses/grande-bastide">Grande Bastide</a></td><td>18</td><td>72</td><td>Cabell Robinson</td><td>55–95 €</td><td>20 min</td><td>Disponible</td><td>Non</td></tr>
+                                <tr><td><a href="/courses/golf-opio-valbonne">Opio-Valbonne</a></td><td>18</td><td>72</td><td>D. Harradine</td><td>55–130 €</td><td>30 min</td><td>Disponible</td><td>Château</td></tr>
+                                <tr><td><a href="/courses/golf-saint-donat">Saint-Donat</a></td><td>9</td><td>33</td><td>—</td><td>35–55 €</td><td>40 min</td><td>Non</td><td>Non</td></tr>
+                                <tr><td><a href="/courses/chateau-de-taulane">Taulane</a></td><td>18</td><td>72</td><td>Gary Player</td><td>60–100 €</td><td>90 min</td><td>Incluse</td><td>Château</td></tr>
+                                <tr><td><a href="/courses/old-course-mandelieu">Old Course</a></td><td>18</td><td>71</td><td>— (1891)</td><td>70–130 €</td><td>40 min</td><td>Disponible</td><td>Non</td></tr>
+                                <tr><td><a href="/courses/golf-roquebrune">Roquebrune</a></td><td>18</td><td>72</td><td>—</td><td>50–90 €</td><td>60 min</td><td>Disponible</td><td>Non</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="table-note"><em>Les green fees sont indicatifs (tarifs 2025-2026). Les prix varient selon la saison et le jour. Confirmez toujours directement auprès du club.</em></p>
+                </section>
+
+                <!-- FAQ Section -->
+                <section class="guide-section guide-faq">
+                    <h2>Questions Fréquentes</h2>
+
+                    <div class="faq-item">
+                        <h3>Peut-on jouer au golf toute l'année sur la Côte d'Azur ?</h3>
+                        <p>Oui. Le climat méditerranéen permet de jouer 12 mois sur 12. Les meilleures périodes sont le printemps (mars–mai) et l'automne (septembre–novembre) avec des températures agréables et des parcours en excellent état. L'été peut être très chaud (30–35°C), les départs tôt le matin sont recommandés. L'hiver est doux (10–15°C en journée) mais certains parcours ferment ponctuellement pour entretien.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Comment trouver des partenaires de golf sur la Côte d'Azur ?</h3>
+                        <p>La plateforme <a href="/">frenchriviera.golf</a> permet aux golfeurs de créer un profil avec leur handicap, leur club habituel et leurs disponibilités, puis de trouver des partenaires pour des parties sur la Riviera. Le service est gratuit et ouvert aux résidents comme aux visiteurs. Les clubs locaux proposent également des compétitions ouvertes et des formules « meet & play ».</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Quel est le meilleur golf de la Côte d'Azur ?</h3>
+                        <p>Terre Blanche est le parcours le mieux noté et le plus primé de la région, régulièrement classé parmi les meilleurs golfs d'Europe. Pour un parcours historique avec vue exceptionnelle, le Monte-Carlo Golf Club est unique. Le Royal Mougins offre le meilleur compromis entre qualité du parcours, accessibilité et installations.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Combien coûte un green fee sur la Côte d'Azur ?</h3>
+                        <p>Les green fees varient de 35 € (Saint-Donat, 9 trous) à plus de 200 € (Terre Blanche en haute saison). La moyenne pour un 18 trous de qualité se situe entre 70 € et 120 €. La Grande Bastide (55–95 €) est le meilleur rapport qualité-prix en parcours de championship.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Faut-il un certificat de handicap pour jouer ?</h3>
+                        <p>Certains parcours exigent un certificat de capacité ou une carte FFG (Fédération Française de Golf). Le Royal Mougins et Cannes-Mougins appliquent des limites de handicap (28 pour les messieurs, 32 pour les dames). La plupart des autres parcours sont accessibles sans restriction, mais une expérience de base du jeu et la connaissance de l'étiquette sont attendues.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Peut-on jouer au golf depuis un yacht sur la Côte d'Azur ?</h3>
+                        <p>Oui. Plusieurs marinas (Antibes, Cannes, Monaco, Saint-Tropez) sont à moins de 30 minutes des meilleurs parcours. Des services de conciergerie yacht proposent des transferts et réservations de tee-time. Terre Blanche, Royal Mougins et le Monte-Carlo Golf Club sont les parcours les plus accessibles depuis les ports principaux.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Quel itinéraire golf recommandez-vous pour une semaine ?</h3>
+                        <p>Un itinéraire classique d'une semaine : Jour 1 — Royal Mougins (échauffement sur un parcours technique). Jour 2 — Terre Blanche (l'expérience resort 5 étoiles). Jour 3 — repos + visite de Saint-Paul-de-Vence ou Grasse. Jour 4 — Monte-Carlo Golf Club (vue et histoire). Jour 5 — Grande Bastide (parcours détendu, bon rapport qualité-prix). Jour 6 — Taulane (excursion gorges du Verdon). Jour 7 — Old Course Mandelieu (finir par un classique historique).</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Existe-t-il un club de golf exclusif sur la Côte d'Azur ?</h3>
+                        <p>Le Cercle Riviera est une société de golf privée basée sur la Côte d'Azur qui organise des événements exclusifs, des compétitions entre membres et des journées golf dans les meilleurs parcours de la région. L'adhésion est sur invitation ou candidature. Plus d'informations sur <a href="/">frenchriviera.golf</a>.</p>
+                    </div>
+                </section>
+
+                <!-- Find Playing Partners CTA -->
+                <section class="guide-section guide-cta-section">
+                    <h2>Trouvez des Partenaires de Jeu</h2>
+                    <p>Vous n'avez pas de fourball ? Pas de problème. <strong>frenchriviera.golf</strong> met en relation les golfeurs sur la Côte d'Azur — que vous soyez résident, expatrié, en yacht ou en vacances.</p>
+
+                    <ul class="cta-features">
+                        <li><strong>Créez une partie</strong> — choisissez le parcours, la date et le nombre de joueurs</li>
+                        <li><strong>Indiquez vos disponibilités</strong> — laissez d'autres golfeurs vous inviter</li>
+                        <li><strong>Échangez et jouez</strong> — connectez-vous avec vos partenaires avant le départ</li>
+                        <li><strong>Notez l'expérience</strong> — aidez la communauté à trouver les bons partenaires</li>
+                    </ul>
+
+                    <p>C'est gratuit et conçu spécifiquement pour la communauté golf de la Côte d'Azur.</p>
+
+                    <div class="cta-buttons">
+                        <a href="/auth/register" class="btn btn-primary btn-lg">Rejoindre frenchriviera.golf</a>
+                        <a href="/games" class="btn btn-outline btn-lg">Voir les Parties</a>
+                    </div>
+                </section>
+
+                <!-- Footer Note -->
+                <section class="guide-section guide-footer-note">
+                    <p><em>Ce guide est maintenu par <a href="/">frenchriviera.golf</a> — la plateforme de la communauté golf de la Côte d'Azur. Basés à Antibes, nous jouons régulièrement sur ces parcours et mettons à jour ce guide selon l'évolution des prix et des conditions. Dernière mise à jour : février 2026.</em></p>
+                    <p><em>Une correction, un ajout ou un désaccord avec notre classement ? <a href="/contact">Contactez-nous</a> — nous accueillons les retours de la communauté.</em></p>
+                </section>
+
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="guide-sidebar">
+                <div class="sidebar-card">
+                    <h3>Chiffres Clés</h3>
+                    <div class="sidebar-stats">
+                        <div class="sidebar-stat">
+                            <span class="stat-number">20+</span>
+                            <span class="stat-label">Parcours</span>
+                        </div>
+                        <div class="sidebar-stat">
+                            <span class="stat-number">300+</span>
+                            <span class="stat-label">Jours de soleil</span>
+                        </div>
+                    </div>
+                    <div class="sidebar-stats">
+                        <div class="sidebar-stat">
+                            <span class="stat-number">35–200 €</span>
+                            <span class="stat-label">Green fees</span>
+                        </div>
+                        <div class="sidebar-stat">
+                            <span class="stat-number">Toute l'année</span>
+                            <span class="stat-label">Jouable</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>Tous les Parcours</h3>
+                    <p>Explorez tous les parcours de la Côte d'Azur avec avis et notes.</p>
+                    <a href="/courses" class="btn btn-outline btn-block">Voir les Parcours</a>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>Par Zone</h3>
+                    <ul class="nearby-links">
+                        <li><a href="/golf-in-nice">Golf à Nice</a></li>
+                        <li><a href="/golf-in-monaco">Golf à Monaco</a></li>
+                        <li><a href="/golf-in-cannes">Golf à Cannes</a></li>
+                        <li><a href="/golf-in-saint-tropez">Golf à Saint-Tropez</a></li>
+                        <li><a href="/golf-in-grasse">Golf à Grasse</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-card sidebar-cta">
+                    <h3>Trouvez des Partenaires</h3>
+                    <p>Connectez-vous avec des golfeurs sur toute la Côte d'Azur. Gratuit.</p>
+                    <a href="/auth/register" class="btn btn-primary btn-block">S'inscrire</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<style>
+.guide-page { min-height: 100vh; }
+.guide-hero { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: white; padding: 3rem 0 4rem; margin-bottom: 0; }
+.guide-hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.guide-hero-subtitle { font-size: 1.5rem; font-weight: 600; opacity: 0.95; margin-bottom: 1rem; }
+.guide-hero-tagline { font-size: 1.1rem; opacity: 0.9; max-width: 700px; line-height: 1.6; }
+.guide-lang-switch { margin-bottom: 1rem; }
+.lang-link { color: white; opacity: 0.9; text-decoration: none; font-size: 0.9rem; padding: 0.25rem 0.75rem; border: 1px solid rgba(255,255,255,0.5); border-radius: 4px; }
+.lang-link:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+.sticky-cta-banner { background: var(--color-text); color: white; padding: 0.75rem 0; text-align: center; position: sticky; top: 0; z-index: 100; }
+.sticky-cta-banner .container { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.sticky-cta-banner span { font-size: 0.95rem; }
+.btn-sm { padding: 0.375rem 0.75rem; font-size: 0.875rem; }
+.guide-content { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; margin-bottom: 3rem; margin-top: 2rem; }
+.guide-section { background: white; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.guide-section h2 { font-size: 1.5rem; margin-bottom: 1.25rem; color: var(--color-text); }
+.tldr-box { background: var(--color-surface); border-left: 4px solid var(--color-primary); padding: 1.5rem; border-radius: 0 8px 8px 0; font-size: 1.05rem; line-height: 1.7; }
+.tldr-box a { color: var(--color-primary-dark); font-weight: 500; }
+.ranked-course { display: flex; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--color-surface); }
+.ranked-course:last-child { border-bottom: none; }
+.rank-badge { flex-shrink: 0; width: 48px; height: 48px; background: var(--color-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; }
+.ranked-course-content h3 { font-size: 1.2rem; margin-bottom: 0.75rem; }
+.ranked-course-content h3 a { color: var(--color-text); text-decoration: none; }
+.ranked-course-content h3 a:hover { color: var(--color-primary); }
+.course-location { font-weight: 400; color: var(--color-text-muted); font-size: 0.95rem; }
+.ranked-course-content p { line-height: 1.7; color: var(--color-text); margin-bottom: 0.75rem; }
+.best-for { background: var(--color-surface); padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; }
+.table-responsive { overflow-x: auto; margin-bottom: 1rem; }
+.comparison-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.comparison-table th, .comparison-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-surface); }
+.comparison-table th { background: var(--color-surface); font-weight: 600; white-space: nowrap; }
+.comparison-table td a { color: var(--color-primary-dark); text-decoration: none; font-weight: 500; }
+.comparison-table td a:hover { text-decoration: underline; }
+.comparison-table tr:hover { background: var(--color-surface); }
+.table-note { font-size: 0.85rem; color: var(--color-text-muted); }
+.faq-item { padding: 1.25rem 0; border-bottom: 1px solid var(--color-surface); }
+.faq-item:last-child { border-bottom: none; }
+.faq-item h3 { font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--color-text); }
+.faq-item p { line-height: 1.7; color: var(--color-text); margin: 0; }
+.guide-cta-section { text-align: center; background: linear-gradient(135deg, var(--color-surface) 0%, white 100%); }
+.guide-cta-section h2 { font-size: 1.75rem; }
+.cta-features { list-style: none; padding: 0; margin: 1.5rem auto; text-align: left; max-width: 500px; }
+.cta-features li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; }
+.cta-features li::before { content: "✓"; position: absolute; left: 0; color: var(--color-primary); font-weight: bold; }
+.cta-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.guide-footer-note { background: var(--color-surface); }
+.guide-footer-note p { margin-bottom: 0.75rem; font-size: 0.95rem; line-height: 1.6; }
+.guide-footer-note p:last-child { margin-bottom: 0; }
+.guide-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+.sidebar-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.sidebar-card h3 { font-size: 1rem; margin-bottom: 1rem; color: var(--color-text); }
+.sidebar-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem; }
+.sidebar-stats:last-child { margin-bottom: 0; }
+.sidebar-stat { text-align: center; }
+.sidebar-stat .stat-number { display: block; font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+.sidebar-stat .stat-label { font-size: 0.8rem; color: var(--color-text-muted); }
+.nearby-links { list-style: none; padding: 0; margin: 0; }
+.nearby-links li { padding: 0.5rem 0; border-bottom: 1px solid var(--color-surface); }
+.nearby-links li:last-child { border-bottom: none; }
+.nearby-links a { color: var(--color-text); text-decoration: none; }
+.nearby-links a:hover { color: var(--color-primary); }
+.sidebar-cta { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: white; }
+.sidebar-cta h3 { color: white; }
+.sidebar-cta p { opacity: 0.9; margin-bottom: 1rem; }
+.btn-block { display: block; width: 100%; text-align: center; }
+.btn-lg { padding: 0.875rem 1.5rem; font-size: 1rem; }
+@media (max-width: 1024px) { .guide-content { grid-template-columns: 1fr; } .guide-sidebar { display: grid; grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) { .guide-hero h1 { font-size: 1.75rem; } .guide-hero-subtitle { font-size: 1.25rem; } .ranked-course { flex-direction: column; gap: 1rem; } .rank-badge { width: 40px; height: 40px; font-size: 1.1rem; } .guide-sidebar { grid-template-columns: 1fr; } .cta-buttons { flex-direction: column; } .comparison-table { font-size: 0.8rem; } .comparison-table th, .comparison-table td { padding: 0.5rem; } }
+</style>
+` }) %>
