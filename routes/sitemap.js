@@ -72,6 +72,12 @@ router.get('/sitemap_index.xml', (req, res) => {
     xml += `    <lastmod>${today}</lastmod>\n`;
     xml += '  </sitemap>\n';
 
+    // Guides sitemap
+    xml += '  <sitemap>\n';
+    xml += `    <loc>${APP_URL}/sitemap-guides.xml</loc>\n`;
+    xml += `    <lastmod>${today}</lastmod>\n`;
+    xml += '  </sitemap>\n';
+
     xml += '</sitemapindex>';
 
     res.set('Content-Type', 'application/xml');
@@ -83,6 +89,7 @@ router.get('/sitemap-main.xml', (req, res) => {
     const urls = [
         { loc: '/', changefreq: 'daily', priority: '1.0' },
         { loc: '/courses', changefreq: 'weekly', priority: '0.9' },
+        { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9' },
         { loc: '/games', changefreq: 'daily', priority: '0.8' },
         { loc: '/available', changefreq: 'daily', priority: '0.7' },
         { loc: '/blog', changefreq: 'weekly', priority: '0.7' },
@@ -128,6 +135,17 @@ router.get('/sitemap-cities.xml', (req, res) => {
     res.send(buildSitemapXml(urls));
 });
 
+// GET /sitemap-guides.xml - Guide pages
+router.get('/sitemap-guides.xml', (req, res) => {
+    const today = new Date().toISOString().split('T')[0];
+    const urls = [
+        { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9', lastmod: today }
+    ];
+
+    res.set('Content-Type', 'application/xml');
+    res.send(buildSitemapXml(urls));
+});
+
 // GET /sitemap-blog.xml - Blog posts
 router.get('/sitemap-blog.xml', async (req, res) => {
     try {
@@ -156,6 +174,7 @@ router.get('/sitemap.xml', async (req, res) => {
             // Static pages
             { loc: '/', changefreq: 'daily', priority: '1.0' },
             { loc: '/courses', changefreq: 'weekly', priority: '0.9' },
+            { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9' },
             { loc: '/games', changefreq: 'daily', priority: '0.8' },
             { loc: '/available', changefreq: 'daily', priority: '0.7' },
             { loc: '/auth/login', changefreq: 'monthly', priority: '0.5' },

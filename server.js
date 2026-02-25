@@ -170,6 +170,7 @@ const blogRoutes = require('./routes/blog');
 const cityRoutes = require('./routes/cities');
 const pagesRoutes = require('./routes/pages');
 const adminRoutes = require('./routes/admin');
+const guidesRoutes = require('./routes/guides');
 
 app.use('/auth', authLimiter, authRoutes);
 app.use('/profile', profileRoutes);
@@ -180,6 +181,7 @@ app.use('/available', availabilityRoutes);
 app.use('/ratings', ratingsRoutes);
 app.use('/notifications', notificationsRoutes);
 app.use('/blog', blogRoutes);
+app.use('/guides', guidesRoutes);
 app.use('/', cityRoutes);
 app.use('/', sitemapRoutes);
 app.use('/', pagesRoutes);
