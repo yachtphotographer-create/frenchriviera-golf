@@ -90,9 +90,11 @@ router.get('/sitemap-main.xml', (req, res) => {
         { loc: '/', changefreq: 'daily', priority: '1.0' },
         { loc: '/courses', changefreq: 'weekly', priority: '0.9' },
         { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9' },
+        { loc: '/guides/meilleurs-golfs-cote-azur-2026', changefreq: 'monthly', priority: '0.9' },
         { loc: '/games', changefreq: 'daily', priority: '0.8' },
         { loc: '/available', changefreq: 'daily', priority: '0.7' },
         { loc: '/blog', changefreq: 'weekly', priority: '0.7' },
+        { loc: '/about/brand-facts', changefreq: 'monthly', priority: '0.6' },
         { loc: '/auth/login', changefreq: 'monthly', priority: '0.5' },
         { loc: '/auth/register', changefreq: 'monthly', priority: '0.5' },
         { loc: '/sitemap', changefreq: 'monthly', priority: '0.3' }
@@ -139,7 +141,8 @@ router.get('/sitemap-cities.xml', (req, res) => {
 router.get('/sitemap-guides.xml', (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const urls = [
-        { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9', lastmod: today }
+        { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9', lastmod: today },
+        { loc: '/guides/meilleurs-golfs-cote-azur-2026', changefreq: 'monthly', priority: '0.9', lastmod: today }
     ];
 
     res.set('Content-Type', 'application/xml');
@@ -175,8 +178,10 @@ router.get('/sitemap.xml', async (req, res) => {
             { loc: '/', changefreq: 'daily', priority: '1.0' },
             { loc: '/courses', changefreq: 'weekly', priority: '0.9' },
             { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9' },
+            { loc: '/guides/meilleurs-golfs-cote-azur-2026', changefreq: 'monthly', priority: '0.9' },
             { loc: '/games', changefreq: 'daily', priority: '0.8' },
             { loc: '/available', changefreq: 'daily', priority: '0.7' },
+            { loc: '/about/brand-facts', changefreq: 'monthly', priority: '0.6' },
             { loc: '/auth/login', changefreq: 'monthly', priority: '0.5' },
             { loc: '/auth/register', changefreq: 'monthly', priority: '0.5' },
             // City landing pages
