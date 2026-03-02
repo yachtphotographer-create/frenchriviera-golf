@@ -1,0 +1,132 @@
+<%- include('../layouts/main', { body: `
+<div class="guide-page">
+    <div class="guide-hero">
+        <div class="container">
+            <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="/guides">Guides</a></li>
+                    <li class="breadcrumb-item active"><span>Golfs près de l'Aéroport de Nice</span></li>
+                </ol>
+            </nav>
+            <div class="guide-lang-switch">
+                <a href="${alternateLang.url}" class="lang-link">${alternateLang.label}</a>
+            </div>
+            <h1>Golfs près de l'Aéroport de Nice</h1>
+            <p class="guide-hero-subtitle">Guide 2026</p>
+            <p class="guide-hero-tagline">Jouez au golf avant ou après votre vol. 5 parcours à moins de 35 minutes de l'aéroport Nice Côte d'Azur (NCE).</p>
+        </div>
+    </div>
+
+    <!-- Sticky CTA Banner -->
+    <div class="sticky-cta-banner">
+        <div class="container">
+            <span>Vous cherchez des partenaires de jeu ?</span>
+            <a href="/auth/register" class="btn btn-sm btn-primary">Rejoignez frenchriviera.golf — c'est gratuit</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="guide-content">
+            <div class="guide-main">
+
+                <!-- TL;DR Section -->
+                <section class="guide-section guide-tldr">
+                    <h2>En Bref</h2>
+                    <div class="tldr-box">
+                        <p>L'aéroport Nice Côte d'Azur (NCE) est idéalement situé pour le golf sur la Riviera. Le <a href="/courses/nice-golf-country-club">Nice Golf Country Club</a> est à seulement 12 minutes — un 9 trous compact parfait pour une partie rapide avant votre vol. Pour 18 trous, le <a href="/courses/golf-club-biot">Golf de Biot</a> est le plus proche à 15 minutes. La <a href="/courses/grande-bastide">Grande Bastide</a> (25 min) offre une qualité championship à excellent prix. Tous les parcours proposent la location de clubs.</p>
+                    </div>
+                </section>
+
+                <!-- Course List -->
+                <section class="guide-section">
+                    <h2>Golfs près de l'Aéroport de Nice — Par Distance</h2>
+
+                    ${courses.map((course, index) => `
+                    <div class="ranked-course">
+                        <div class="rank-badge">${course.position}</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/${course.slug}">${course.name}</a> <span class="course-location">(${course.city} — ${course.distance})</span></h3>
+                            <p>${course.description}</p>
+                            <p class="course-details"><strong>Trous :</strong> ${course.holes} | <strong>Par :</strong> ${course.par} | <strong>Green Fee :</strong> ${course.greenFee}</p>
+                        </div>
+                    </div>
+                    `).join('')}
+
+                </section>
+
+                <!-- Comparison Table -->
+                <section class="guide-section">
+                    <h2>Comparatif Rapide</h2>
+                    <div class="table-responsive">
+                        <table class="guide-table">
+                            <thead>
+                                <tr>
+                                    <th>Parcours</th>
+                                    <th>Distance</th>
+                                    <th>Trous</th>
+                                    <th>Green Fee</th>
+                                    <th>Location Clubs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${courses.map(course => `
+                                <tr>
+                                    <td><a href="/courses/${course.slug}">${course.name}</a></td>
+                                    <td>${course.distance}</td>
+                                    <td>${course.holes}</td>
+                                    <td>${course.greenFee}</td>
+                                    <td>Oui</td>
+                                </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- FAQ Section -->
+                <section class="guide-section">
+                    <h2>Questions Fréquentes</h2>
+                    <div class="faq-list">
+                        ${faqData.map(faq => `
+                        <div class="faq-item">
+                            <h3 class="faq-question">${faq.question}</h3>
+                            <p class="faq-answer">${faq.answer}</p>
+                        </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- CTA Section -->
+                <section class="guide-section guide-cta-section">
+                    <h2>Trouvez des Partenaires de Jeu</h2>
+                    <p>Vous voyagez seul ? Utilisez frenchriviera.golf pour trouver des partenaires. C'est gratuit.</p>
+                    <a href="/auth/register" class="btn btn-primary">Créer un Compte Gratuit</a>
+                </section>
+
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="guide-sidebar">
+                <div class="sidebar-card">
+                    <h3>Infos Clés</h3>
+                    <ul class="sidebar-stats">
+                        <li><strong>18 trous le plus proche :</strong> Golf de Biot (15 min)</li>
+                        <li><strong>9 trous le plus proche :</strong> Nice Golf (12 min)</li>
+                        <li><strong>Meilleur rapport qualité-prix :</strong> Grande Bastide (55-95 €)</li>
+                        <li><strong>Location clubs :</strong> Disponible partout</li>
+                    </ul>
+                </div>
+                <div class="sidebar-card">
+                    <h3>Autres Guides</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="/guides/meilleurs-golfs-cote-azur-2026">Meilleurs Golfs 2026</a></li>
+                        <li><a href="/guides/golf-pas-cher-cote-azur">Golf Pas Cher</a></li>
+                        <li><a href="/guides/meilleurs-resorts-golf-cote-azur">Resorts Golf</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+` }) %>

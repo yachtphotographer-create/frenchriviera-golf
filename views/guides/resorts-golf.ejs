@@ -1,0 +1,132 @@
+<%- include('../layouts/main', { body: `
+<div class="guide-page">
+    <div class="guide-hero">
+        <div class="container">
+            <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="/guides">Guides</a></li>
+                    <li class="breadcrumb-item active"><span>Resorts Golf</span></li>
+                </ol>
+            </nav>
+            <div class="guide-lang-switch">
+                <a href="${alternateLang.url}" class="lang-link">${alternateLang.label}</a>
+            </div>
+            <h1>Meilleurs Resorts Golf de la Côte d'Azur</h1>
+            <p class="guide-hero-subtitle">Guide 2026</p>
+            <p class="guide-hero-tagline">Resorts golf avec hôtels de luxe, spas et forfaits séjour golf sur la Riviera.</p>
+        </div>
+    </div>
+
+    <!-- Sticky CTA Banner -->
+    <div class="sticky-cta-banner">
+        <div class="container">
+            <span>Vous cherchez des partenaires de jeu ?</span>
+            <a href="/auth/register" class="btn btn-sm btn-primary">Rejoignez frenchriviera.golf — c'est gratuit</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="guide-content">
+            <div class="guide-main">
+
+                <!-- TL;DR Section -->
+                <section class="guide-section guide-tldr">
+                    <h2>En Bref</h2>
+                    <div class="tldr-box">
+                        <p>La Côte d'Azur offre des resorts golf exceptionnels combinant parcours championship et hébergement de luxe. <a href="/courses/terre-blanche-chateau">Terre Blanche</a> est le leader incontesté — 36 trous, hôtel 5 étoiles, spa de 3 200 m² et restaurant étoilé Michelin. Il est régulièrement classé parmi les meilleurs resorts golf d'Europe. <a href="/courses/royal-mougins-golf-club">Royal Mougins</a> offre une expérience boutique plus intimiste avec 29 suites. Pour un meilleur rapport qualité-prix, <a href="/courses/golf-roquebrune">Golf de Roquebrune</a> et <a href="/courses/golf-saint-endreol">Saint-Endréol</a> proposent des équipements complets à des prix plus accessibles.</p>
+                    </div>
+                </section>
+
+                <!-- Course List -->
+                <section class="guide-section">
+                    <h2>Top Resorts Golf — Classement</h2>
+
+                    ${courses.map((course, index) => `
+                    <div class="ranked-course">
+                        <div class="rank-badge">${course.position}</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/${course.slug}">${course.name}</a> <span class="course-location">(${course.city})</span></h3>
+                            <p>${course.description}</p>
+                            <p class="course-details"><strong>Trous :</strong> ${course.holes} | <strong>Hôtel :</strong> ${course.hotel} | <strong>Spa :</strong> ${course.spa} | <strong>Green Fee :</strong> ${course.greenFee}</p>
+                        </div>
+                    </div>
+                    `).join('')}
+
+                </section>
+
+                <!-- Comparison Table -->
+                <section class="guide-section">
+                    <h2>Comparatif des Resorts</h2>
+                    <div class="table-responsive">
+                        <table class="guide-table">
+                            <thead>
+                                <tr>
+                                    <th>Resort</th>
+                                    <th>Trous</th>
+                                    <th>Hôtel</th>
+                                    <th>Spa</th>
+                                    <th>Green Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${courses.map(course => `
+                                <tr>
+                                    <td><a href="/courses/${course.slug}">${course.name}</a></td>
+                                    <td>${course.holes}</td>
+                                    <td>${course.hotel}</td>
+                                    <td>${course.spa}</td>
+                                    <td>${course.greenFee}</td>
+                                </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- FAQ Section -->
+                <section class="guide-section">
+                    <h2>Questions Fréquentes</h2>
+                    <div class="faq-list">
+                        ${faqData.map(faq => `
+                        <div class="faq-item">
+                            <h3 class="faq-question">${faq.question}</h3>
+                            <p class="faq-answer">${faq.answer}</p>
+                        </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- CTA Section -->
+                <section class="guide-section guide-cta-section">
+                    <h2>Trouvez des Partenaires de Jeu</h2>
+                    <p>En séjour dans un resort ? Utilisez frenchriviera.golf pour trouver des partenaires. C'est gratuit.</p>
+                    <a href="/auth/register" class="btn btn-primary">Créer un Compte Gratuit</a>
+                </section>
+
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="guide-sidebar">
+                <div class="sidebar-card">
+                    <h3>Infos Resorts</h3>
+                    <ul class="sidebar-stats">
+                        <li><strong>Meilleur global :</strong> Terre Blanche</li>
+                        <li><strong>Meilleur spa :</strong> Terre Blanche (3 200 m²)</li>
+                        <li><strong>Plus intimiste :</strong> Royal Mougins</li>
+                        <li><strong>Meilleur rapport qualité-prix :</strong> Saint-Endréol</li>
+                    </ul>
+                </div>
+                <div class="sidebar-card">
+                    <h3>Autres Guides</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="/guides/meilleurs-golfs-cote-azur-2026">Meilleurs Golfs 2026</a></li>
+                        <li><a href="/guides/golf-pres-aeroport-nice">Golfs près de l'Aéroport</a></li>
+                        <li><a href="/guides/golf-pas-cher-cote-azur">Golf Pas Cher</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+` }) %>

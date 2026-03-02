@@ -1,0 +1,132 @@
+<%- include('../layouts/main', { body: `
+<div class="guide-page">
+    <div class="guide-hero">
+        <div class="container">
+            <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/guides">Guides</a></li>
+                    <li class="breadcrumb-item active"><span>Golf Near Nice Airport</span></li>
+                </ol>
+            </nav>
+            <div class="guide-lang-switch">
+                <a href="${alternateLang.url}" class="lang-link">${alternateLang.label}</a>
+            </div>
+            <h1>Golf Courses Near Nice Airport</h1>
+            <p class="guide-hero-subtitle">2026 Guide</p>
+            <p class="guide-hero-tagline">Play golf before or after your flight. 5 courses within 35 minutes of Nice Côte d'Azur Airport (NCE).</p>
+        </div>
+    </div>
+
+    <!-- Sticky CTA Banner -->
+    <div class="sticky-cta-banner">
+        <div class="container">
+            <span>Looking for playing partners?</span>
+            <a href="/auth/register" class="btn btn-sm btn-primary">Join frenchriviera.golf — it's free</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="guide-content">
+            <div class="guide-main">
+
+                <!-- TL;DR Section -->
+                <section class="guide-section guide-tldr">
+                    <h2>TL;DR — The Quick Answer</h2>
+                    <div class="tldr-box">
+                        <p>Nice Côte d'Azur Airport (NCE) is perfectly positioned for golf on the French Riviera. <a href="/courses/nice-golf-country-club">Nice Golf Country Club</a> is just 12 minutes away — a compact 9-hole course ideal for a quick round before your flight. For 18 holes, <a href="/courses/golf-club-biot">Golf de Biot</a> is the closest at 15 minutes, a charming layout at the foot of the historic glassblowing village. <a href="/courses/grande-bastide">Grande Bastide</a> (25 min) offers championship quality at excellent value. All courses offer club rental, and most have pro shops for last-minute supplies. Book your tee time in advance, especially in high season.</p>
+                    </div>
+                </section>
+
+                <!-- Course List -->
+                <section class="guide-section">
+                    <h2>Golf Courses Near Nice Airport — Ranked by Distance</h2>
+
+                    ${courses.map((course, index) => `
+                    <div class="ranked-course">
+                        <div class="rank-badge">${course.position}</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/${course.slug}">${course.name}</a> <span class="course-location">(${course.city} — ${course.distance})</span></h3>
+                            <p>${course.description}</p>
+                            <p class="course-details"><strong>Holes:</strong> ${course.holes} | <strong>Par:</strong> ${course.par} | <strong>Green Fee:</strong> ${course.greenFee}</p>
+                        </div>
+                    </div>
+                    `).join('')}
+
+                </section>
+
+                <!-- Comparison Table -->
+                <section class="guide-section">
+                    <h2>Quick Comparison</h2>
+                    <div class="table-responsive">
+                        <table class="guide-table">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Distance</th>
+                                    <th>Holes</th>
+                                    <th>Green Fee</th>
+                                    <th>Club Rental</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${courses.map(course => `
+                                <tr>
+                                    <td><a href="/courses/${course.slug}">${course.name}</a></td>
+                                    <td>${course.distance}</td>
+                                    <td>${course.holes}</td>
+                                    <td>${course.greenFee}</td>
+                                    <td>Yes</td>
+                                </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- FAQ Section -->
+                <section class="guide-section">
+                    <h2>Frequently Asked Questions</h2>
+                    <div class="faq-list">
+                        ${faqData.map(faq => `
+                        <div class="faq-item">
+                            <h3 class="faq-question">${faq.question}</h3>
+                            <p class="faq-answer">${faq.answer}</p>
+                        </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- CTA Section -->
+                <section class="guide-section guide-cta-section">
+                    <h2>Find Playing Partners</h2>
+                    <p>Traveling solo? Use frenchriviera.golf to find playing partners at any of these courses. It's free.</p>
+                    <a href="/auth/register" class="btn btn-primary">Create Free Account</a>
+                </section>
+
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="guide-sidebar">
+                <div class="sidebar-card">
+                    <h3>Key Facts</h3>
+                    <ul class="sidebar-stats">
+                        <li><strong>Closest 18-hole:</strong> Golf de Biot (15 min)</li>
+                        <li><strong>Closest 9-hole:</strong> Nice Golf (12 min)</li>
+                        <li><strong>Best value:</strong> Grande Bastide (€55-95)</li>
+                        <li><strong>Club rental:</strong> Available at all courses</li>
+                    </ul>
+                </div>
+                <div class="sidebar-card">
+                    <h3>More Guides</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="/guides/best-golf-courses-french-riviera-2026">Best Golf Courses 2026</a></li>
+                        <li><a href="/guides/budget-golf-french-riviera">Budget Golf Options</a></li>
+                        <li><a href="/guides/best-golf-resorts-french-riviera">Golf Resorts</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+` }) %>

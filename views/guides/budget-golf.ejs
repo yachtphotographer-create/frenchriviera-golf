@@ -1,0 +1,144 @@
+<%- include('../layouts/main', { body: `
+<div class="guide-page">
+    <div class="guide-hero">
+        <div class="container">
+            <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/guides">Guides</a></li>
+                    <li class="breadcrumb-item active"><span>Budget Golf</span></li>
+                </ol>
+            </nav>
+            <div class="guide-lang-switch">
+                <a href="${alternateLang.url}" class="lang-link">${alternateLang.label}</a>
+            </div>
+            <h1>Budget Golf on the French Riviera</h1>
+            <p class="guide-hero-subtitle">2026 Guide</p>
+            <p class="guide-hero-tagline">Affordable golf courses under €80. Quality doesn't have to break the bank on the Côte d'Azur.</p>
+        </div>
+    </div>
+
+    <!-- Sticky CTA Banner -->
+    <div class="sticky-cta-banner">
+        <div class="container">
+            <span>Looking for playing partners?</span>
+            <a href="/auth/register" class="btn btn-sm btn-primary">Join frenchriviera.golf — it's free</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="guide-content">
+            <div class="guide-main">
+
+                <!-- TL;DR Section -->
+                <section class="guide-section guide-tldr">
+                    <h2>TL;DR — The Quick Answer</h2>
+                    <div class="tldr-box">
+                        <p>You don't need to spend €150+ to play great golf on the French Riviera. <a href="/courses/grande-bastide">Grande Bastide</a> offers championship quality from just €55 in low season — consistently rated among the best value courses in France. <a href="/courses/golf-club-biot">Golf de Biot</a> starts at €45 and is just 15 minutes from Nice. For a quick round, <a href="/courses/nice-golf-country-club">Nice Golf Country Club</a> offers 9 holes from €25. The secret is timing: November to February offers 30-50% lower rates, and twilight tee times (2-3 hours before sunset) typically save 30-40%. All courses listed here maintain excellent standards despite their lower prices.</p>
+                    </div>
+                </section>
+
+                <!-- Course List -->
+                <section class="guide-section">
+                    <h2>Best Value Golf Courses — Ranked</h2>
+
+                    ${courses.map((course, index) => `
+                    <div class="ranked-course">
+                        <div class="rank-badge">${course.position}</div>
+                        <div class="ranked-course-content">
+                            <h3><a href="/courses/${course.slug}">${course.name}</a> <span class="course-location">(${course.city})</span></h3>
+                            <p>${course.description}</p>
+                            <p class="course-details"><strong>Holes:</strong> ${course.holes} | <strong>Par:</strong> ${course.par} | <strong>Green Fee:</strong> ${course.greenFee} | <strong>Low Season:</strong> ${course.lowSeason}</p>
+                        </div>
+                    </div>
+                    `).join('')}
+
+                </section>
+
+                <!-- Comparison Table -->
+                <section class="guide-section">
+                    <h2>Price Comparison</h2>
+                    <div class="table-responsive">
+                        <table class="guide-table">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Holes</th>
+                                    <th>Low Season</th>
+                                    <th>High Season</th>
+                                    <th>Twilight</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${courses.map(course => `
+                                <tr>
+                                    <td><a href="/courses/${course.slug}">${course.name}</a></td>
+                                    <td>${course.holes}</td>
+                                    <td>${course.lowSeason}</td>
+                                    <td>${course.greenFee.split('-')[1] || course.greenFee}</td>
+                                    <td>-30%</td>
+                                </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Tips Section -->
+                <section class="guide-section">
+                    <h2>Money-Saving Tips</h2>
+                    <ul class="tips-list">
+                        <li><strong>Play in low season:</strong> November to February offers the best rates (30-50% off).</li>
+                        <li><strong>Book twilight rounds:</strong> Most courses offer discounts starting 2-3 hours before sunset.</li>
+                        <li><strong>Check for FFG rates:</strong> French Golf Federation members often get discounts.</li>
+                        <li><strong>Book midweek:</strong> Weekday rates are typically lower than weekends.</li>
+                        <li><strong>Look for multi-round packages:</strong> Some courses offer discounts for booking multiple rounds.</li>
+                    </ul>
+                </section>
+
+                <!-- FAQ Section -->
+                <section class="guide-section">
+                    <h2>Frequently Asked Questions</h2>
+                    <div class="faq-list">
+                        ${faqData.map(faq => `
+                        <div class="faq-item">
+                            <h3 class="faq-question">${faq.question}</h3>
+                            <p class="faq-answer">${faq.answer}</p>
+                        </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- CTA Section -->
+                <section class="guide-section guide-cta-section">
+                    <h2>Find Playing Partners</h2>
+                    <p>Share green fees by joining a group. Use frenchriviera.golf to find playing partners. It's free.</p>
+                    <a href="/auth/register" class="btn btn-primary">Create Free Account</a>
+                </section>
+
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="guide-sidebar">
+                <div class="sidebar-card">
+                    <h3>Budget Facts</h3>
+                    <ul class="sidebar-stats">
+                        <li><strong>Cheapest 18-hole:</strong> €45 (Biot)</li>
+                        <li><strong>Cheapest 9-hole:</strong> €25 (Nice)</li>
+                        <li><strong>Best value:</strong> Grande Bastide</li>
+                        <li><strong>Low season:</strong> Nov–Feb</li>
+                    </ul>
+                </div>
+                <div class="sidebar-card">
+                    <h3>More Guides</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="/guides/best-golf-courses-french-riviera-2026">Best Golf Courses 2026</a></li>
+                        <li><a href="/guides/golf-near-nice-airport">Golf Near Nice Airport</a></li>
+                        <li><a href="/guides/best-golf-resorts-french-riviera">Golf Resorts</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+` }) %>

@@ -245,4 +245,534 @@ router.get('/', (req, res) => {
     res.redirect('/guides/best-golf-courses-french-riviera-2026');
 });
 
+// ============================================
+// GOLF NEAR NICE AIRPORT GUIDE
+// ============================================
+
+const airportCoursesEN = [
+    { position: 1, name: 'Golf de Biot', slug: 'golf-club-biot', city: 'Biot', distance: '15 min', holes: 18, par: 70, greenFee: '€45-75', description: 'The closest 18-hole course to Nice airport. Charming layout at the foot of the historic village of Biot, famous for its glassblowing.' },
+    { position: 2, name: 'Nice Golf Country Club', slug: 'nice-golf-country-club', city: 'Nice', distance: '12 min', holes: 9, par: 32, greenFee: '€25-40', description: 'Compact 9-hole course just 10 minutes from the terminal. Perfect for a quick round before your flight.' },
+    { position: 3, name: 'Golf de la Grande Bastide', slug: 'grande-bastide', city: 'Châteauneuf-Grasse', distance: '25 min', holes: 18, par: 72, greenFee: '€55-95', description: 'Best value championship course near the airport. Excellent conditioning year-round.' },
+    { position: 4, name: 'Golf d\'Opio-Valbonne', slug: 'golf-opio-valbonne', city: 'Opio', distance: '30 min', holes: 18, par: 72, greenFee: '€55-130', description: 'Beautiful estate course with château clubhouse. Worth the extra 10 minutes from the airport.' },
+    { position: 5, name: 'Golf Country Club Cannes-Mougins', slug: 'cannes-mougins-golf-country-club', city: 'Mougins', distance: '35 min', holes: 18, par: 72, greenFee: '€80-150', description: 'Historic European Tour venue. Premium experience within easy reach of the airport.' }
+];
+
+const airportCoursesFR = [
+    { position: 1, name: 'Golf de Biot', slug: 'golf-club-biot', city: 'Biot', distance: '15 min', holes: 18, par: 70, greenFee: '45-75 €', description: 'Le 18 trous le plus proche de l\'aéroport de Nice. Parcours charmant au pied du village historique de Biot.' },
+    { position: 2, name: 'Nice Golf Country Club', slug: 'nice-golf-country-club', city: 'Nice', distance: '12 min', holes: 9, par: 32, greenFee: '25-40 €', description: 'Compact 9 trous à 10 minutes du terminal. Parfait pour une partie rapide avant votre vol.' },
+    { position: 3, name: 'Golf de la Grande Bastide', slug: 'grande-bastide', city: 'Châteauneuf-Grasse', distance: '25 min', holes: 18, par: 72, greenFee: '55-95 €', description: 'Meilleur rapport qualité-prix près de l\'aéroport. Excellent entretien toute l\'année.' },
+    { position: 4, name: 'Golf d\'Opio-Valbonne', slug: 'golf-opio-valbonne', city: 'Opio', distance: '30 min', holes: 18, par: 72, greenFee: '55-130 €', description: 'Magnifique domaine avec château en guise de clubhouse. Vaut les 10 minutes supplémentaires.' },
+    { position: 5, name: 'Cannes-Mougins Country Club', slug: 'cannes-mougins-golf-country-club', city: 'Mougins', distance: '35 min', holes: 18, par: 72, greenFee: '80-150 €', description: 'Ancien parcours de l\'European Tour. Expérience premium accessible depuis l\'aéroport.' }
+];
+
+const airportFaqEN = [
+    { question: 'How far is Nice airport from the nearest golf course?', answer: 'Nice Golf Country Club is just 12 minutes from Nice Côte d\'Azur Airport (NCE). Golf de Biot, the nearest 18-hole course, is 15 minutes away.' },
+    { question: 'Can I play golf on arrival day at Nice airport?', answer: 'Yes, if you land before noon. Most courses accept tee times until 2-3 hours before sunset. Golf de Biot and Nice Golf Country Club are close enough for an afternoon round after a morning arrival.' },
+    { question: 'Is there golf club storage at Nice airport?', answer: 'There are luggage storage services at Nice airport Terminal 1 and 2. You can store your regular luggage while playing golf, or vice versa.' },
+    { question: 'Which airport golf courses offer club rental?', answer: 'All five courses near Nice airport offer club rental. Expect to pay €30-50 for a full set.' }
+];
+
+const airportFaqFR = [
+    { question: 'À quelle distance de l\'aéroport de Nice se trouve le golf le plus proche ?', answer: 'Le Nice Golf Country Club est à seulement 12 minutes de l\'aéroport Nice Côte d\'Azur (NCE). Le Golf de Biot, le 18 trous le plus proche, est à 15 minutes.' },
+    { question: 'Peut-on jouer au golf le jour de son arrivée à Nice ?', answer: 'Oui, si vous atterrissez avant midi. La plupart des parcours acceptent les départs jusqu\'à 2-3 heures avant le coucher du soleil.' },
+    { question: 'Y a-t-il une consigne à bagages à l\'aéroport de Nice ?', answer: 'Des services de consigne sont disponibles aux Terminaux 1 et 2. Vous pouvez y laisser vos bagages pendant votre partie de golf.' },
+    { question: 'Quels golfs près de l\'aéroport proposent la location de clubs ?', answer: 'Les cinq parcours près de l\'aéroport proposent la location de clubs. Comptez 30-50 € pour un set complet.' }
+];
+
+const airportHreflang = {
+    en: '/guides/golf-near-nice-airport',
+    fr: '/guides/golf-pres-aeroport-nice',
+    'x-default': '/guides/golf-near-nice-airport'
+};
+
+// GET /guides/golf-near-nice-airport (English)
+router.get('/golf-near-nice-airport', async (req, res) => {
+    try {
+        const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
+
+        const itemListSchema = {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Golf Courses Near Nice Airport",
+            "description": "Golf courses within 35 minutes of Nice Côte d'Azur Airport",
+            "numberOfItems": airportCoursesEN.length,
+            "itemListOrder": "https://schema.org/ItemListOrderDescending",
+            "itemListElement": airportCoursesEN.map(course => ({
+                "@type": "ListItem",
+                "position": course.position,
+                "item": {
+                    "@type": "GolfCourse",
+                    "name": course.name,
+                    "url": `${APP_URL}/courses/${course.slug}`,
+                    "description": course.description,
+                    "address": { "@type": "PostalAddress", "addressLocality": course.city, "addressCountry": "FR" },
+                    "priceRange": course.greenFee
+                }
+            }))
+        };
+
+        const faqSchema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": airportFaqEN.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+            }))
+        };
+
+        const articleSchema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Golf Courses Near Nice Airport — 2026 Guide",
+            "description": "5 golf courses within 35 minutes of Nice Côte d'Azur Airport. Play before or after your flight.",
+            "author": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "publisher": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "datePublished": "2026-03-02",
+            "dateModified": "2026-03-02"
+        };
+
+        res.render('guides/golf-near-airport', {
+            title: 'Golf Courses Near Nice Airport — 2026 Guide',
+            metaDescription: '5 golf courses within 35 minutes of Nice Côte d\'Azur Airport (NCE). Play golf before or after your flight on the French Riviera.',
+            canonicalPath: '/guides/golf-near-nice-airport',
+            ogType: 'article',
+            keywords: 'golf near nice airport, golf NCE airport, golf cote azur airport, play golf nice, french riviera golf airport',
+            schema: [itemListSchema, faqSchema, articleSchema],
+            courses: airportCoursesEN,
+            faqData: airportFaqEN,
+            courseLinks,
+            hreflang: airportHreflang,
+            currentLang: 'en',
+            alternateLang: { code: 'fr', url: '/guides/golf-pres-aeroport-nice', label: 'Français' }
+        });
+    } catch (err) {
+        console.error('Guide page error:', err);
+        res.redirect('/');
+    }
+});
+
+// GET /guides/golf-pres-aeroport-nice (French)
+router.get('/golf-pres-aeroport-nice', async (req, res) => {
+    try {
+        const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
+
+        const itemListSchema = {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Golfs près de l'aéroport de Nice",
+            "description": "Parcours de golf à moins de 35 minutes de l'aéroport Nice Côte d'Azur",
+            "numberOfItems": airportCoursesFR.length,
+            "itemListOrder": "https://schema.org/ItemListOrderDescending",
+            "itemListElement": airportCoursesFR.map(course => ({
+                "@type": "ListItem",
+                "position": course.position,
+                "item": {
+                    "@type": "GolfCourse",
+                    "name": course.name,
+                    "url": `${APP_URL}/courses/${course.slug}`,
+                    "description": course.description,
+                    "address": { "@type": "PostalAddress", "addressLocality": course.city, "addressCountry": "FR" },
+                    "priceRange": course.greenFee
+                }
+            }))
+        };
+
+        const faqSchema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": airportFaqFR.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+            }))
+        };
+
+        const articleSchema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Golfs près de l'Aéroport de Nice — Guide 2026",
+            "description": "5 parcours de golf à moins de 35 minutes de l'aéroport Nice Côte d'Azur.",
+            "author": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "publisher": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "datePublished": "2026-03-02",
+            "dateModified": "2026-03-02",
+            "inLanguage": "fr"
+        };
+
+        res.render('guides/golf-pres-aeroport', {
+            title: 'Golfs près de l\'Aéroport de Nice — Guide 2026',
+            metaDescription: '5 parcours de golf à moins de 35 minutes de l\'aéroport Nice Côte d\'Azur (NCE). Jouez avant ou après votre vol.',
+            canonicalPath: '/guides/golf-pres-aeroport-nice',
+            htmlLang: 'fr',
+            ogType: 'article',
+            keywords: 'golf aeroport nice, golf NCE, golf cote azur aeroport, jouer golf nice, french riviera golf',
+            schema: [itemListSchema, faqSchema, articleSchema],
+            courses: airportCoursesFR,
+            faqData: airportFaqFR,
+            courseLinks,
+            hreflang: airportHreflang,
+            currentLang: 'fr',
+            alternateLang: { code: 'en', url: '/guides/golf-near-nice-airport', label: 'English' }
+        });
+    } catch (err) {
+        console.error('Guide page error:', err);
+        res.redirect('/');
+    }
+});
+
+// ============================================
+// BUDGET GOLF GUIDE
+// ============================================
+
+const budgetCoursesEN = [
+    { position: 1, name: 'Golf de la Grande Bastide', slug: 'grande-bastide', city: 'Châteauneuf-Grasse', holes: 18, par: 72, greenFee: '€55-95', lowSeason: '€55', description: 'Best value championship course on the Riviera. Cabell Robinson design with excellent conditioning.' },
+    { position: 2, name: 'Golf de Saint-Donat', slug: 'golf-saint-donat', city: 'Grasse', holes: 18, par: 71, greenFee: '€55-85', lowSeason: '€55', description: 'Robert Trent Jones Jr. design above the perfume capital. Mountain views and challenging layout.' },
+    { position: 3, name: 'Golf d\'Opio-Valbonne', slug: 'golf-opio-valbonne', city: 'Opio', holes: 18, par: 72, greenFee: '€55-130', lowSeason: '€55', description: 'Estate course with château clubhouse. Twilight rates available from €45.' },
+    { position: 4, name: 'Golf de Roquebrune', slug: 'golf-roquebrune', city: 'Roquebrune-sur-Argens', holes: 18, par: 72, greenFee: '€50-90', lowSeason: '€50', description: 'Wooded course between Cannes and Saint-Tropez. Resort facilities available.' },
+    { position: 5, name: 'Golf de Biot', slug: 'golf-club-biot', city: 'Biot', holes: 18, par: 70, greenFee: '€45-75', lowSeason: '€45', description: 'Charming course near the coast. One of the most affordable 18-hole options.' },
+    { position: 6, name: 'Nice Golf Country Club', slug: 'nice-golf-country-club', city: 'Nice', holes: 9, par: 32, greenFee: '€25-40', lowSeason: '€25', description: 'Most affordable option for a quick round. 9 holes close to Nice center.' }
+];
+
+const budgetCoursesFR = [
+    { position: 1, name: 'Golf de la Grande Bastide', slug: 'grande-bastide', city: 'Châteauneuf-Grasse', holes: 18, par: 72, greenFee: '55-95 €', lowSeason: '55 €', description: 'Meilleur rapport qualité-prix de la Riviera. Design de Cabell Robinson, excellent entretien.' },
+    { position: 2, name: 'Golf de Saint-Donat', slug: 'golf-saint-donat', city: 'Grasse', holes: 18, par: 71, greenFee: '55-85 €', lowSeason: '55 €', description: 'Parcours Robert Trent Jones Jr. au-dessus de la capitale du parfum. Vues montagneuses.' },
+    { position: 3, name: 'Golf d\'Opio-Valbonne', slug: 'golf-opio-valbonne', city: 'Opio', holes: 18, par: 72, greenFee: '55-130 €', lowSeason: '55 €', description: 'Domaine avec château en clubhouse. Tarifs twilight disponibles à partir de 45 €.' },
+    { position: 4, name: 'Golf de Roquebrune', slug: 'golf-roquebrune', city: 'Roquebrune-sur-Argens', holes: 18, par: 72, greenFee: '50-90 €', lowSeason: '50 €', description: 'Parcours boisé entre Cannes et Saint-Tropez. Équipements de resort disponibles.' },
+    { position: 5, name: 'Golf de Biot', slug: 'golf-club-biot', city: 'Biot', holes: 18, par: 70, greenFee: '45-75 €', lowSeason: '45 €', description: 'Parcours charmant près de la côte. L\'un des 18 trous les plus abordables.' },
+    { position: 6, name: 'Nice Golf Country Club', slug: 'nice-golf-country-club', city: 'Nice', holes: 9, par: 32, greenFee: '25-40 €', lowSeason: '25 €', description: 'Option la plus économique. 9 trous près du centre de Nice.' }
+];
+
+const budgetFaqEN = [
+    { question: 'What is the cheapest golf course on the French Riviera?', answer: 'Nice Golf Country Club offers 9 holes from €25. For 18 holes, Golf de Biot starts at €45 and Grande Bastide at €55 in low season.' },
+    { question: 'When is low season for golf on the French Riviera?', answer: 'Low season is typically November to February. Green fees can be 30-50% lower than peak summer rates. The weather is still pleasant for golf.' },
+    { question: 'Are there twilight rates at French Riviera golf courses?', answer: 'Yes, most courses offer twilight rates starting 2-3 hours before sunset. Expect 30-40% off the standard green fee. Opio-Valbonne offers twilight from €45.' },
+    { question: 'Can I get golf discounts with a French golf federation card?', answer: 'Some courses offer discounts to FFG (French Golf Federation) cardholders. Grande Bastide and Saint-Donat typically honor FFG rates.' }
+];
+
+const budgetFaqFR = [
+    { question: 'Quel est le golf le moins cher de la Côte d\'Azur ?', answer: 'Le Nice Golf Country Club propose 9 trous à partir de 25 €. Pour 18 trous, le Golf de Biot démarre à 45 € et la Grande Bastide à 55 € en basse saison.' },
+    { question: 'Quand est la basse saison pour le golf sur la Côte d\'Azur ?', answer: 'La basse saison s\'étend généralement de novembre à février. Les green fees peuvent être 30-50% moins chers qu\'en été. Le temps reste agréable pour jouer.' },
+    { question: 'Y a-t-il des tarifs twilight sur les golfs de la Côte d\'Azur ?', answer: 'Oui, la plupart des parcours proposent des tarifs twilight 2-3 heures avant le coucher du soleil. Comptez 30-40% de réduction. Opio-Valbonne propose le twilight à partir de 45 €.' },
+    { question: 'Peut-on avoir des réductions avec une carte FFG ?', answer: 'Certains parcours accordent des réductions aux détenteurs de la carte FFG. La Grande Bastide et Saint-Donat honorent généralement les tarifs FFG.' }
+];
+
+const budgetHreflang = {
+    en: '/guides/budget-golf-french-riviera',
+    fr: '/guides/golf-pas-cher-cote-azur',
+    'x-default': '/guides/budget-golf-french-riviera'
+};
+
+// GET /guides/budget-golf-french-riviera (English)
+router.get('/budget-golf-french-riviera', async (req, res) => {
+    try {
+        const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
+
+        const itemListSchema = {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Budget Golf Courses on the French Riviera",
+            "description": "Affordable golf courses under €80 on the Côte d'Azur",
+            "numberOfItems": budgetCoursesEN.length,
+            "itemListOrder": "https://schema.org/ItemListOrderDescending",
+            "itemListElement": budgetCoursesEN.map(course => ({
+                "@type": "ListItem",
+                "position": course.position,
+                "item": {
+                    "@type": "GolfCourse",
+                    "name": course.name,
+                    "url": `${APP_URL}/courses/${course.slug}`,
+                    "description": course.description,
+                    "address": { "@type": "PostalAddress", "addressLocality": course.city, "addressCountry": "FR" },
+                    "priceRange": course.greenFee
+                }
+            }))
+        };
+
+        const faqSchema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": budgetFaqEN.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+            }))
+        };
+
+        const articleSchema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Budget Golf on the French Riviera — 2026 Guide",
+            "description": "Affordable golf courses under €80 on the Côte d'Azur. Low season rates, twilight deals, and best value options.",
+            "author": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "publisher": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "datePublished": "2026-03-02",
+            "dateModified": "2026-03-02"
+        };
+
+        res.render('guides/budget-golf', {
+            title: 'Budget Golf on the French Riviera — 2026 Guide',
+            metaDescription: 'Affordable golf courses under €80 on the Côte d\'Azur. Find the best value courses, low season rates, and twilight deals.',
+            canonicalPath: '/guides/budget-golf-french-riviera',
+            ogType: 'article',
+            keywords: 'cheap golf french riviera, budget golf cote azur, affordable golf nice, golf deals france, low cost golf cannes',
+            schema: [itemListSchema, faqSchema, articleSchema],
+            courses: budgetCoursesEN,
+            faqData: budgetFaqEN,
+            courseLinks,
+            hreflang: budgetHreflang,
+            currentLang: 'en',
+            alternateLang: { code: 'fr', url: '/guides/golf-pas-cher-cote-azur', label: 'Français' }
+        });
+    } catch (err) {
+        console.error('Guide page error:', err);
+        res.redirect('/');
+    }
+});
+
+// GET /guides/golf-pas-cher-cote-azur (French)
+router.get('/golf-pas-cher-cote-azur', async (req, res) => {
+    try {
+        const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
+
+        const itemListSchema = {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Golfs Pas Chers sur la Côte d'Azur",
+            "description": "Parcours de golf abordables à moins de 80 € sur la Côte d'Azur",
+            "numberOfItems": budgetCoursesFR.length,
+            "itemListOrder": "https://schema.org/ItemListOrderDescending",
+            "itemListElement": budgetCoursesFR.map(course => ({
+                "@type": "ListItem",
+                "position": course.position,
+                "item": {
+                    "@type": "GolfCourse",
+                    "name": course.name,
+                    "url": `${APP_URL}/courses/${course.slug}`,
+                    "description": course.description,
+                    "address": { "@type": "PostalAddress", "addressLocality": course.city, "addressCountry": "FR" },
+                    "priceRange": course.greenFee
+                }
+            }))
+        };
+
+        const faqSchema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": budgetFaqFR.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+            }))
+        };
+
+        const articleSchema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Golf Pas Cher sur la Côte d'Azur — Guide 2026",
+            "description": "Parcours de golf abordables à moins de 80 € sur la Côte d'Azur. Tarifs basse saison et offres twilight.",
+            "author": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "publisher": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "datePublished": "2026-03-02",
+            "dateModified": "2026-03-02",
+            "inLanguage": "fr"
+        };
+
+        res.render('guides/golf-pas-cher', {
+            title: 'Golf Pas Cher sur la Côte d\'Azur — Guide 2026',
+            metaDescription: 'Parcours de golf abordables à moins de 80 € sur la Côte d\'Azur. Meilleurs tarifs, basse saison et offres twilight.',
+            canonicalPath: '/guides/golf-pas-cher-cote-azur',
+            htmlLang: 'fr',
+            ogType: 'article',
+            keywords: 'golf pas cher cote azur, golf economique nice, golf petit budget france, tarifs golf cannes, golf abordable riviera',
+            schema: [itemListSchema, faqSchema, articleSchema],
+            courses: budgetCoursesFR,
+            faqData: budgetFaqFR,
+            courseLinks,
+            hreflang: budgetHreflang,
+            currentLang: 'fr',
+            alternateLang: { code: 'en', url: '/guides/budget-golf-french-riviera', label: 'English' }
+        });
+    } catch (err) {
+        console.error('Guide page error:', err);
+        res.redirect('/');
+    }
+});
+
+// ============================================
+// GOLF RESORTS GUIDE
+// ============================================
+
+const resortCoursesEN = [
+    { position: 1, name: 'Terre Blanche Hotel Spa Golf Resort', slug: 'terre-blanche-chateau', city: 'Tourrettes', holes: 36, greenFee: '€96-200+', hotel: '5-star, 115 suites', spa: 'Yes - 3,200m²', description: 'The ultimate French Riviera golf resort. Two championship courses, luxury spa, and Michelin-star dining.' },
+    { position: 2, name: 'Royal Mougins Golf Resort', slug: 'royal-mougins-golf-club', city: 'Mougins', holes: 18, greenFee: '€95-165', hotel: '4-star, 29 suites', spa: 'Yes', description: 'Boutique golf resort with Robert von Hagge course. Intimate setting near Cannes.' },
+    { position: 3, name: 'Golf de Roquebrune Resort', slug: 'golf-roquebrune', city: 'Roquebrune-sur-Argens', holes: 18, greenFee: '€50-90', hotel: '5-star, 100 rooms', spa: 'Yes', description: 'Full resort between Cannes and Saint-Tropez. Golf, spa, pools, and gourmet restaurant.' },
+    { position: 4, name: 'Château de Taulane', slug: 'chateau-de-taulane', city: 'La Martre', holes: 18, greenFee: '€60-100', hotel: '4-star château', spa: 'Yes', description: 'Gary Player course at 1,000m altitude. Historic château accommodation in the Verdon countryside.' },
+    { position: 5, name: 'Golf de Saint-Endréol', slug: 'golf-saint-endreol', city: 'La Motte', holes: 18, greenFee: '€50-85', hotel: '4-star, 80 rooms', spa: 'Yes', description: 'Resort in the Var countryside. Golf, tennis, spa, and family-friendly facilities.' }
+];
+
+const resortCoursesFR = [
+    { position: 1, name: 'Terre Blanche Hotel Spa Golf Resort', slug: 'terre-blanche-chateau', city: 'Tourrettes', holes: 36, greenFee: '96-200+ €', hotel: '5 étoiles, 115 suites', spa: 'Oui - 3 200 m²', description: 'Le resort golf ultime de la Côte d\'Azur. Deux parcours championship, spa de luxe et restaurant étoilé.' },
+    { position: 2, name: 'Royal Mougins Golf Resort', slug: 'royal-mougins-golf-club', city: 'Mougins', holes: 18, greenFee: '95-165 €', hotel: '4 étoiles, 29 suites', spa: 'Oui', description: 'Resort golf boutique avec parcours Robert von Hagge. Cadre intimiste près de Cannes.' },
+    { position: 3, name: 'Golf de Roquebrune Resort', slug: 'golf-roquebrune', city: 'Roquebrune-sur-Argens', holes: 18, greenFee: '50-90 €', hotel: '5 étoiles, 100 chambres', spa: 'Oui', description: 'Resort complet entre Cannes et Saint-Tropez. Golf, spa, piscines et restaurant gastronomique.' },
+    { position: 4, name: 'Château de Taulane', slug: 'chateau-de-taulane', city: 'La Martre', holes: 18, greenFee: '60-100 €', hotel: 'Château 4 étoiles', spa: 'Oui', description: 'Parcours Gary Player à 1 000 m d\'altitude. Hébergement en château historique dans le Verdon.' },
+    { position: 5, name: 'Golf de Saint-Endréol', slug: 'golf-saint-endreol', city: 'La Motte', holes: 18, greenFee: '50-85 €', hotel: '4 étoiles, 80 chambres', spa: 'Oui', description: 'Resort dans la campagne varoise. Golf, tennis, spa et équipements familiaux.' }
+];
+
+const resortFaqEN = [
+    { question: 'What is the best golf resort on the French Riviera?', answer: 'Terre Blanche is consistently rated the best golf resort on the French Riviera and in France. It offers 36 holes, a 5-star hotel, a 3,200m² spa, and multiple restaurants including Michelin-starred dining.' },
+    { question: 'Are there golf resorts near Saint-Tropez?', answer: 'Yes. Golf de Roquebrune Resort is 30 minutes from Saint-Tropez and offers 5-star accommodation. Golf de Saint-Endréol is 40 minutes away with 4-star facilities.' },
+    { question: 'Can I book stay-and-play packages on the French Riviera?', answer: 'Yes, all five golf resorts offer stay-and-play packages combining accommodation, golf, and often spa access. Terre Blanche and Royal Mougins have the most comprehensive packages.' },
+    { question: 'Which French Riviera golf resort has the best spa?', answer: 'Terre Blanche has the largest and most luxurious spa (3,200m²) featuring 14 treatment rooms, pools, and a fitness center. Royal Mougins and Roquebrune also have excellent spa facilities.' }
+];
+
+const resortFaqFR = [
+    { question: 'Quel est le meilleur resort golf de la Côte d\'Azur ?', answer: 'Terre Blanche est régulièrement classé meilleur resort golf de la Côte d\'Azur et de France. Il propose 36 trous, un hôtel 5 étoiles, un spa de 3 200 m² et plusieurs restaurants dont un étoilé Michelin.' },
+    { question: 'Y a-t-il des resorts golf près de Saint-Tropez ?', answer: 'Oui. Le Golf de Roquebrune Resort est à 30 minutes de Saint-Tropez avec hébergement 5 étoiles. Le Golf de Saint-Endréol est à 40 minutes avec des équipements 4 étoiles.' },
+    { question: 'Peut-on réserver des forfaits séjour golf sur la Côte d\'Azur ?', answer: 'Oui, les cinq resorts proposent des forfaits combinant hébergement, golf et souvent accès spa. Terre Blanche et Royal Mougins offrent les forfaits les plus complets.' },
+    { question: 'Quel resort golf de la Côte d\'Azur a le meilleur spa ?', answer: 'Terre Blanche possède le spa le plus grand et luxueux (3 200 m²) avec 14 salles de soins, piscines et centre de fitness. Royal Mougins et Roquebrune ont également d\'excellents spas.' }
+];
+
+const resortHreflang = {
+    en: '/guides/best-golf-resorts-french-riviera',
+    fr: '/guides/meilleurs-resorts-golf-cote-azur',
+    'x-default': '/guides/best-golf-resorts-french-riviera'
+};
+
+// GET /guides/best-golf-resorts-french-riviera (English)
+router.get('/best-golf-resorts-french-riviera', async (req, res) => {
+    try {
+        const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
+
+        const itemListSchema = {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Best Golf Resorts on the French Riviera",
+            "description": "Golf resorts with hotels and spas on the Côte d'Azur",
+            "numberOfItems": resortCoursesEN.length,
+            "itemListOrder": "https://schema.org/ItemListOrderDescending",
+            "itemListElement": resortCoursesEN.map(course => ({
+                "@type": "ListItem",
+                "position": course.position,
+                "item": {
+                    "@type": "GolfCourse",
+                    "name": course.name,
+                    "url": `${APP_URL}/courses/${course.slug}`,
+                    "description": course.description,
+                    "address": { "@type": "PostalAddress", "addressLocality": course.city, "addressCountry": "FR" },
+                    "priceRange": course.greenFee
+                }
+            }))
+        };
+
+        const faqSchema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": resortFaqEN.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+            }))
+        };
+
+        const articleSchema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Best Golf Resorts on the French Riviera — 2026 Guide",
+            "description": "5 golf resorts with hotels and spas on the Côte d'Azur. Stay-and-play packages, luxury amenities, and championship courses.",
+            "author": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "publisher": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "datePublished": "2026-03-02",
+            "dateModified": "2026-03-02"
+        };
+
+        res.render('guides/golf-resorts', {
+            title: 'Best Golf Resorts on the French Riviera — 2026 Guide',
+            metaDescription: '5 golf resorts with hotels and spas on the Côte d\'Azur. Stay-and-play packages at Terre Blanche, Royal Mougins, and more.',
+            canonicalPath: '/guides/best-golf-resorts-french-riviera',
+            ogType: 'article',
+            keywords: 'golf resorts french riviera, golf hotel cote azur, terre blanche resort, golf spa france, stay and play golf nice',
+            schema: [itemListSchema, faqSchema, articleSchema],
+            courses: resortCoursesEN,
+            faqData: resortFaqEN,
+            courseLinks,
+            hreflang: resortHreflang,
+            currentLang: 'en',
+            alternateLang: { code: 'fr', url: '/guides/meilleurs-resorts-golf-cote-azur', label: 'Français' }
+        });
+    } catch (err) {
+        console.error('Guide page error:', err);
+        res.redirect('/');
+    }
+});
+
+// GET /guides/meilleurs-resorts-golf-cote-azur (French)
+router.get('/meilleurs-resorts-golf-cote-azur', async (req, res) => {
+    try {
+        const APP_URL = process.env.APP_URL || 'https://frenchriviera.golf';
+
+        const itemListSchema = {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Meilleurs Resorts Golf de la Côte d'Azur",
+            "description": "Resorts golf avec hôtels et spas sur la Côte d'Azur",
+            "numberOfItems": resortCoursesFR.length,
+            "itemListOrder": "https://schema.org/ItemListOrderDescending",
+            "itemListElement": resortCoursesFR.map(course => ({
+                "@type": "ListItem",
+                "position": course.position,
+                "item": {
+                    "@type": "GolfCourse",
+                    "name": course.name,
+                    "url": `${APP_URL}/courses/${course.slug}`,
+                    "description": course.description,
+                    "address": { "@type": "PostalAddress", "addressLocality": course.city, "addressCountry": "FR" },
+                    "priceRange": course.greenFee
+                }
+            }))
+        };
+
+        const faqSchema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": resortFaqFR.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+            }))
+        };
+
+        const articleSchema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Meilleurs Resorts Golf de la Côte d'Azur — Guide 2026",
+            "description": "5 resorts golf avec hôtels et spas sur la Côte d'Azur. Forfaits séjour golf à Terre Blanche, Royal Mougins et plus.",
+            "author": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "publisher": { "@type": "Organization", "name": "frenchriviera.golf", "url": APP_URL },
+            "datePublished": "2026-03-02",
+            "dateModified": "2026-03-02",
+            "inLanguage": "fr"
+        };
+
+        res.render('guides/resorts-golf', {
+            title: 'Meilleurs Resorts Golf de la Côte d\'Azur — Guide 2026',
+            metaDescription: '5 resorts golf avec hôtels et spas sur la Côte d\'Azur. Forfaits séjour golf à Terre Blanche, Royal Mougins et plus.',
+            canonicalPath: '/guides/meilleurs-resorts-golf-cote-azur',
+            htmlLang: 'fr',
+            ogType: 'article',
+            keywords: 'resort golf cote azur, hotel golf france, terre blanche resort, golf spa cote azur, sejour golf nice',
+            schema: [itemListSchema, faqSchema, articleSchema],
+            courses: resortCoursesFR,
+            faqData: resortFaqFR,
+            courseLinks,
+            hreflang: resortHreflang,
+            currentLang: 'fr',
+            alternateLang: { code: 'en', url: '/guides/best-golf-resorts-french-riviera', label: 'English' }
+        });
+    } catch (err) {
+        console.error('Guide page error:', err);
+        res.redirect('/');
+    }
+});
+
 module.exports = router;

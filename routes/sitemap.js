@@ -89,8 +89,17 @@ router.get('/sitemap-main.xml', (req, res) => {
     const urls = [
         { loc: '/', changefreq: 'daily', priority: '1.0' },
         { loc: '/courses', changefreq: 'weekly', priority: '0.9' },
+        // Guide pages (EN)
         { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9' },
+        { loc: '/guides/golf-near-nice-airport', changefreq: 'monthly', priority: '0.85' },
+        { loc: '/guides/budget-golf-french-riviera', changefreq: 'monthly', priority: '0.85' },
+        { loc: '/guides/best-golf-resorts-french-riviera', changefreq: 'monthly', priority: '0.85' },
+        // Guide pages (FR)
         { loc: '/guides/meilleurs-golfs-cote-azur-2026', changefreq: 'monthly', priority: '0.9' },
+        { loc: '/guides/golf-pres-aeroport-nice', changefreq: 'monthly', priority: '0.85' },
+        { loc: '/guides/golf-pas-cher-cote-azur', changefreq: 'monthly', priority: '0.85' },
+        { loc: '/guides/meilleurs-resorts-golf-cote-azur', changefreq: 'monthly', priority: '0.85' },
+        // Other pages
         { loc: '/games', changefreq: 'daily', priority: '0.8' },
         { loc: '/available', changefreq: 'daily', priority: '0.7' },
         { loc: '/blog', changefreq: 'weekly', priority: '0.7' },
@@ -141,8 +150,18 @@ router.get('/sitemap-cities.xml', (req, res) => {
 router.get('/sitemap-guides.xml', (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const urls = [
+        // Best Golf Courses (EN/FR)
         { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9', lastmod: today },
-        { loc: '/guides/meilleurs-golfs-cote-azur-2026', changefreq: 'monthly', priority: '0.9', lastmod: today }
+        { loc: '/guides/meilleurs-golfs-cote-azur-2026', changefreq: 'monthly', priority: '0.9', lastmod: today },
+        // Golf Near Nice Airport (EN/FR)
+        { loc: '/guides/golf-near-nice-airport', changefreq: 'monthly', priority: '0.85', lastmod: today },
+        { loc: '/guides/golf-pres-aeroport-nice', changefreq: 'monthly', priority: '0.85', lastmod: today },
+        // Budget Golf (EN/FR)
+        { loc: '/guides/budget-golf-french-riviera', changefreq: 'monthly', priority: '0.85', lastmod: today },
+        { loc: '/guides/golf-pas-cher-cote-azur', changefreq: 'monthly', priority: '0.85', lastmod: today },
+        // Golf Resorts (EN/FR)
+        { loc: '/guides/best-golf-resorts-french-riviera', changefreq: 'monthly', priority: '0.85', lastmod: today },
+        { loc: '/guides/meilleurs-resorts-golf-cote-azur', changefreq: 'monthly', priority: '0.85', lastmod: today }
     ];
 
     res.set('Content-Type', 'application/xml');
@@ -177,8 +196,17 @@ router.get('/sitemap.xml', async (req, res) => {
             // Static pages
             { loc: '/', changefreq: 'daily', priority: '1.0' },
             { loc: '/courses', changefreq: 'weekly', priority: '0.9' },
+            // Guide pages (EN)
             { loc: '/guides/best-golf-courses-french-riviera-2026', changefreq: 'monthly', priority: '0.9' },
+            { loc: '/guides/golf-near-nice-airport', changefreq: 'monthly', priority: '0.85' },
+            { loc: '/guides/budget-golf-french-riviera', changefreq: 'monthly', priority: '0.85' },
+            { loc: '/guides/best-golf-resorts-french-riviera', changefreq: 'monthly', priority: '0.85' },
+            // Guide pages (FR)
             { loc: '/guides/meilleurs-golfs-cote-azur-2026', changefreq: 'monthly', priority: '0.9' },
+            { loc: '/guides/golf-pres-aeroport-nice', changefreq: 'monthly', priority: '0.85' },
+            { loc: '/guides/golf-pas-cher-cote-azur', changefreq: 'monthly', priority: '0.85' },
+            { loc: '/guides/meilleurs-resorts-golf-cote-azur', changefreq: 'monthly', priority: '0.85' },
+            // Other pages
             { loc: '/games', changefreq: 'daily', priority: '0.8' },
             { loc: '/available', changefreq: 'daily', priority: '0.7' },
             { loc: '/about/brand-facts', changefreq: 'monthly', priority: '0.6' },
