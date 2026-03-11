@@ -15,64 +15,64 @@
                     ${profile.location_city ? (profile.nationality ? ' · ' : '') + profile.location_city : ''}
                 </p>
                 ${profile.languages && profile.languages.length > 0 ?
-                    `<p class="profile-languages">Speaks: ${profile.languages.join(', ')}</p>` : ''
+                    `<p class="profile-languages">${t.profile.speaks}: ${profile.languages.join(', ')}</p>` : ''
                 }
                 <div class="profile-stats-inline">
-                    <span><strong>${profile.games_played || 0}</strong> games played</span>
+                    <span><strong>${profile.games_played || 0}</strong> ${t.profile.gamesPlayed}</span>
                     ${profile.average_rating > 0 ?
-                        `<span><strong>${parseFloat(profile.average_rating).toFixed(1)}</strong> rating (${profile.total_ratings})</span>` : ''
+                        `<span><strong>${parseFloat(profile.average_rating).toFixed(1)}</strong> ${t.profile.rating} (${profile.total_ratings})</span>` : ''
                     }
                 </div>
             </div>
             ${isOwnProfile ?
-                `<a href="/profile/edit" class="btn btn-outline">Edit Profile</a>` : ''
+                `<a href="/profile/edit" class="btn btn-outline">${t.profile.editProfile}</a>` : ''
             }
         </div>
 
         <div class="profile-content">
             ${profile.bio ?
                 `<section class="profile-section">
-                    <h2>About</h2>
+                    <h2>${t.profile.about}</h2>
                     <p>${escapeHtml(profile.bio)}</p>
                 </section>` : ''
             }
 
             <section class="profile-section">
-                <h2>Golf Details</h2>
+                <h2>${t.profile.golfDetails}</h2>
                 <div class="details-grid">
                     ${profile.handicap !== null ?
                         `<div class="detail-item">
-                            <span class="detail-label">Handicap</span>
-                            <span class="detail-value">${profile.handicap} (${profile.handicap_type || 'not specified'})</span>
+                            <span class="detail-label">${t.profile.handicap}</span>
+                            <span class="detail-value">${profile.handicap} (${profile.handicap_type || lang === 'fr' ? 'non spécifié' : 'not specified'})</span>
                         </div>` : ''
                     }
                     ${profile.playing_level ?
                         `<div class="detail-item">
-                            <span class="detail-label">Level</span>
+                            <span class="detail-label">${t.profile.level}</span>
                             <span class="detail-value">${profile.playing_level}</span>
                         </div>` : ''
                     }
                     ${profile.pace_preference ?
                         `<div class="detail-item">
-                            <span class="detail-label">Pace</span>
+                            <span class="detail-label">${t.profile.pace}</span>
                             <span class="detail-value">${profile.pace_preference}</span>
                         </div>` : ''
                     }
                     ${profile.transport_preference ?
                         `<div class="detail-item">
-                            <span class="detail-label">Transport</span>
+                            <span class="detail-label">${t.profile.transport}</span>
                             <span class="detail-value">${profile.transport_preference}</span>
                         </div>` : ''
                     }
                     ${profile.typical_tee_time ?
                         `<div class="detail-item">
-                            <span class="detail-label">Preferred Time</span>
+                            <span class="detail-label">${t.profile.preferredTime}</span>
                             <span class="detail-value">${profile.typical_tee_time.replace('_', ' ')}</span>
                         </div>` : ''
                     }
                     ${profile.usual_days ?
                         `<div class="detail-item">
-                            <span class="detail-label">Usually Plays</span>
+                            <span class="detail-label">${t.profile.usuallyPlays}</span>
                             <span class="detail-value">${profile.usual_days}</span>
                         </div>` : ''
                     }
@@ -81,7 +81,7 @@
 
             ${typeof favoriteCourses !== 'undefined' && favoriteCourses && favoriteCourses.length > 0 ?
                 '<section class="profile-section">' +
-                    '<h2>Favorite Courses</h2>' +
+                    '<h2>' + t.profile.favoriteCourses + '</h2>' +
                     '<div class="favorite-courses-display">' +
                         favoriteCourses.map(function(course) {
                             return '<a href="/courses/' + course.slug + '" class="favorite-course-badge">' +
@@ -95,23 +95,23 @@
 
             ${profile.vibe || profile.group_preference || profile.post_round ?
                 `<section class="profile-section">
-                    <h2>Playing Style</h2>
+                    <h2>${t.profile.playingStyle}</h2>
                     <div class="details-grid">
                         ${profile.vibe ?
                             `<div class="detail-item">
-                                <span class="detail-label">Vibe</span>
+                                <span class="detail-label">${t.profile.vibe}</span>
                                 <span class="detail-value">${profile.vibe}</span>
                             </div>` : ''
                         }
                         ${profile.group_preference ?
                             `<div class="detail-item">
-                                <span class="detail-label">Group Preference</span>
+                                <span class="detail-label">${t.profile.groupPreference}</span>
                                 <span class="detail-value">${profile.group_preference.replace('_', ' ')}</span>
                             </div>` : ''
                         }
                         ${profile.post_round ?
                             `<div class="detail-item">
-                                <span class="detail-label">After the Round</span>
+                                <span class="detail-label">${t.profile.afterRound}</span>
                                 <span class="detail-value">${profile.post_round.replace('_', ' ')}</span>
                             </div>` : ''
                         }
@@ -122,8 +122,8 @@
             ${profile.average_rating > 0 ? `
                 <section class="profile-section ratings-section">
                     <div class="section-header">
-                        <h2>Player Rating</h2>
-                        <a href="/ratings/user/${profile.id}">View All Reviews</a>
+                        <h2>${t.profile.playerRating}</h2>
+                        <a href="/ratings/user/${profile.id}">${t.profile.viewAllReviews}</a>
                     </div>
                     <div class="rating-summary-card">
                         <div class="rating-big">
@@ -135,15 +135,15 @@
                                     </svg>
                                 `).join('')}
                             </div>
-                            <span class="rating-count">${profile.total_ratings} ${profile.total_ratings === 1 ? 'review' : 'reviews'}</span>
+                            <span class="rating-count">${profile.total_ratings} ${profile.total_ratings === 1 ? t.profile.review : t.profile.reviews}</span>
                         </div>
                     </div>
                 </section>
             ` : ''}
 
             <section class="profile-section">
-                <h2>Member Since</h2>
-                <p>${new Date(profile.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</p>
+                <h2>${t.profile.memberSince}</h2>
+                <p>${new Date(profile.created_at).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { month: 'long', year: 'numeric' })}</p>
             </section>
         </div>
     </div>

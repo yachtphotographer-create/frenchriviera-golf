@@ -2,62 +2,62 @@
 <div class="my-games-page">
     <div class="container">
         <div class="page-header">
-            <h1>My Games</h1>
+            <h1>${t.myGames.title}</h1>
         </div>
 
         <div class="page-actions">
-            <a href="/games/create" class="btn btn-primary">Create a Game</a>
-            <a href="/games" class="btn btn-outline">Find Games</a>
+            <a href="/games/create" class="btn btn-primary">${t.myGames.createGame}</a>
+            <a href="/games" class="btn btn-outline">${t.myGames.findGames}</a>
         </div>
 
         <section class="games-section">
-            <h2>Upcoming Games</h2>
+            <h2>${t.myGames.upcomingGames}</h2>
             ${upcoming && upcoming.length > 0 ?
                 `<div class="games-list">
                     ${upcoming.map(game => `
                         <article class="game-card-mini">
                             <div class="game-date-mini">
                                 <span class="date-num">${new Date(game.game_date).getDate()}</span>
-                                <span class="date-month">${new Date(game.game_date).toLocaleDateString('en-GB', { month: 'short' })}</span>
+                                <span class="date-month">${new Date(game.game_date).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { month: 'short' })}</span>
                             </div>
                             <div class="game-info-mini">
                                 <h3><a href="/games/${game.id}">${game.course_name}</a></h3>
-                                <p>${game.tee_time.slice(0, 5)} · ${game.role === 'creator' ? 'You created' : 'Joined'}</p>
+                                <p>${game.tee_time.slice(0, 5)} · ${game.role === 'creator' ? t.myGames.youCreated : t.myGames.joined}</p>
                             </div>
                             <div class="game-status-mini">
                                 <span class="status-badge status-${game.status}">${game.status}</span>
-                                ${game.player_status === 'pending' ? '<span class="status-badge status-pending">Pending</span>' : ''}
+                                ${game.player_status === 'pending' ? '<span class="status-badge status-pending">' + (lang === 'fr' ? 'En attente' : 'Pending') + '</span>' : ''}
                             </div>
-                            <a href="/games/${game.id}" class="btn btn-outline btn-sm">View</a>
+                            <a href="/games/${game.id}" class="btn btn-outline btn-sm">${t.myGames.view}</a>
                         </article>
                     `).join('')}
                 </div>` :
                 `<div class="empty-state">
-                    <p>No upcoming games. <a href="/games">Find a game</a> or <a href="/games/create">create one</a>.</p>
+                    <p>${t.myGames.noUpcoming} ${t.myGames.findOrCreate}</p>
                 </div>`
             }
         </section>
 
         <section class="games-section">
-            <h2>Past Games</h2>
+            <h2>${t.myGames.pastGames}</h2>
             ${past && past.length > 0 ?
                 `<div class="games-list">
                     ${past.map(game => `
                         <article class="game-card-mini past">
                             <div class="game-date-mini">
                                 <span class="date-num">${new Date(game.game_date).getDate()}</span>
-                                <span class="date-month">${new Date(game.game_date).toLocaleDateString('en-GB', { month: 'short' })}</span>
+                                <span class="date-month">${new Date(game.game_date).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { month: 'short' })}</span>
                             </div>
                             <div class="game-info-mini">
                                 <h3><a href="/games/${game.id}">${game.course_name}</a></h3>
-                                <p>${new Date(game.game_date).toLocaleDateString('en-GB')}</p>
+                                <p>${new Date(game.game_date).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB')}</p>
                             </div>
-                            <a href="/games/${game.id}" class="btn btn-outline btn-sm">View</a>
+                            <a href="/games/${game.id}" class="btn btn-outline btn-sm">${t.myGames.view}</a>
                         </article>
                     `).join('')}
                 </div>` :
                 `<div class="empty-state">
-                    <p>No past games yet.</p>
+                    <p>${t.myGames.noPast}</p>
                 </div>`
             }
         </section>

@@ -1,23 +1,23 @@
 <%- include('../layouts/main', { body: `
 <div class="profile-edit-page">
     <div class="container container-narrow">
-        <h1>Edit Profile</h1>
+        <h1>${t.profile.editProfile}</h1>
 
         <!-- Photo Upload -->
         <section class="form-section">
-            <h2>Profile Photo</h2>
+            <h2>${t.profile.profilePhoto}</h2>
             <div class="photo-upload">
                 <div class="current-photo">
                     ${profile.profile_photo ?
-                        `<img src="${profile.profile_photo}" alt="Current photo">` :
+                        `<img src="${profile.profile_photo}" alt="">` :
                         `<div class="avatar-placeholder large">${profile.display_name.charAt(0).toUpperCase()}</div>`
                     }
                 </div>
                 <form action="/profile/photo" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="_csrf" value="${csrfToken}">
                     <input type="file" name="photo" id="photo" accept="image/*">
-                    <label for="photo" class="btn btn-outline">Choose Photo</label>
-                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <label for="photo" class="btn btn-outline">${t.profile.choosePhoto}</label>
+                    <button type="submit" class="btn btn-primary">${t.profile.upload}</button>
                 </form>
             </div>
         </section>
@@ -26,188 +26,188 @@
         <form action="/profile/edit" method="POST" class="profile-form">
             <input type="hidden" name="_csrf" value="${csrfToken}">
             <section class="form-section">
-                <h2>Basic Info</h2>
+                <h2>${t.profile.basicInfo}</h2>
 
                 <div class="form-group">
-                    <label for="display_name">Display Name *</label>
+                    <label for="display_name">${t.profile.displayName} *</label>
                     <input type="text" id="display_name" name="display_name"
                            value="${profile.display_name}" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nationality">Nationality</label>
+                        <label for="nationality">${t.profile.nationality}</label>
                         <input type="text" id="nationality" name="nationality"
-                               value="${profile.nationality || ''}" placeholder="e.g. French">
+                               value="${profile.nationality || ''}" placeholder="${lang === 'fr' ? 'ex: Français' : 'e.g. French'}">
                     </div>
                     <div class="form-group">
-                        <label for="location_city">City</label>
+                        <label for="location_city">${t.profile.city}</label>
                         <input type="text" id="location_city" name="location_city"
-                               value="${profile.location_city || ''}" placeholder="e.g. Nice">
+                               value="${profile.location_city || ''}" placeholder="${lang === 'fr' ? 'ex: Nice' : 'e.g. Nice'}">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="location_type">I am a...</label>
+                    <label for="location_type">${t.profile.iAmA}</label>
                     <select id="location_type" name="location_type">
-                        <option value="">Select...</option>
-                        <option value="resident" ${profile.location_type === 'resident' ? 'selected' : ''}>Resident</option>
-                        <option value="visitor" ${profile.location_type === 'visitor' ? 'selected' : ''}>Visitor</option>
-                        <option value="seasonal" ${profile.location_type === 'seasonal' ? 'selected' : ''}>Seasonal</option>
+                        <option value="">${t.profile.select}</option>
+                        <option value="resident" ${profile.location_type === 'resident' ? 'selected' : ''}>${t.profile.resident}</option>
+                        <option value="visitor" ${profile.location_type === 'visitor' ? 'selected' : ''}>${t.profile.visitor}</option>
+                        <option value="seasonal" ${profile.location_type === 'seasonal' ? 'selected' : ''}>${t.profile.seasonal}</option>
                     </select>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="gender">Gender</label>
+                        <label for="gender">${t.profile.gender}</label>
                         <select id="gender" name="gender">
-                            <option value="">Select...</option>
-                            <option value="male" ${profile.gender === 'male' ? 'selected' : ''}>Male</option>
-                            <option value="female" ${profile.gender === 'female' ? 'selected' : ''}>Female</option>
-                            <option value="other" ${profile.gender === 'other' ? 'selected' : ''}>Other</option>
+                            <option value="">${t.profile.select}</option>
+                            <option value="male" ${profile.gender === 'male' ? 'selected' : ''}>${t.profile.male}</option>
+                            <option value="female" ${profile.gender === 'female' ? 'selected' : ''}>${t.profile.female}</option>
+                            <option value="other" ${profile.gender === 'other' ? 'selected' : ''}>${t.profile.other}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="birth_date">Date of Birth</label>
+                        <label for="birth_date">${t.profile.dateOfBirth}</label>
                         <input type="date" id="birth_date" name="birth_date"
                                value="${profile.birth_date ? new Date(profile.birth_date).toISOString().split('T')[0] : ''}">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="languages">Languages (comma separated)</label>
+                    <label for="languages">${t.profile.languages} (${t.profile.languagesHint})</label>
                     <input type="text" id="languages" name="languages"
                            value="${profile.languages ? profile.languages.join(', ') : ''}"
-                           placeholder="e.g. English, French">
+                           placeholder="${lang === 'fr' ? 'ex: Français, Anglais' : 'e.g. English, French'}">
                 </div>
 
                 <div class="form-group">
-                    <label for="bio">About Me</label>
+                    <label for="bio">${t.profile.aboutMe}</label>
                     <textarea id="bio" name="bio" rows="4"
-                              placeholder="Tell other golfers about yourself...">${profile.bio || ''}</textarea>
+                              placeholder="${t.profile.aboutMePlaceholder}">${profile.bio || ''}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Phone (optional)</label>
+                    <label for="phone">${t.profile.phone} (${t.profile.phoneOptional})</label>
                     <input type="tel" id="phone" name="phone"
                            value="${profile.phone || ''}" placeholder="+33 6 XX XX XX XX">
                 </div>
             </section>
 
             <section class="form-section">
-                <h2>Golf Details</h2>
+                <h2>${t.profile.golfDetails}</h2>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="handicap">Handicap</label>
+                        <label for="handicap">${t.profile.handicap}</label>
                         <input type="number" id="handicap" name="handicap"
                                value="${profile.handicap || ''}" step="0.1" min="-5" max="54"
-                               placeholder="e.g. 18.5">
+                               placeholder="${lang === 'fr' ? 'ex: 18.5' : 'e.g. 18.5'}">
                     </div>
                     <div class="form-group">
-                        <label for="handicap_type">Handicap Type</label>
+                        <label for="handicap_type">${t.profile.handicapType}</label>
                         <select id="handicap_type" name="handicap_type">
-                            <option value="">Select...</option>
-                            <option value="official" ${profile.handicap_type === 'official' ? 'selected' : ''}>Official</option>
-                            <option value="self_declared" ${profile.handicap_type === 'self_declared' ? 'selected' : ''}>Self-declared</option>
-                            <option value="none" ${profile.handicap_type === 'none' ? 'selected' : ''}>No handicap</option>
+                            <option value="">${t.profile.select}</option>
+                            <option value="official" ${profile.handicap_type === 'official' ? 'selected' : ''}>${t.profile.official}</option>
+                            <option value="self_declared" ${profile.handicap_type === 'self_declared' ? 'selected' : ''}>${t.profile.selfDeclared}</option>
+                            <option value="none" ${profile.handicap_type === 'none' ? 'selected' : ''}>${t.profile.noHandicap}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="playing_level">Playing Level</label>
+                    <label for="playing_level">${t.profile.playingLevel}</label>
                     <select id="playing_level" name="playing_level">
-                        <option value="">Select...</option>
-                        <option value="beginner" ${profile.playing_level === 'beginner' ? 'selected' : ''}>Beginner</option>
-                        <option value="intermediate" ${profile.playing_level === 'intermediate' ? 'selected' : ''}>Intermediate</option>
-                        <option value="advanced" ${profile.playing_level === 'advanced' ? 'selected' : ''}>Advanced</option>
-                        <option value="scratch" ${profile.playing_level === 'scratch' ? 'selected' : ''}>Scratch</option>
+                        <option value="">${t.profile.select}</option>
+                        <option value="beginner" ${profile.playing_level === 'beginner' ? 'selected' : ''}>${t.profile.beginner}</option>
+                        <option value="intermediate" ${profile.playing_level === 'intermediate' ? 'selected' : ''}>${t.profile.intermediate}</option>
+                        <option value="advanced" ${profile.playing_level === 'advanced' ? 'selected' : ''}>${t.profile.advanced}</option>
+                        <option value="scratch" ${profile.playing_level === 'scratch' ? 'selected' : ''}>${t.profile.scratch}</option>
                     </select>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="pace_preference">Pace Preference</label>
+                        <label for="pace_preference">${t.profile.pacePreference}</label>
                         <select id="pace_preference" name="pace_preference">
-                            <option value="">Select...</option>
-                            <option value="relaxed" ${profile.pace_preference === 'relaxed' ? 'selected' : ''}>Relaxed</option>
-                            <option value="normal" ${profile.pace_preference === 'normal' ? 'selected' : ''}>Normal</option>
-                            <option value="fast" ${profile.pace_preference === 'fast' ? 'selected' : ''}>Fast</option>
+                            <option value="">${t.profile.select}</option>
+                            <option value="relaxed" ${profile.pace_preference === 'relaxed' ? 'selected' : ''}>${t.profile.relaxed}</option>
+                            <option value="normal" ${profile.pace_preference === 'normal' ? 'selected' : ''}>${t.profile.normal}</option>
+                            <option value="fast" ${profile.pace_preference === 'fast' ? 'selected' : ''}>${t.profile.fast}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="transport_preference">Transport</label>
+                        <label for="transport_preference">${t.profile.transport}</label>
                         <select id="transport_preference" name="transport_preference">
-                            <option value="">Select...</option>
-                            <option value="buggy" ${profile.transport_preference === 'buggy' ? 'selected' : ''}>Buggy</option>
-                            <option value="walking" ${profile.transport_preference === 'walking' ? 'selected' : ''}>Walking</option>
-                            <option value="trolley" ${profile.transport_preference === 'trolley' ? 'selected' : ''}>Trolley</option>
-                            <option value="caddy" ${profile.transport_preference === 'caddy' ? 'selected' : ''}>Caddy</option>
+                            <option value="">${t.profile.select}</option>
+                            <option value="buggy" ${profile.transport_preference === 'buggy' ? 'selected' : ''}>${t.profile.buggy}</option>
+                            <option value="walking" ${profile.transport_preference === 'walking' ? 'selected' : ''}>${t.profile.walking}</option>
+                            <option value="trolley" ${profile.transport_preference === 'trolley' ? 'selected' : ''}>${t.profile.trolley}</option>
+                            <option value="caddy" ${profile.transport_preference === 'caddy' ? 'selected' : ''}>${t.profile.caddy}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="typical_tee_time">Preferred Tee Time</label>
+                        <label for="typical_tee_time">${t.profile.preferredTeeTime}</label>
                         <select id="typical_tee_time" name="typical_tee_time">
-                            <option value="">Select...</option>
-                            <option value="early_bird" ${profile.typical_tee_time === 'early_bird' ? 'selected' : ''}>Early Bird (before 8am)</option>
-                            <option value="morning" ${profile.typical_tee_time === 'morning' ? 'selected' : ''}>Morning (8am-12pm)</option>
-                            <option value="afternoon" ${profile.typical_tee_time === 'afternoon' ? 'selected' : ''}>Afternoon</option>
+                            <option value="">${t.profile.select}</option>
+                            <option value="early_bird" ${profile.typical_tee_time === 'early_bird' ? 'selected' : ''}>${t.profile.earlyBird}</option>
+                            <option value="morning" ${profile.typical_tee_time === 'morning' ? 'selected' : ''}>${t.profile.morning}</option>
+                            <option value="afternoon" ${profile.typical_tee_time === 'afternoon' ? 'selected' : ''}>${t.profile.afternoon}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="usual_days">Usually Plays</label>
+                        <label for="usual_days">${t.profile.usuallyPlays}</label>
                         <select id="usual_days" name="usual_days">
-                            <option value="">Select...</option>
-                            <option value="weekdays" ${profile.usual_days === 'weekdays' ? 'selected' : ''}>Weekdays</option>
-                            <option value="weekends" ${profile.usual_days === 'weekends' ? 'selected' : ''}>Weekends</option>
-                            <option value="both" ${profile.usual_days === 'both' ? 'selected' : ''}>Both</option>
+                            <option value="">${t.profile.select}</option>
+                            <option value="weekdays" ${profile.usual_days === 'weekdays' ? 'selected' : ''}>${t.profile.weekdays}</option>
+                            <option value="weekends" ${profile.usual_days === 'weekends' ? 'selected' : ''}>${t.profile.weekends}</option>
+                            <option value="both" ${profile.usual_days === 'both' ? 'selected' : ''}>${t.profile.both}</option>
                         </select>
                     </div>
                 </div>
             </section>
 
             <section class="form-section">
-                <h2>Playing Style</h2>
+                <h2>${t.profile.playingStyle}</h2>
 
                 <div class="form-group">
-                    <label for="vibe">Golf Vibe</label>
+                    <label for="vibe">${t.profile.golfVibe}</label>
                     <select id="vibe" name="vibe">
-                        <option value="">Select...</option>
-                        <option value="competitive" ${profile.vibe === 'competitive' ? 'selected' : ''}>Competitive</option>
-                        <option value="social" ${profile.vibe === 'social' ? 'selected' : ''}>Social</option>
-                        <option value="networking" ${profile.vibe === 'networking' ? 'selected' : ''}>Networking</option>
-                        <option value="learning" ${profile.vibe === 'learning' ? 'selected' : ''}>Learning</option>
+                        <option value="">${t.profile.select}</option>
+                        <option value="competitive" ${profile.vibe === 'competitive' ? 'selected' : ''}>${t.profile.competitive}</option>
+                        <option value="social" ${profile.vibe === 'social' ? 'selected' : ''}>${t.profile.social}</option>
+                        <option value="networking" ${profile.vibe === 'networking' ? 'selected' : ''}>${t.profile.networking}</option>
+                        <option value="learning" ${profile.vibe === 'learning' ? 'selected' : ''}>${t.profile.learning}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="group_preference">Group Preference</label>
+                    <label for="group_preference">${t.profile.groupPreference}</label>
                     <select id="group_preference" name="group_preference">
-                        <option value="">Select...</option>
-                        <option value="mixed" ${profile.group_preference === 'mixed' ? 'selected' : ''}>Mixed levels</option>
-                        <option value="same_level" ${profile.group_preference === 'same_level' ? 'selected' : ''}>Same level</option>
-                        <option value="beginners_welcome" ${profile.group_preference === 'beginners_welcome' ? 'selected' : ''}>Beginners welcome</option>
+                        <option value="">${t.profile.select}</option>
+                        <option value="mixed" ${profile.group_preference === 'mixed' ? 'selected' : ''}>${t.profile.mixedLevels}</option>
+                        <option value="same_level" ${profile.group_preference === 'same_level' ? 'selected' : ''}>${t.profile.sameLevel}</option>
+                        <option value="beginners_welcome" ${profile.group_preference === 'beginners_welcome' ? 'selected' : ''}>${t.profile.beginnersWelcome}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="post_round">After the Round</label>
+                    <label for="post_round">${t.profile.afterRound}</label>
                     <select id="post_round" name="post_round">
-                        <option value="">Select...</option>
-                        <option value="lunch" ${profile.post_round === 'lunch' ? 'selected' : ''}>Lunch</option>
-                        <option value="drinks" ${profile.post_round === 'drinks' ? 'selected' : ''}>Drinks</option>
-                        <option value="quick_exit" ${profile.post_round === 'quick_exit' ? 'selected' : ''}>Quick exit</option>
+                        <option value="">${t.profile.select}</option>
+                        <option value="lunch" ${profile.post_round === 'lunch' ? 'selected' : ''}>${t.profile.lunch}</option>
+                        <option value="drinks" ${profile.post_round === 'drinks' ? 'selected' : ''}>${t.profile.drinks}</option>
+                        <option value="quick_exit" ${profile.post_round === 'quick_exit' ? 'selected' : ''}>${t.profile.quickExit}</option>
                     </select>
                 </div>
             </section>
 
             <section class="form-section">
-                <h2>Favorite Courses</h2>
-                <p class="form-hint">Select up to 3 courses you enjoy playing (optional)</p>
+                <h2>${t.profile.favoriteCourses}</h2>
+                <p class="form-hint">${t.profile.selectUpTo3}</p>
                 <div class="favorite-courses-list">
                     ${courses.map(course => {
                         const isChecked = profile.favorite_courses && profile.favorite_courses.includes(course.id);
@@ -221,8 +221,8 @@
             </section>
 
             <div class="form-actions">
-                <a href="/profile" class="btn btn-outline">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/profile" class="btn btn-outline">${t.profile.cancel}</a>
+                <button type="submit" class="btn btn-primary">${t.profile.saveChanges}</button>
             </div>
         </form>
     </div>

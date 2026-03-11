@@ -1,75 +1,67 @@
 <%- include('../layouts/main', { body: `
 <div class="availability-page">
     <div class="container container-narrow">
-        <h1>Set Your Availability</h1>
-        <p class="text-muted">Let other golfers know when you're free to play</p>
+        <h1>${t.availability.title}</h1>
+        <p class="text-muted">${t.availability.subtitle}</p>
 
         <form action="/availability/create" method="POST" class="availability-form">
             <input type="hidden" name="_csrf" value="${csrfToken}">
             <section class="form-section">
-                <h2>When are you available?</h2>
+                <h2>${t.availability.whenAvailable}</h2>
 
                 <div class="form-group">
-                    <label>Date Type *</label>
+                    <label>${t.availability.dateType} *</label>
                     <div class="date-type-toggle">
                         <label class="radio-label">
-                            <input type="radio" name="date_type" value="single" checked> Single day
+                            <input type="radio" name="date_type" value="single" checked> ${t.availability.singleDay}
                         </label>
                         <label class="radio-label">
-                            <input type="radio" name="date_type" value="range"> Period (multiple days)
+                            <input type="radio" name="date_type" value="range"> ${t.availability.period}
                         </label>
                     </div>
                 </div>
 
                 <div class="form-group" id="single-date-group">
-                    <label for="available_date">Date *</label>
-                    <input type="text" id="available_date" name="available_date" placeholder="Select date">
+                    <label for="available_date">${t.availability.date} *</label>
+                    <input type="text" id="available_date" name="available_date" placeholder="${t.availability.selectDate}">
                 </div>
 
                 <div class="form-row date-range-group" id="date-range-group" style="display: none;">
                     <div class="form-group">
-                        <label for="start_date">From *</label>
-                        <input type="text" id="start_date" name="start_date" placeholder="Start date">
+                        <label for="start_date">${t.availability.from} *</label>
+                        <input type="text" id="start_date" name="start_date" placeholder="${t.availability.startDate}">
                     </div>
                     <div class="form-group">
-                        <label for="end_date">To *</label>
-                        <input type="text" id="end_date" name="end_date" placeholder="End date">
+                        <label for="end_date">${t.availability.to} *</label>
+                        <input type="text" id="end_date" name="end_date" placeholder="${t.availability.endDate}">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="time_window">Time Window *</label>
+                    <label for="time_window">${t.availability.timeWindow} *</label>
                     <select id="time_window" name="time_window" required>
-                        <option value="">Select...</option>
-                        <option value="early_bird">Early Bird (before 8am)</option>
-                        <option value="morning">Morning (8am - 12pm)</option>
-                        <option value="afternoon">Afternoon (after 12pm)</option>
-                        <option value="all_day">All Day</option>
+                        <option value="">${t.profile.select}</option>
+                        <option value="early_bird">${t.availability.earlyBird}</option>
+                        <option value="morning">${t.availability.morning}</option>
+                        <option value="afternoon">${t.availability.afternoon}</option>
+                        <option value="all_day">${t.availability.allDay}</option>
                     </select>
                 </div>
             </section>
 
             <section class="form-section">
-                <h2>Where? (Optional)</h2>
+                <h2>${t.availability.whereOptional}</h2>
 
                 <div class="form-group">
-                    <label>Preferred Course 1</label>
+                    <label>${t.availability.preferredCourse} 1</label>
                     <select name="course_ids" class="course-dropdown">
-                        <option value="">Any course</option>
+                        <option value="">${t.availability.anyCourse}</option>
                         ${courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Preferred Course 2 (optional)</label>
-                    <select name="course_ids" class="course-dropdown">
-                        <option value="">—</option>
-                        ${courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Preferred Course 3 (optional)</label>
+                    <label>${t.availability.preferredCourse} 2 (${t.availability.optional})</label>
                     <select name="course_ids" class="course-dropdown">
                         <option value="">—</option>
                         ${courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
@@ -77,9 +69,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="area">Area</label>
+                    <label>${t.availability.preferredCourse} 3 (${t.availability.optional})</label>
+                    <select name="course_ids" class="course-dropdown">
+                        <option value="">—</option>
+                        ${courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="area">${t.availability.area}</label>
                     <select id="area" name="area">
-                        <option value="">Any area</option>
+                        <option value="">${t.availability.anyArea}</option>
                         <option value="nice">Nice</option>
                         <option value="cannes">Cannes</option>
                         <option value="monaco">Monaco</option>
@@ -90,32 +90,32 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="note">Note (Optional)</label>
+                    <label for="note">${t.availability.note}</label>
                     <textarea id="note" name="note" rows="2"
-                              placeholder="E.g., Looking for a relaxed round, happy to play anywhere..."></textarea>
+                              placeholder="${t.availability.notePlaceholder}"></textarea>
                 </div>
             </section>
 
             <div class="form-actions">
-                <a href="/dashboard" class="btn btn-outline">Cancel</a>
-                <button type="submit" class="btn btn-primary">Set Availability</button>
+                <a href="/dashboard" class="btn btn-outline">${t.common.cancel}</a>
+                <button type="submit" class="btn btn-primary">${t.availability.setAvailability}</button>
             </div>
         </form>
 
         ${myAvailability && myAvailability.length > 0 ? `
             <section class="my-availability">
-                <h2>Your Current Availability</h2>
+                <h2>${t.availability.yourCurrentAvailability}</h2>
                 <div class="availability-list">
                     ${myAvailability.map(avail => `
                         <div class="availability-item">
                             <div class="avail-info">
-                                <strong>${new Date(avail.available_date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</strong>
+                                <strong>${new Date(avail.available_date).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</strong>
                                 <span>${avail.time_window.replace('_', ' ')}</span>
                                 ${avail.course_name ? `<span>@ ${avail.course_name}</span>` : ''}
                             </div>
                             <form action="/availability/${avail.id}/delete" method="POST">
                                 <input type="hidden" name="_csrf" value="${csrfToken}">
-                                <button type="submit" class="btn btn-outline btn-sm">Remove</button>
+                                <button type="submit" class="btn btn-outline btn-sm">${t.availability.remove}</button>
                             </form>
                         </div>
                     `).join('')}
