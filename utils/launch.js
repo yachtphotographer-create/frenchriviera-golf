@@ -1,7 +1,7 @@
 const db = require('../config/database');
 
-const LAUNCH_THRESHOLD = 200;
-const FOUNDING_MEMBER_LIMIT = 200;
+const LAUNCH_THRESHOLD = 100;
+const FOUNDING_MEMBER_LIMIT = 100;
 
 /**
  * Get the current launch status
