@@ -123,6 +123,27 @@
         "inviteToGame": "Invite to Game",
         "noPlayers": "No available players found for these criteria."
     },
+    "dashboard": {
+        "welcome": "Welcome back",
+        "quickActions": "Quick Actions",
+        "createGame": "Create a Game",
+        "setAvailability": "Set Availability",
+        "findGame": "Find a Game",
+        "findPlayers": "Find Players",
+        "upcomingGames": "Upcoming Games",
+        "noUpcomingGames": "No upcoming games",
+        "browseGames": "Browse open games or create your own!",
+        "recentActivity": "Recent Activity",
+        "viewAllNotifications": "View All Notifications",
+        "noRecentActivity": "No recent activity",
+        "yourProfile": "Your Profile",
+        "completeProfile": "Complete your profile to help other golfers find you.",
+        "editProfile": "Edit Profile",
+        "handicap": "Handicap",
+        "level": "Level",
+        "pace": "Pace",
+        "notSet": "Not set"
+    },
     "common": {
         "learnMore": "Learn More",
         "viewAll": "View All",

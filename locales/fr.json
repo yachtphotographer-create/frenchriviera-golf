@@ -123,6 +123,27 @@
         "inviteToGame": "Inviter à une Partie",
         "noPlayers": "Aucun joueur disponible pour ces critères."
     },
+    "dashboard": {
+        "welcome": "Bienvenue",
+        "quickActions": "Actions Rapides",
+        "createGame": "Créer une Partie",
+        "setAvailability": "Définir ma Disponibilité",
+        "findGame": "Trouver une Partie",
+        "findPlayers": "Trouver des Joueurs",
+        "upcomingGames": "Parties à Venir",
+        "noUpcomingGames": "Aucune partie à venir",
+        "browseGames": "Parcourez les parties ou créez la vôtre !",
+        "recentActivity": "Activité Récente",
+        "viewAllNotifications": "Voir Toutes les Notifications",
+        "noRecentActivity": "Aucune activité récente",
+        "yourProfile": "Votre Profil",
+        "completeProfile": "Complétez votre profil pour aider les autres golfeurs à vous trouver.",
+        "editProfile": "Modifier le Profil",
+        "handicap": "Handicap",
+        "level": "Niveau",
+        "pace": "Rythme",
+        "notSet": "Non défini"
+    },
     "common": {
         "learnMore": "En Savoir Plus",
         "viewAll": "Voir Tout",
