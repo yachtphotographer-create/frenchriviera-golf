@@ -729,6 +729,13 @@ h3 { font-size: 1.375rem; }
     margin-bottom: var(--spacing-md);
 }
 
+.footer-brand {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
 .footer-brand p {
     color: var(--color-text-muted);
     font-size: 0.9rem;
