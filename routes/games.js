@@ -3,7 +3,8 @@ const router = express.Router();
 const Game = require('../models/Game');
 const Course = require('../models/Course');
 const { isAuthenticated, isVerified } = require('../middleware/auth');
-const { createNotification } = require('../utils/notifications');
+const { createNotification, createTranslatedNotification, getUserLanguage } = require('../utils/notifications');
+const { translations } = require('../middleware/language');
 
 // GET /games - Browse open games
 router.get('/', async (req, res) => {
@@ -150,39 +151,44 @@ router.get('/:id/invite/:userId', isAuthenticated, async (req, res) => {
         const inviteResult = await Game.invitePlayer(gameId, userId, req.session.user.id);
         console.log('Invite result:', inviteResult);
 
-        const { createNotification } = require('../utils/notifications');
-
-        // Notify invited player
-        await createNotification(
+        // Notify invited player (in their language)
+        await createTranslatedNotification(
             userId,
             'invitation',
-            'Game invitation',
-            `${req.session.user.display_name} invited you to play at ${game.course_name}`,
+            'gameInvitation',
+            'youveBeenInvited',
+            { playerName: req.session.user.display_name, courseName: game.course_name, date: new Date(game.game_date).toLocaleDateString() },
             `/games/${gameId}`
         );
 
-        // Notify sender (confirmation)
-        await createNotification(
+        // Notify sender (confirmation, in their language)
+        await createTranslatedNotification(
             req.session.user.id,
             'invitation_sent',
-            'Invitation sent',
-            `You invited ${invitedPlayer.display_name} to play at ${game.course_name}`,
+            'invitationSent',
+            'invitationSentTo',
+            { playerName: invitedPlayer.display_name, courseName: game.course_name },
             `/games/${gameId}`
         );
 
-        // Push real-time notifications
+        // Push real-time notifications (use requester's language for socket, DB notification is in user's language)
         const io = req.app.get('io');
         if (io) {
+            const invitedLang = await getUserLanguage(userId);
+            const senderLang = req.lang || 'en';
+            const tInvited = translations[invitedLang];
+            const tSender = translations[senderLang];
+
             io.to(`user-${userId}`).emit('new-notification', {
                 type: 'invitation',
-                title: 'Game invitation',
-                message: `${req.session.user.display_name} invited you to play at ${game.course_name}`,
+                title: tInvited.notifications.gameInvitation,
+                message: tInvited.notifications.youveBeenInvited.replace('{playerName}', req.session.user.display_name).replace('{courseName}', game.course_name).replace('{date}', new Date(game.game_date).toLocaleDateString()),
                 link: `/games/${gameId}`
             });
             io.to(`user-${req.session.user.id}`).emit('new-notification', {
                 type: 'invitation_sent',
-                title: 'Invitation sent',
-                message: `You invited ${invitedPlayer.display_name} to play at ${game.course_name}`,
+                title: tSender.notifications.invitationSent,
+                message: tSender.notifications.invitationSentTo.replace('{playerName}', invitedPlayer.display_name).replace('{courseName}', game.course_name),
                 link: `/games/${gameId}`
             });
         }
@@ -276,22 +282,25 @@ router.post('/:id/join', isAuthenticated, async (req, res) => {
 
         await Game.requestJoin(gameId, req.session.user.id);
 
-        // Notify creator
-        await createNotification(
+        // Notify creator (in their language)
+        await createTranslatedNotification(
             game.creator_id,
             'game_request',
-            'New join request',
-            `${req.session.user.display_name} wants to join your game at ${game.course_name}`,
+            'newJoinRequest',
+            'playerWantsToJoin',
+            { playerName: req.session.user.display_name, courseName: game.course_name },
             `/games/${gameId}`
         );
 
         // Push real-time notification
         const io = req.app.get('io');
         if (io) {
+            const creatorLang = await getUserLanguage(game.creator_id);
+            const t = translations[creatorLang];
             io.to(`user-${game.creator_id}`).emit('new-notification', {
                 type: 'game_request',
-                title: 'New join request',
-                message: `${req.session.user.display_name} wants to join your game at ${game.course_name}`,
+                title: t.notifications.newJoinRequest,
+                message: t.notifications.playerWantsToJoin.replace('{playerName}', req.session.user.display_name).replace('{courseName}', game.course_name),
                 link: `/games/${gameId}`
             });
         }
@@ -320,22 +329,25 @@ router.post('/:id/accept/:playerId', isAuthenticated, async (req, res) => {
 
         await Game.acceptPlayer(gameId, playerId);
 
-        // Notify player
-        await createNotification(
+        // Notify player (in their language)
+        await createTranslatedNotification(
             playerId,
             'game_accepted',
-            'You\'re in!',
-            `Your request to join the game at ${game.course_name} was accepted!`,
+            'youreIn',
+            'acceptedToGame',
+            { courseName: game.course_name },
             `/games/${gameId}`
         );
 
         // Push real-time notification
         const io = req.app.get('io');
         if (io) {
+            const playerLang = await getUserLanguage(playerId);
+            const t = translations[playerLang];
             io.to(`user-${playerId}`).emit('new-notification', {
                 type: 'game_accepted',
-                title: 'You\'re in!',
-                message: `Your request to join the game at ${game.course_name} was accepted!`,
+                title: t.notifications.youreIn,
+                message: t.notifications.acceptedToGame.replace('{courseName}', game.course_name),
                 link: `/games/${gameId}`
             });
         }
@@ -364,22 +376,25 @@ router.post('/:id/decline/:playerId', isAuthenticated, async (req, res) => {
 
         await Game.declinePlayer(gameId, playerId);
 
-        // Notify player
-        await createNotification(
+        // Notify player (in their language)
+        await createTranslatedNotification(
             playerId,
             'game_declined',
-            'Request declined',
-            `Your request to join the game at ${game.course_name} was declined.`,
+            'requestDeclined',
+            'requestDeclinedMessage',
+            { courseName: game.course_name },
             `/games`
         );
 
         // Push real-time notification
         const io = req.app.get('io');
         if (io) {
+            const playerLang = await getUserLanguage(playerId);
+            const t = translations[playerLang];
             io.to(`user-${playerId}`).emit('new-notification', {
                 type: 'game_declined',
-                title: 'Request declined',
-                message: `Your request to join the game at ${game.course_name} was declined.`,
+                title: t.notifications.requestDeclined,
+                message: t.notifications.requestDeclinedMessage.replace('{courseName}', game.course_name),
                 link: `/games`
             });
         }
@@ -417,40 +432,46 @@ router.post('/:id/accept-invite', isAuthenticated, async (req, res) => {
         // Accept the invitation (reuse existing acceptPlayer method)
         await Game.acceptPlayer(gameId, req.session.user.id);
 
-        // Notify the game creator
-        await createNotification(
+        // Notify the game creator (in their language)
+        await createTranslatedNotification(
             game.creator_id,
             'invitation_accepted',
-            'Invitation accepted!',
-            `${req.session.user.display_name} accepted your invitation to play at ${game.course_name}. You can now chat in the game card!`,
+            'invitationAccepted',
+            'playerAcceptedInvite',
+            { playerName: req.session.user.display_name, courseName: game.course_name },
             `/games/${gameId}`
         );
 
         // Push real-time notification to creator
         const io = req.app.get('io');
         if (io) {
+            const creatorLang = await getUserLanguage(game.creator_id);
+            const tCreator = translations[creatorLang];
             io.to(`user-${game.creator_id}`).emit('new-notification', {
                 type: 'invitation_accepted',
-                title: 'Invitation accepted!',
-                message: `${req.session.user.display_name} accepted your invitation to play at ${game.course_name}. You can now chat in the game card!`,
+                title: tCreator.notifications.invitationAccepted,
+                message: tCreator.notifications.playerAcceptedInvite.replace('{playerName}', req.session.user.display_name).replace('{courseName}', game.course_name),
                 link: `/games/${gameId}`
             });
         }
 
         // Notify the invited player (themselves) to confirm they can chat
-        await createNotification(
+        await createTranslatedNotification(
             req.session.user.id,
             'game_joined',
-            'You\'re in!',
-            `You joined the game at ${game.course_name}. You can now chat with the group in the game card!`,
+            'youreIn',
+            'acceptedToGame',
+            { courseName: game.course_name },
             `/games/${gameId}`
         );
 
         if (io) {
+            const userLang = req.lang || 'en';
+            const tUser = translations[userLang];
             io.to(`user-${req.session.user.id}`).emit('new-notification', {
                 type: 'game_joined',
-                title: 'You\'re in!',
-                message: `You joined the game at ${game.course_name}. You can now chat with the group in the game card!`,
+                title: tUser.notifications.youreIn,
+                message: tUser.notifications.acceptedToGame.replace('{courseName}', game.course_name),
                 link: `/games/${gameId}`
             });
         }
@@ -488,22 +509,25 @@ router.post('/:id/decline-invite', isAuthenticated, async (req, res) => {
         // Decline the invitation (reuse existing declinePlayer method)
         await Game.declinePlayer(gameId, req.session.user.id);
 
-        // Notify the game creator
-        await createNotification(
+        // Notify the game creator (in their language)
+        await createTranslatedNotification(
             game.creator_id,
             'invitation_declined',
-            'Invitation declined',
-            `${req.session.user.display_name} declined your invitation to play at ${game.course_name}`,
+            'invitationDeclined',
+            'playerDeclinedInvite',
+            { playerName: req.session.user.display_name, courseName: game.course_name },
             `/games/${gameId}`
         );
 
         // Push real-time notification to creator
         const io = req.app.get('io');
         if (io) {
+            const creatorLang = await getUserLanguage(game.creator_id);
+            const t = translations[creatorLang];
             io.to(`user-${game.creator_id}`).emit('new-notification', {
                 type: 'invitation_declined',
-                title: 'Invitation declined',
-                message: `${req.session.user.display_name} declined your invitation to play at ${game.course_name}`,
+                title: t.notifications.invitationDeclined,
+                message: t.notifications.playerDeclinedInvite.replace('{playerName}', req.session.user.display_name).replace('{courseName}', game.course_name),
                 link: `/games/${gameId}`
             });
         }
@@ -537,23 +561,27 @@ router.post('/:id/withdraw', isAuthenticated, async (req, res) => {
 
         // Only notify if the player was actually accepted (not just pending)
         if (wasAccepted) {
+            const io = req.app.get('io');
+
             // Notify the creator
             if (game.creator_id !== req.session.user.id) {
-                await createNotification(
+                await createTranslatedNotification(
                     game.creator_id,
                     'player_withdrawn',
-                    'Player withdrew',
-                    `${req.session.user.display_name} has withdrawn from your game at ${game.course_name}`,
+                    'playerWithdrew',
+                    'playerWithdrewMessage',
+                    { playerName: req.session.user.display_name, courseName: game.course_name },
                     `/games/${gameId}`
                 );
 
                 // Push real-time notification
-                const io = req.app.get('io');
                 if (io) {
+                    const creatorLang = await getUserLanguage(game.creator_id);
+                    const t = translations[creatorLang];
                     io.to(`user-${game.creator_id}`).emit('new-notification', {
                         type: 'player_withdrawn',
-                        title: 'Player withdrew',
-                        message: `${req.session.user.display_name} has withdrawn from your game at ${game.course_name}`,
+                        title: t.notifications.playerWithdrew,
+                        message: t.notifications.playerWithdrewMessage.replace('{playerName}', req.session.user.display_name).replace('{courseName}', game.course_name),
                         link: `/games/${gameId}`
                     });
                 }
@@ -564,21 +592,23 @@ router.post('/:id/withdraw', isAuthenticated, async (req, res) => {
                 if (player.user_id !== req.session.user.id &&
                     player.user_id !== game.creator_id &&
                     (player.status === 'accepted' || player.role === 'creator')) {
-                    await createNotification(
+                    await createTranslatedNotification(
                         player.user_id,
                         'player_withdrawn',
-                        'Player withdrew',
-                        `${req.session.user.display_name} has withdrawn from the game at ${game.course_name}`,
+                        'playerWithdrew',
+                        'playerWithdrewMessage',
+                        { playerName: req.session.user.display_name, courseName: game.course_name },
                         `/games/${gameId}`
                     );
 
                     // Push real-time notification
-                    const io = req.app.get('io');
                     if (io) {
+                        const playerLang = await getUserLanguage(player.user_id);
+                        const t = translations[playerLang];
                         io.to(`user-${player.user_id}`).emit('new-notification', {
                             type: 'player_withdrawn',
-                            title: 'Player withdrew',
-                            message: `${req.session.user.display_name} has withdrawn from the game at ${game.course_name}`,
+                            title: t.notifications.playerWithdrew,
+                            message: t.notifications.playerWithdrewMessage.replace('{playerName}', req.session.user.display_name).replace('{courseName}', game.course_name),
                             link: `/games/${gameId}`
                         });
                     }
@@ -613,20 +643,25 @@ router.post('/:id/cancel', isAuthenticated, async (req, res) => {
 
         for (const player of players) {
             if (player.user_id !== req.session.user.id && player.status === 'accepted') {
-                await createNotification(
+                const playerLang = await getUserLanguage(player.user_id);
+                const gameDate = new Date(game.game_date).toLocaleDateString(playerLang === 'fr' ? 'fr-FR' : 'en-GB');
+
+                await createTranslatedNotification(
                     player.user_id,
                     'game_cancelled',
-                    'Game cancelled',
-                    `The game at ${game.course_name} on ${new Date(game.game_date).toLocaleDateString()} has been cancelled.`,
+                    'gameCancelled',
+                    'gameCancelledMessage',
+                    { courseName: game.course_name, date: gameDate },
                     `/games`
                 );
 
                 // Push real-time notification
                 if (io) {
+                    const t = translations[playerLang];
                     io.to(`user-${player.user_id}`).emit('new-notification', {
                         type: 'game_cancelled',
-                        title: 'Game cancelled',
-                        message: `The game at ${game.course_name} on ${new Date(game.game_date).toLocaleDateString()} has been cancelled.`,
+                        title: t.notifications.gameCancelled,
+                        message: t.notifications.gameCancelledMessage.replace('{courseName}', game.course_name).replace('{date}', gameDate),
                         link: `/games`
                     });
                 }
@@ -663,12 +698,13 @@ router.post('/:id/invite/:userId', isAuthenticated, async (req, res) => {
         const inviteResult = await Game.invitePlayer(gameId, userId, req.session.user.id);
         console.log('Invite result:', inviteResult);
 
-        // Notify invited player
-        const notifResult = await createNotification(
+        // Notify invited player (in their language)
+        const notifResult = await createTranslatedNotification(
             userId,
             'invitation',
-            'Game invitation',
-            `${req.session.user.display_name} invited you to play at ${game.course_name}`,
+            'gameInvitation',
+            'youveBeenInvited',
+            { playerName: req.session.user.display_name, courseName: game.course_name, date: new Date(game.game_date).toLocaleDateString() },
             `/games/${gameId}`
         );
         console.log('Notification created:', notifResult);
@@ -676,10 +712,12 @@ router.post('/:id/invite/:userId', isAuthenticated, async (req, res) => {
         // Push real-time notification
         const io = req.app.get('io');
         if (io) {
+            const invitedLang = await getUserLanguage(userId);
+            const t = translations[invitedLang];
             io.to(`user-${userId}`).emit('new-notification', {
                 type: 'invitation',
-                title: 'Game invitation',
-                message: `${req.session.user.display_name} invited you to play at ${game.course_name}`,
+                title: t.notifications.gameInvitation,
+                message: t.notifications.youveBeenInvited.replace('{playerName}', req.session.user.display_name).replace('{courseName}', game.course_name).replace('{date}', new Date(game.game_date).toLocaleDateString()),
                 link: `/games/${gameId}`
             });
         }

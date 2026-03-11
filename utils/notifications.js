@@ -1,6 +1,30 @@
 const db = require('../config/database');
+const { translations } = require('../middleware/language');
 
-// Create a notification
+// Helper to replace placeholders like {playerName} with actual values
+const formatMessage = (template, params = {}) => {
+    let result = template;
+    for (const [key, value] of Object.entries(params)) {
+        result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+    }
+    return result;
+};
+
+// Get user's preferred language
+const getUserLanguage = async (userId) => {
+    try {
+        const result = await db.query(
+            'SELECT preferred_language FROM users WHERE id = $1',
+            [userId]
+        );
+        return result.rows[0]?.preferred_language || 'en';
+    } catch (err) {
+        console.error('Error getting user language:', err);
+        return 'en';
+    }
+};
+
+// Create a notification (legacy - with hardcoded text)
 const createNotification = async (userId, type, title, message, link = null) => {
     try {
         await db.query(
@@ -11,6 +35,32 @@ const createNotification = async (userId, type, title, message, link = null) => 
         return true;
     } catch (err) {
         console.error('Error creating notification:', err);
+        return false;
+    }
+};
+
+// Create a translated notification
+const createTranslatedNotification = async (userId, type, titleKey, messageKey, params = {}, link = null) => {
+    try {
+        // Get user's preferred language
+        const lang = await getUserLanguage(userId);
+        const t = translations[lang] || translations['en'];
+
+        // Get translated strings
+        const title = t.notifications?.[titleKey] || translations['en'].notifications?.[titleKey] || titleKey;
+        const messageTemplate = t.notifications?.[messageKey] || translations['en'].notifications?.[messageKey] || messageKey;
+
+        // Format message with parameters
+        const message = formatMessage(messageTemplate, params);
+
+        await db.query(
+            `INSERT INTO notifications (user_id, type, title, message, link)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [userId, type, title, message, link]
+        );
+        return true;
+    } catch (err) {
+        console.error('Error creating translated notification:', err);
         return false;
     }
 };
@@ -76,8 +126,10 @@ const markAllAsRead = async (userId) => {
 
 module.exports = {
     createNotification,
+    createTranslatedNotification,
     getUnreadCount,
     getNotifications,
     markAsRead,
-    markAllAsRead
+    markAllAsRead,
+    getUserLanguage
 };

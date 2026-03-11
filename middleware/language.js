@@ -1,5 +1,6 @@
 const en = require('../locales/en.json');
 const fr = require('../locales/fr.json');
+const db = require('../config/database');
 
 const translations = { en, fr };
 const supportedLanguages = ['en', 'fr'];
@@ -11,10 +12,12 @@ const defaultLanguage = 'en';
  */
 const languageMiddleware = (req, res, next) => {
     let lang = defaultLanguage;
+    let shouldSaveToDB = false;
 
     // 1. Check for query parameter (allows switching language via ?lang=fr)
     if (req.query.lang && supportedLanguages.includes(req.query.lang)) {
         lang = req.query.lang;
+        shouldSaveToDB = true;
         // Set cookie to remember preference (1 year)
         res.cookie('lang', lang, {
             maxAge: 365 * 24 * 60 * 60 * 1000,
@@ -38,6 +41,12 @@ const languageMiddleware = (req, res, next) => {
         }
     }
 
+    // Save language preference to database if user is logged in and changed language
+    if (shouldSaveToDB && req.session && req.session.user && req.session.user.id) {
+        db.query('UPDATE users SET preferred_language = $1 WHERE id = $2', [lang, req.session.user.id])
+            .catch(err => console.error('Error saving language preference:', err));
+    }
+
     // Set language in request and response locals
     req.lang = lang;
     res.locals.lang = lang;
@@ -57,4 +66,7 @@ const languageMiddleware = (req, res, next) => {
     next();
 };
 
+// Export translations for use in notifications
 module.exports = languageMiddleware;
+module.exports.translations = translations;
+module.exports.supportedLanguages = supportedLanguages;

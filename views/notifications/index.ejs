@@ -2,11 +2,11 @@
 <div class="notifications-page">
     <div class="container container-narrow">
         <div class="page-header-flex">
-            <h1>Notifications</h1>
+            <h1>${t.notifications.title}</h1>
             ${notifications && notifications.some(n => !n.read) ?
                 `<form action="/notifications/read-all" method="POST">
                     <input type="hidden" name="_csrf" value="${csrfToken}">
-                    <button type="submit" class="btn btn-outline btn-sm">Mark all as read</button>
+                    <button type="submit" class="btn btn-outline btn-sm">${t.notifications.markAllRead}</button>
                 </form>` : ''
             }
         </div>
@@ -31,13 +31,13 @@
                         <div class="notification-content">
                             <strong>${escapeHtml(notif.title)}</strong>
                             <p>${escapeHtml(notif.message)}</p>
-                            <span class="notification-time" data-time="${notif.created_at}">${new Date(notif.created_at).toLocaleDateString()}</span>
+                            <span class="notification-time" data-time="${notif.created_at}">${new Date(notif.created_at).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB')}</span>
                         </div>
                         ${!notif.read ? '<span class="notification-dot"></span>' : ''}
                     </a>
                 `).join('') :
                 `<div class="empty-state">
-                    <p>No notifications yet.</p>
+                    <p>${t.notifications.noNotifications}</p>
                 </div>`
             }
         </div>
@@ -63,16 +63,18 @@
 </style>
 
 <script>
+const isLangFr = '${lang}' === 'fr';
+
 function timeAgo(dateString) {
     const date = new Date(dateString);
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
 
-    if (seconds < 60) return 'Just now';
-    if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
-    if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
-    if (seconds < 604800) return Math.floor(seconds / 86400) + 'd ago';
-    return date.toLocaleDateString();
+    if (seconds < 60) return isLangFr ? 'À l\\'instant' : 'Just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + (isLangFr ? ' min' : 'm ago');
+    if (seconds < 86400) return Math.floor(seconds / 3600) + (isLangFr ? ' h' : 'h ago');
+    if (seconds < 604800) return Math.floor(seconds / 86400) + (isLangFr ? ' j' : 'd ago');
+    return date.toLocaleDateString(isLangFr ? 'fr-FR' : 'en-GB');
 }
 
 // Update time displays

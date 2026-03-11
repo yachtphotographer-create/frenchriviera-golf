@@ -287,5 +287,33 @@
         "back": "Retour",
         "next": "Suivant",
         "previous": "Précédent"
+    },
+    "notifications": {
+        "title": "Notifications",
+        "markAllRead": "Tout marquer comme lu",
+        "noNotifications": "Aucune notification.",
+        "justNow": "À l'instant",
+        "gameInvitation": "Invitation à une partie",
+        "youveBeenInvited": "Vous êtes invité(e) à jouer à {courseName} le {date}",
+        "invitationSent": "Invitation envoyée",
+        "invitationSentTo": "Votre invitation à {playerName} pour {courseName} a été envoyée",
+        "newJoinRequest": "Nouvelle demande",
+        "playerWantsToJoin": "{playerName} souhaite rejoindre votre partie à {courseName}",
+        "youreIn": "Vous êtes inscrit(e) !",
+        "acceptedToGame": "Vous avez été accepté(e) pour la partie à {courseName}. Vous pouvez maintenant discuter avec votre groupe !",
+        "requestDeclined": "Demande refusée",
+        "requestDeclinedMessage": "Votre demande pour rejoindre la partie à {courseName} a été refusée",
+        "invitationAccepted": "Invitation acceptée !",
+        "playerAcceptedInvite": "{playerName} a accepté votre invitation pour jouer à {courseName}. Vous pouvez maintenant discuter dans la fiche partie !",
+        "invitationDeclined": "Invitation refusée",
+        "playerDeclinedInvite": "{playerName} a refusé votre invitation pour jouer à {courseName}",
+        "playerWithdrew": "Joueur retiré",
+        "playerWithdrewMessage": "{playerName} s'est retiré(e) de la partie à {courseName}",
+        "gameCancelled": "Partie annulée",
+        "gameCancelledMessage": "La partie à {courseName} le {date} a été annulée par l'organisateur",
+        "rateYourPartners": "Notez vos partenaires",
+        "ratePartnersMessage": "Comment était votre partie à {courseName} ? Notez vos partenaires de jeu !",
+        "newRating": "Nouvelle note reçue",
+        "youReceivedRating": "{playerName} vous a noté(e) suite à la partie à {courseName}"
     }
 }

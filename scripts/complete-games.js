@@ -7,7 +7,7 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
 const db = require('../config/database');
-const { createNotification } = require('../utils/notifications');
+const { createTranslatedNotification } = require('../utils/notifications');
 
 async function completeGames() {
     console.log('[complete-games] Starting...');
@@ -52,11 +52,12 @@ async function completeGames() {
                 // Only send if there are other players to rate
                 const otherPlayers = players.filter(p => p.user_id !== player.user_id);
                 if (otherPlayers.length > 0) {
-                    await createNotification(
+                    await createTranslatedNotification(
                         player.user_id,
                         'rate_players',
-                        'Rate your playing partners',
-                        `Your game at ${game.course_name} is complete! Rate your playing partners.`,
+                        'rateYourPartners',
+                        'ratePartnersMessage',
+                        { courseName: game.course_name },
                         `/ratings/game/${game.id}`
                     );
                     console.log(`[complete-games] Notified ${player.display_name}`);

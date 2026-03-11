@@ -287,5 +287,33 @@
         "back": "Back",
         "next": "Next",
         "previous": "Previous"
+    },
+    "notifications": {
+        "title": "Notifications",
+        "markAllRead": "Mark all as read",
+        "noNotifications": "No notifications yet.",
+        "justNow": "Just now",
+        "gameInvitation": "Game invitation",
+        "youveBeenInvited": "You've been invited to play at {courseName} on {date}",
+        "invitationSent": "Invitation sent",
+        "invitationSentTo": "Your invitation to {playerName} for {courseName} has been sent",
+        "newJoinRequest": "New join request",
+        "playerWantsToJoin": "{playerName} wants to join your game at {courseName}",
+        "youreIn": "You're in!",
+        "acceptedToGame": "You've been accepted to the game at {courseName}. You can now chat with your group!",
+        "requestDeclined": "Request declined",
+        "requestDeclinedMessage": "Your request to join the game at {courseName} was declined",
+        "invitationAccepted": "Invitation accepted!",
+        "playerAcceptedInvite": "{playerName} accepted your invitation to play at {courseName}. You can now chat in the game card!",
+        "invitationDeclined": "Invitation declined",
+        "playerDeclinedInvite": "{playerName} declined your invitation to play at {courseName}",
+        "playerWithdrew": "Player withdrew",
+        "playerWithdrewMessage": "{playerName} withdrew from the game at {courseName}",
+        "gameCancelled": "Game cancelled",
+        "gameCancelledMessage": "The game at {courseName} on {date} has been cancelled by the organizer",
+        "rateYourPartners": "Rate your partners",
+        "ratePartnersMessage": "How was your round at {courseName}? Rate your playing partners!",
+        "newRating": "New rating received",
+        "youReceivedRating": "{playerName} rated you from the game at {courseName}"
     }
 }

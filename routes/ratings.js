@@ -3,7 +3,7 @@ const router = express.Router();
 const Rating = require('../models/Rating');
 const Game = require('../models/Game');
 const { isAuthenticated } = require('../middleware/auth');
-const { createNotification } = require('../utils/notifications');
+const { createTranslatedNotification } = require('../utils/notifications');
 
 // GET /ratings/game/:gameId - Rate players from a game
 router.get('/game/:gameId', isAuthenticated, async (req, res) => {
@@ -76,12 +76,13 @@ router.post('/submit', isAuthenticated, async (req, res) => {
                 comment: comment || null
             });
 
-            // Notify the rated user
-            await createNotification(
+            // Notify the rated user (in their language)
+            await createTranslatedNotification(
                 parseInt(user_id),
                 'rating_received',
-                'New rating received',
-                `${req.session.user.display_name} rated you from the game at ${game.course_name}`,
+                'newRating',
+                'youReceivedRating',
+                { playerName: req.session.user.display_name, courseName: game.course_name },
                 `/profile`
             );
         }
