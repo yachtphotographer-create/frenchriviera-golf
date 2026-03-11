@@ -90,6 +90,73 @@ router.post('/create', isAuthenticated, async (req, res) => {
             gender_preference: gender_preference || 'mixed'
         });
 
+        // Notify players in the area about the new game
+        try {
+            const course = await Course.findById(parseInt(course_id));
+            if (course) {
+                // Find players who might be interested:
+                // 1. Players with availability on this date in this area/course
+                // 2. Players whose location_city matches the course city
+                const db = require('../config/database');
+
+                const interestedPlayersResult = await db.query(`
+                    SELECT DISTINCT u.id, u.display_name
+                    FROM users u
+                    WHERE u.id != $1
+                    AND u.email_verified = true
+                    AND (
+                        -- Players with matching availability
+                        u.id IN (
+                            SELECT a.user_id FROM availability a
+                            WHERE a.active = true
+                            AND a.available_date = $2
+                            AND (a.course_id = $3 OR a.course_id IS NULL)
+                            AND (a.area IS NULL OR a.area = '' OR a.area = $4 OR a.area = 'any')
+                        )
+                        -- OR players located in the same city
+                        OR LOWER(u.location_city) = LOWER($4)
+                    )
+                    LIMIT 50
+                `, [req.session.user.id, game_date, parseInt(course_id), course.city]);
+
+                const interestedPlayers = interestedPlayersResult.rows;
+                const io = req.app.get('io');
+
+                for (const player of interestedPlayers) {
+                    const playerLang = await getUserLanguage(player.id);
+                    const gameDate = new Date(game_date).toLocaleDateString(playerLang === 'fr' ? 'fr-FR' : 'en-GB');
+
+                    await createTranslatedNotification(
+                        player.id,
+                        'new_game_nearby',
+                        'newGameNearby',
+                        'newGameNearbyMessage',
+                        { playerName: req.session.user.display_name, courseName: course.name, date: gameDate },
+                        `/games/${game.id}`
+                    );
+
+                    // Push real-time notification
+                    if (io) {
+                        const t = translations[playerLang];
+                        io.to(`user-${player.id}`).emit('new-notification', {
+                            type: 'new_game_nearby',
+                            title: t.notifications.newGameNearby,
+                            message: t.notifications.newGameNearbyMessage
+                                .replace('{playerName}', req.session.user.display_name)
+                                .replace('{courseName}', course.name)
+                                .replace('{date}', gameDate),
+                            link: `/games/${game.id}`
+                        });
+                    }
+                }
+
+                console.log(`[games] Notified ${interestedPlayers.length} players about new game at ${course.name}`);
+            }
+        } catch (notifErr) {
+            // Don't fail game creation if notifications fail
+            console.error('Error sending new game notifications:', notifErr);
+        }
+
         req.session.success = 'Game created successfully!';
         res.redirect(`/games/${game.id}`);
 

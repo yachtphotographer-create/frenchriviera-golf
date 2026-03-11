@@ -314,6 +314,8 @@
         "rateYourPartners": "Notez vos partenaires",
         "ratePartnersMessage": "Comment était votre partie à {courseName} ? Notez vos partenaires de jeu !",
         "newRating": "Nouvelle note reçue",
-        "youReceivedRating": "{playerName} vous a noté(e) suite à la partie à {courseName}"
+        "youReceivedRating": "{playerName} vous a noté(e) suite à la partie à {courseName}",
+        "newGameNearby": "Nouvelle partie dans votre zone",
+        "newGameNearbyMessage": "{playerName} cherche des partenaires à {courseName} le {date}"
     }
 }

@@ -314,6 +314,8 @@
         "rateYourPartners": "Rate your partners",
         "ratePartnersMessage": "How was your round at {courseName}? Rate your playing partners!",
         "newRating": "New rating received",
-        "youReceivedRating": "{playerName} rated you from the game at {courseName}"
+        "youReceivedRating": "{playerName} rated you from the game at {courseName}",
+        "newGameNearby": "New game in your area",
+        "newGameNearbyMessage": "{playerName} is looking for partners at {courseName} on {date}"
     }
 }
