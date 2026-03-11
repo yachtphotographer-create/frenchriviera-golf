@@ -1,100 +1,46 @@
-require('dotenv').config({ quiet: true });
-const { pool } = require('../config/database');
+require('dotenv').config();
+const db = require('../config/database');
 
-// Verified working golf course images from Unsplash
-const coursePhotos = {
-    "monte-carlo-golf-club": [
-        "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=800&q=80"
-    ],
-    "royal-mougins-golf-club": [
-        "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=800&q=80"
-    ],
-    "cannes-mougins-golf-country-club": [
-        "https://images.unsplash.com/photo-1592919505780-303950717480?w=800&q=80"
-    ],
-    "terre-blanche-chateau": [
-        "https://images.unsplash.com/photo-1596727362302-b8d891c42ab8?w=800&q=80"
-    ],
-    "terre-blanche-le-riou": [
-        "https://images.unsplash.com/photo-1562176566-e9afd27531d4?w=800&q=80"
-    ],
-    "old-course-mandelieu": [
-        "https://images.unsplash.com/photo-1500932334442-8761ee4810a7?w=800&q=80"
-    ],
-    "riviera-golf-barbossi": [
-        "https://images.unsplash.com/photo-1633533452148-a6b0366580f1?w=800&q=80"
-    ],
-    "golf-opio-valbonne": [
-        "https://images.unsplash.com/photo-1580127534052-6583a62d7327?w=800&q=80"
-    ],
-    "grande-bastide": [
-        "https://images.unsplash.com/photo-1591491719565-9a0a6f52d577?w=800&q=80"
-    ],
-    "golf-club-biot": [
-        "https://images.unsplash.com/photo-1621508638997-e30808c10653?w=800&q=80"
-    ],
-    "golf-saint-donat": [
-        "https://images.unsplash.com/photo-1609859419744-eb8db2e8c29c?w=800&q=80"
-    ],
-    "golf-roquebrune": [
-        "https://images.unsplash.com/photo-1624727828489-a1e03b79bba8?w=800&q=80"
-    ],
-    "golf-saint-endreol": [
-        "https://images.unsplash.com/photo-1558369178-6556d97855d0?w=800&q=80"
-    ],
-    "golf-valescure": [
-        "https://images.unsplash.com/photo-1579200986793-0a88d6540fab?w=800&q=80"
-    ],
-    "chateau-de-taulane": [
-        "https://images.unsplash.com/photo-1584908390049-e4dd3a6f5849?w=800&q=80"
-    ],
-    "golf-saint-tropez": [
-        "https://images.unsplash.com/photo-1545437706-755cbbb76fcb?w=800&q=80"
-    ],
-    "nice-golf-country-club": [
-        "https://images.unsplash.com/photo-1595351298020-038700609878?w=800&q=80"
-    ],
-    "golf-claux-amic": [
-        "https://images.unsplash.com/photo-1622397817068-e82188bf5aa7?w=800&q=80"
-    ],
-    "golf-barbaroux": [
-        "https://images.unsplash.com/photo-1560185127-bdf956e56de5?w=800&q=80"
-    ],
-    "esterel-latitudes-golf": [
-        "https://images.unsplash.com/photo-1565025011378-6da929195c9a?w=800&q=80"
-    ]
-};
+const photoUpdates = [
+    { slug: 'esterel-latitudes-golf', photo: '/images/courses/golf-esterel-latitudes-new.jpg' },
+    { slug: 'golf-claux-amic', photo: '/images/courses/golf-claux-amic-new.jpg' },
+    { slug: 'golf-club-biot', photo: '/images/courses/golf-biot-new.jpg' },
+    { slug: 'cannes-mougins-golf-country-club', photo: '/images/courses/golf-cannes-mougins-new.jpg' },
+    { slug: 'golf-roquebrune', photo: '/images/courses/golf-roquebrune.jpg' },
+    { slug: 'golf-saint-tropez', photo: '/images/courses/golf-saint-tropez.jpg' },
+    { slug: 'golf-valescure', photo: '/images/courses/golf-valescure.jpg' },
+    { slug: 'monte-carlo-golf-club', photo: '/images/courses/golf-monte-carlo-new.jpg' },
+    { slug: 'nice-golf-country-club', photo: '/images/courses/golf-nice-new.jpg' },
+    { slug: 'old-course-mandelieu', photo: '/images/courses/golf-old-course-mandelieu-new.png' },
+    { slug: 'riviera-golf-barbossi', photo: '/images/courses/golf-barbossi-new.jpg' },
+    { slug: 'royal-mougins-golf-club', photo: '/images/courses/golf-royal-mougins.jpg' },
+    { slug: 'terre-blanche-chateau', photo: '/images/courses/golf-terre-blanche-chateau.jpg' },
+    { slug: 'terre-blanche-le-riou', photo: '/images/courses/golf-terre-blanche-riou.jpg' },
+    { slug: 'golf-dolcefregate', photo: '/images/courses/golf-dolcefregate-new.jpg' },
+    { slug: 'chateau-de-taulane', photo: '/images/courses/golf-chateau-taulane-new.webp' }
+];
 
-async function updateCoursePhotos() {
-    const client = await pool.connect();
-
+async function updatePhotos() {
     try {
-        console.log('Updating golf course photos...\n');
-
-        for (const [slug, photos] of Object.entries(coursePhotos)) {
-            const result = await client.query(
-                `UPDATE courses
-                 SET photos = $1, updated_at = NOW()
-                 WHERE slug = $2
-                 RETURNING name`,
-                [photos, slug]
+        for (const update of photoUpdates) {
+            const result = await db.query(
+                "UPDATE courses SET photos = ARRAY[\$1] WHERE slug = \$2 RETURNING name, slug",
+                [update.photo, update.slug]
             );
 
             if (result.rows.length > 0) {
-                console.log(`✓ Updated: ${result.rows[0].name}`);
+                console.log("Updated:", result.rows[0].name);
             } else {
-                console.log(`✗ Not found: ${slug}`);
+                console.log("Not found:", update.slug);
             }
         }
 
-        console.log('\nDone! All course photos updated with golf images.');
-
+        console.log("\nAll photos updated!");
+        process.exit(0);
     } catch (err) {
-        console.error('Error updating photos:', err);
-    } finally {
-        client.release();
-        await pool.end();
+        console.error("Error:", err);
+        process.exit(1);
     }
 }
 
-updateCoursePhotos();
+updatePhotos();
