@@ -724,7 +724,7 @@ h3 { font-size: 1.375rem; }
 }
 
 .footer-logo-img {
-    height: 60px;
+    height: 100px;
     width: auto;
     margin-bottom: var(--spacing-md);
 }
