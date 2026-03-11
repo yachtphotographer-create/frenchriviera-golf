@@ -12,11 +12,6 @@
             <p class="page-subtitle">${t.games.subtitle}</p>
         </div>
 
-        <div class="page-actions">
-            <p class="create-game-hint">Can't find a game that suits you? Create your own and let players come to you.</p>
-            <a href="/games/create" class="btn btn-primary">${t.games.createGame}</a>
-        </div>
-
         <div class="filters-bar">
             <form action="/games" method="GET" class="filters-form">
                 <div class="filter-group">
@@ -86,9 +81,14 @@
                 `).join('') :
                 `<div class="empty-state">
                     <p>${t.games.noGames}</p>
-                    <a href="/games/create" class="btn btn-primary">${t.games.createGame}</a>
                 </div>`
             }
+        </div>
+
+        <div class="create-game-cta">
+            <h3>${lang === 'fr' ? 'Vous ne trouvez pas de partie ?' : "Can't find a game?"}</h3>
+            <p>${lang === 'fr' ? 'Créez la vôtre et laissez les joueurs venir à vous.' : 'Create your own and let players come to you.'}</p>
+            <a href="/games/create" class="btn btn-primary">${t.games.createGame}</a>
         </div>
     </div>
 </div>
@@ -96,11 +96,27 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
 .games-page { padding: 2rem 0 4rem; }
-.games-page .page-actions { margin-bottom: 1.5rem; text-align: center; }
-.create-game-hint {
+
+/* Create Game CTA at bottom */
+.create-game-cta {
+    margin-top: 3rem;
+    padding: 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid #d1fae5;
+}
+.create-game-cta h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    color: var(--color-text);
+}
+.create-game-cta p {
+    margin: 0 0 1rem;
     color: var(--color-text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 0.75rem;
+}
+.create-game-cta .btn {
+    padding: 0.75rem 2rem;
 }
 
 /* Flatpickr Calendar */
