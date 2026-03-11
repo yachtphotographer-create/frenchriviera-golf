@@ -422,7 +422,7 @@ router.post('/:id/accept-invite', isAuthenticated, async (req, res) => {
             game.creator_id,
             'invitation_accepted',
             'Invitation accepted!',
-            `${req.session.user.display_name} accepted your invitation to play at ${game.course_name}`,
+            `${req.session.user.display_name} accepted your invitation to play at ${game.course_name}. You can now chat in the game card!`,
             `/games/${gameId}`
         );
 
@@ -432,7 +432,25 @@ router.post('/:id/accept-invite', isAuthenticated, async (req, res) => {
             io.to(`user-${game.creator_id}`).emit('new-notification', {
                 type: 'invitation_accepted',
                 title: 'Invitation accepted!',
-                message: `${req.session.user.display_name} accepted your invitation to play at ${game.course_name}`,
+                message: `${req.session.user.display_name} accepted your invitation to play at ${game.course_name}. You can now chat in the game card!`,
+                link: `/games/${gameId}`
+            });
+        }
+
+        // Notify the invited player (themselves) to confirm they can chat
+        await createNotification(
+            req.session.user.id,
+            'game_joined',
+            'You\'re in!',
+            `You joined the game at ${game.course_name}. You can now chat with the group in the game card!`,
+            `/games/${gameId}`
+        );
+
+        if (io) {
+            io.to(`user-${req.session.user.id}`).emit('new-notification', {
+                type: 'game_joined',
+                title: 'You\'re in!',
+                message: `You joined the game at ${game.course_name}. You can now chat with the group in the game card!`,
                 link: `/games/${gameId}`
             });
         }
