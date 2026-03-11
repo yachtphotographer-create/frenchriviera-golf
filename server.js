@@ -43,7 +43,7 @@ app.use(helmet({
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: process.env.NODE_ENV !== 'production' ? 1000 : 100,
+    max: 500, // Allow 500 requests per 15 minutes
     message: 'Too many requests, please try again later.',
     standardHeaders: true,
     legacyHeaders: false
@@ -107,10 +107,14 @@ const { generateCsrfToken, doubleCsrfProtection } = doubleCsrf({
     getSessionIdentifier: () => ''
 });
 
-// Apply CSRF protection to all routes except Socket.io and static files
+// Apply CSRF protection to all routes except Socket.io, static files, and file uploads
 app.use((req, res, next) => {
     // Skip CSRF for GET, HEAD, OPTIONS requests
     if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+        return next();
+    }
+    // Skip CSRF for multipart file uploads (handled separately with session auth)
+    if (req.path === '/profile/photo' && req.headers['content-type']?.includes('multipart/form-data')) {
         return next();
     }
     // Apply CSRF protection for state-changing requests
