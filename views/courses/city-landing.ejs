@@ -1,16 +1,17 @@
+<% const isFr = typeof lang !== 'undefined' && lang === 'fr'; %>
 <%- include('../layouts/main', { body: `
 <div class="city-landing-page">
     <div class="city-hero">
         <div class="container">
             <nav class="breadcrumb-nav" aria-label="Breadcrumb">
                 <ol class="breadcrumb-list">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/courses">Golf Courses</a></li>
-                    <li class="breadcrumb-item active"><span>Golf in ${cityName}</span></li>
+                    <li class="breadcrumb-item"><a href="/">${isFr ? 'Accueil' : 'Home'}</a></li>
+                    <li class="breadcrumb-item"><a href="/courses">${isFr ? 'Parcours' : 'Golf Courses'}</a></li>
+                    <li class="breadcrumb-item active"><span>${isFr ? 'Golf à ' + cityName : 'Golf in ' + cityName}</span></li>
                 </ol>
             </nav>
-            <h1>Golf in ${cityName}</h1>
-            <p class="city-hero-subtitle">${courses.length} golf course${courses.length !== 1 ? 's' : ''} on the French Riviera</p>
+            <h1>${isFr ? 'Golf à ' + cityName : 'Golf in ' + cityName}</h1>
+            <p class="city-hero-subtitle">${courses.length} ${isFr ? (courses.length > 1 ? 'parcours de golf' : 'parcours de golf') : (courses.length !== 1 ? 'golf courses' : 'golf course')} ${isFr ? 'sur la Côte d\'Azur' : 'on the French Riviera'}</p>
         </div>
     </div>
 
@@ -18,11 +19,11 @@
         <div class="city-content">
             <div class="city-main">
                 <section class="city-section city-intro">
-                    <h2>Golf on the French Riviera in ${cityName}</h2>
-                    <p class="city-description">${config.description}</p>
+                    <h2>${isFr ? 'Golf sur la Côte d\'Azur à ' + cityName : 'Golf on the French Riviera in ' + cityName}</h2>
+                    <p class="city-description">${isFr ? (config.description_fr || config.description) : config.description}</p>
 
                     <div class="city-highlights">
-                        <h3>Why Golf in ${cityName}?</h3>
+                        <h3>${isFr ? 'Pourquoi Jouer au Golf à ' + cityName + ' ?' : 'Why Golf in ' + cityName + '?'}</h3>
                         <ul class="highlights-list">
                             ${config.highlights.map(h => `<li>${h}</li>`).join('')}
                         </ul>
@@ -30,7 +31,7 @@
                 </section>
 
                 <section class="city-section">
-                    <h2>Golf Courses in ${cityName}</h2>
+                    <h2>${isFr ? 'Parcours de Golf à ' + cityName : 'Golf Courses in ' + cityName}</h2>
                     <div class="courses-grid">
                         ${courses.map(course => `
                             <a href="/courses/${course.slug}" class="course-card">
@@ -41,7 +42,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                                           </div>`
                                     }
-                                    ${course.featured ? '<span class="badge badge-featured">Featured</span>' : ''}
+                                    ${course.featured ? `<span class="badge badge-featured">${isFr ? 'Vedette' : 'Featured'}</span>` : ''}
                                 </div>
                                 <div class="course-card-content">
                                     <h3 class="course-card-name">${course.name}</h3>
@@ -50,7 +51,7 @@
                                         ${course.city}
                                     </p>
                                     <div class="course-card-stats">
-                                        <span>${course.holes} holes</span>
+                                        <span>${course.holes} ${isFr ? 'trous' : 'holes'}</span>
                                         <span>Par ${course.par}</span>
                                         ${course.avg_rating > 0 ? `
                                             <span class="course-card-rating">
@@ -65,67 +66,67 @@
                 </section>
 
                 <section class="city-section city-tips">
-                    <h2>Golf Tips for ${cityName}</h2>
+                    <h2>${isFr ? 'Conseils Golf pour ' + cityName : 'Golf Tips for ' + cityName}</h2>
                     <div class="tips-grid">
                         <div class="tip-card">
-                            <h4>Best Time to Play</h4>
-                            <p>The French Riviera enjoys over 300 days of sunshine per year. Spring (April-June) and autumn (September-November) offer ideal golfing conditions with pleasant temperatures.</p>
+                            <h4>${isFr ? 'Meilleure Période' : 'Best Time to Play'}</h4>
+                            <p>${isFr ? 'La Côte d\'Azur bénéficie de plus de 300 jours d\'ensoleillement par an. Le printemps (avril-juin) et l\'automne (septembre-novembre) offrent des conditions idéales.' : 'The French Riviera enjoys over 300 days of sunshine per year. Spring (April-June) and autumn (September-November) offer ideal golfing conditions with pleasant temperatures.'}</p>
                         </div>
                         <div class="tip-card">
-                            <h4>Getting There</h4>
-                            <p>Nice Côte d'Azur Airport is the main gateway, with easy access to all courses. Car rental is recommended for maximum flexibility.</p>
+                            <h4>${isFr ? 'Comment y Aller' : 'Getting There'}</h4>
+                            <p>${isFr ? 'L\'aéroport Nice Côte d\'Azur est la principale porte d\'entrée, avec un accès facile à tous les parcours. La location de voiture est recommandée.' : 'Nice Côte d\'Azur Airport is the main gateway, with easy access to all courses. Car rental is recommended for maximum flexibility.'}</p>
                         </div>
                         <div class="tip-card">
-                            <h4>What to Expect</h4>
-                            <p>French Riviera courses often have dress codes. Smart casual attire is expected. Green fees vary significantly between courses.</p>
+                            <h4>${isFr ? 'À Savoir' : 'What to Expect'}</h4>
+                            <p>${isFr ? 'Les parcours de la Côte d\'Azur ont souvent un code vestimentaire. Une tenue décontractée chic est attendue. Les green fees varient selon les parcours.' : 'French Riviera courses often have dress codes. Smart casual attire is expected. Green fees vary significantly between courses.'}</p>
                         </div>
                     </div>
                 </section>
 
                 <section class="city-section city-cta">
-                    <h2>Find Playing Partners in ${cityName}</h2>
-                    <p>Looking for golfers to play with in ${cityName}? Join French Riviera Golf to connect with local players and visitors.</p>
+                    <h2>${isFr ? 'Trouver des Partenaires à ' + cityName : 'Find Playing Partners in ' + cityName}</h2>
+                    <p>${isFr ? 'Vous cherchez des golfeurs avec qui jouer à ' + cityName + ' ? Rejoignez French Riviera Golf pour connecter avec des joueurs locaux et visiteurs.' : 'Looking for golfers to play with in ' + cityName + '? Join French Riviera Golf to connect with local players and visitors.'}</p>
                     <div class="cta-buttons">
-                        <a href="/auth/register" class="btn btn-primary">Create Free Account</a>
-                        <a href="/games" class="btn btn-outline">Browse Open Games</a>
+                        <a href="/auth/register" class="btn btn-primary">${isFr ? 'Créer un Compte Gratuit' : 'Create Free Account'}</a>
+                        <a href="/games" class="btn btn-outline">${isFr ? 'Parcourir les Parties' : 'Browse Open Games'}</a>
                     </div>
                 </section>
             </div>
 
             <aside class="city-sidebar">
                 <div class="sidebar-card">
-                    <h3>Quick Stats</h3>
+                    <h3>${isFr ? 'En Bref' : 'Quick Stats'}</h3>
                     <div class="sidebar-stats">
                         <div class="sidebar-stat">
                             <span class="stat-number">${courses.length}</span>
-                            <span class="stat-label">Golf Courses</span>
+                            <span class="stat-label">${isFr ? 'Parcours' : 'Golf Courses'}</span>
                         </div>
                         <div class="sidebar-stat">
                             <span class="stat-number">${courses.reduce((a, c) => a + (c.holes || 0), 0)}</span>
-                            <span class="stat-label">Total Holes</span>
+                            <span class="stat-label">${isFr ? 'Trous au Total' : 'Total Holes'}</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="sidebar-card">
-                    <h3>Nearby Areas</h3>
+                    <h3>${isFr ? 'Zones Proches' : 'Nearby Areas'}</h3>
                     <ul class="nearby-links">
                         ${nearbyCities.map(city => `
-                            <li><a href="/golf-in-${city.slug}">Golf in ${city.name}</a></li>
+                            <li><a href="/golf-in-${city.slug}">${isFr ? 'Golf à ' + city.name : 'Golf in ' + city.name}</a></li>
                         `).join('')}
                     </ul>
                 </div>
 
                 <div class="sidebar-card">
-                    <h3>All French Riviera</h3>
-                    <p>Explore all golf courses across the French Riviera.</p>
-                    <a href="/courses" class="btn btn-outline btn-block">View All Courses</a>
+                    <h3>${isFr ? 'Toute la Côte d\'Azur' : 'All French Riviera'}</h3>
+                    <p>${isFr ? 'Explorez tous les parcours de la Côte d\'Azur.' : 'Explore all golf courses across the French Riviera.'}</p>
+                    <a href="/courses" class="btn btn-outline btn-block">${isFr ? 'Voir Tous les Parcours' : 'View All Courses'}</a>
                 </div>
 
                 <div class="sidebar-card sidebar-cta">
-                    <h3>Find Playing Partners</h3>
-                    <p>Connect with golfers in ${cityName} and across the French Riviera.</p>
-                    <a href="/auth/register" class="btn btn-primary btn-block">Join Free</a>
+                    <h3>${isFr ? 'Trouver des Partenaires' : 'Find Playing Partners'}</h3>
+                    <p>${isFr ? 'Connectez avec des golfeurs à ' + cityName + ' et sur toute la Côte d\'Azur.' : 'Connect with golfers in ' + cityName + ' and across the French Riviera.'}</p>
+                    <a href="/auth/register" class="btn btn-primary btn-block">${isFr ? 'Rejoindre Gratuitement' : 'Join Free'}</a>
                 </div>
             </aside>
         </div>
