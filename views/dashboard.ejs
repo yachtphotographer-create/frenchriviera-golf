@@ -1,11 +1,21 @@
+<%
+const launchT = t.launch || {
+    foundingMemberBadge: lang === 'fr' ? 'Membre Fondateur' : 'Founding Member',
+    countdownTitle: lang === 'fr' ? 'Lancement de la Plateforme' : 'Platform Launch Countdown',
+    countdownSubtitle: lang === 'fr' ? 'Nous construisons notre communaute !' : 'We are building our community!',
+    spotsLeft: lang === 'fr' ? '{count} places restantes' : '{count} spots left',
+    youAreFoundingMember: lang === 'fr' ? 'Vous etes Membre Fondateur !' : 'You are a Founding Member!',
+    foundingMemberPerks: lang === 'fr' ? 'En tant que membre fondateur, vous aurez toujours le badge.' : 'As a founding member, you will always have the badge.'
+};
+%>
 <%- include('layouts/main', { body: `
 <div class="dashboard">
     <div class="container">
         <div class="dashboard-header">
-            <h1>${t.dashboard.welcome}, ${user.display_name}!${user.is_founding_member ? ' <span class="founding-badge">' + t.launch.foundingMemberBadge + '</span>' : ''}</h1>
+            <h1>${t.dashboard.welcome}, ${user.display_name}!${user.is_founding_member ? ' <span class="founding-badge">' + launchT.foundingMemberBadge + '</span>' : ''}</h1>
             ${!user.email_verified ? `
                 <div class="alert alert-warning">
-                    <span>${lang === 'fr' ? 'Votre email n\\'est pas vérifié.' : 'Your email is not verified.'} <a href="/auth/resend-verification">${lang === 'fr' ? 'Renvoyer l\\'email de vérification' : 'Resend verification email'}</a></span>
+                    <span>${lang === 'fr' ? 'Votre email n\\'est pas verifie.' : 'Your email is not verified.'} <a href="/auth/resend-verification">${lang === 'fr' ? 'Renvoyer l\\'email de verification' : 'Resend verification email'}</a></span>
                 </div>
             ` : ''}
         </div>
@@ -13,21 +23,21 @@
         ${!launchStatus.isLaunched ? `
             <section class="launch-countdown card">
                 <div class="launch-countdown-content">
-                    <h2>${t.launch.countdownTitle}</h2>
-                    <p class="launch-subtitle">${t.launch.countdownSubtitle.replace('{threshold}', launchStatus.threshold)}</p>
+                    <h2>${launchT.countdownTitle}</h2>
+                    <p class="launch-subtitle">${lang === 'fr' ? 'Les fonctionnalites de matching seront disponibles a ' + launchStatus.threshold + ' membres.' : 'Game matching features unlock at ' + launchStatus.threshold + ' members.'}</p>
                     <div class="launch-progress">
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${launchStatus.progressPercent}%"></div>
                         </div>
                         <div class="progress-text">
                             <span class="progress-count">${launchStatus.userCount} / ${launchStatus.threshold}</span>
-                            <span class="progress-remaining">${t.launch.spotsLeft.replace('{count}', launchStatus.spotsLeft)}</span>
+                            <span class="progress-remaining">${lang === 'fr' ? launchStatus.spotsLeft + ' places restantes' : launchStatus.spotsLeft + ' spots left'}</span>
                         </div>
                     </div>
                     ${user.is_founding_member ? `
-                        <p class="founding-member-notice">${t.launch.youAreFoundingMember} ${t.launch.foundingMemberPerks.replace('{limit}', launchStatus.threshold)}</p>
+                        <p class="founding-member-notice">${launchT.youAreFoundingMember}</p>
                     ` : `
-                        <p class="founding-member-notice">${t.launch.foundingMemberPerks.replace('{limit}', launchStatus.threshold)}</p>
+                        <p class="founding-member-notice">${lang === 'fr' ? 'Les ' + launchStatus.threshold + ' premiers membres recevront le badge Membre Fondateur.' : 'First ' + launchStatus.threshold + ' members will receive the Founding Member badge.'}</p>
                     `}
                 </div>
             </section>
@@ -57,14 +67,14 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                                 </div>
                                 <span>${t.dashboard.createGame}</span>
-                                <span class="locked-label">${t.launch.spotsLeft.replace('{count}', launchStatus.spotsLeft)}</span>
+                                <span class="locked-label">${lang === 'fr' ? launchStatus.spotsLeft + ' places' : launchStatus.spotsLeft + ' spots left'}</span>
                             </div>
                             <div class="action-card locked">
                                 <div class="action-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                                 </div>
                                 <span>${t.dashboard.setAvailability}</span>
-                                <span class="locked-label">${t.launch.spotsLeft.replace('{count}', launchStatus.spotsLeft)}</span>
+                                <span class="locked-label">${lang === 'fr' ? launchStatus.spotsLeft + ' places' : launchStatus.spotsLeft + ' spots left'}</span>
                             </div>
                         `}
                         <a href="/games" class="action-card">
