@@ -9,11 +9,11 @@
             <div class="footer-links">
                 <h4><%= typeof t !== 'undefined' ? t.footer.golfByCity : 'Golf by City' %></h4>
                 <ul>
-                    <li><a href="/golf-in-nice">Golf in Nice</a></li>
-                    <li><a href="/golf-in-monaco">Golf in Monaco</a></li>
-                    <li><a href="/golf-in-cannes">Golf in Cannes</a></li>
-                    <li><a href="/golf-in-saint-tropez">Golf in Saint-Tropez</a></li>
-                    <li><a href="/golf-in-grasse">Golf in Grasse</a></li>
+                    <li><a href="/golf-in-nice"><%= lang === 'fr' ? 'Golf à Nice' : 'Golf in Nice' %></a></li>
+                    <li><a href="/golf-in-monaco"><%= lang === 'fr' ? 'Golf à Monaco' : 'Golf in Monaco' %></a></li>
+                    <li><a href="/golf-in-cannes"><%= lang === 'fr' ? 'Golf à Cannes' : 'Golf in Cannes' %></a></li>
+                    <li><a href="/golf-in-saint-tropez"><%= lang === 'fr' ? 'Golf à Saint-Tropez' : 'Golf in Saint-Tropez' %></a></li>
+                    <li><a href="/golf-in-grasse"><%= lang === 'fr' ? 'Golf à Grasse' : 'Golf in Grasse' %></a></li>
                 </ul>
             </div>
 
