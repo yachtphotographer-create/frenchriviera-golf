@@ -104,7 +104,7 @@
     },
     "players": {
         "title": "Joueurs Disponibles",
-        "subtitle": "Trouvez des golfeurs à la recherche d'une partie",
+        "subtitle": "Ces golfeurs cherchent des partenaires de jeu mais n'ont pas encore de partie. Contrairement à 'Trouver une Partie' où vous rejoignez un départ existant, ici vous pouvez connecter avec des joueurs dont les disponibilités correspondent aux vôtres et créer une partie ensemble.",
         "setAvailability": "Définir ma Disponibilité",
         "anyDate": "Toute date",
         "allAreas": "Toutes les Zones",
