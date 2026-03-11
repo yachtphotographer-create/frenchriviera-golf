@@ -7,6 +7,8 @@ const launchT = t.launch || {
     youAreFoundingMember: lang === 'fr' ? 'Vous etes Membre Fondateur !' : 'You are a Founding Member!',
     foundingMemberPerks: lang === 'fr' ? 'En tant que membre fondateur, vous aurez toujours le badge.' : 'As a founding member, you will always have the badge.'
 };
+const emailNotVerified = lang === 'fr' ? 'Votre email n\'est pas verifie.' : 'Your email is not verified.';
+const resendVerification = lang === 'fr' ? 'Renvoyer l\'email de verification' : 'Resend verification email';
 %>
 <%- include('layouts/main', { body: `
 <div class="dashboard">
@@ -15,7 +17,7 @@ const launchT = t.launch || {
             <h1>${t.dashboard.welcome}, ${user.display_name}!${user.is_founding_member ? ' <span class="founding-badge">' + launchT.foundingMemberBadge + '</span>' : ''}</h1>
             ${!user.email_verified ? `
                 <div class="alert alert-warning">
-                    <span>${lang === 'fr' ? 'Votre email n\\'est pas verifie.' : 'Your email is not verified.'} <a href="/auth/resend-verification">${lang === 'fr' ? 'Renvoyer l\\'email de verification' : 'Resend verification email'}</a></span>
+                    <span>${emailNotVerified} <a href="/auth/resend-verification">${resendVerification}</a></span>
                 </div>
             ` : ''}
         </div>
