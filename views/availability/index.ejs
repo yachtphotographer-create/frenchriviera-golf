@@ -9,11 +9,18 @@
         </nav>
         <div class="page-header">
             <h1>${t.players.title}</h1>
-            <p class="page-subtitle">${t.players.subtitle}</p>
         </div>
 
-        <div class="page-actions">
-            <a href="/availability/create" class="btn btn-primary">${t.players.setAvailability}</a>
+        <div class="availability-cta">
+            <div class="availability-cta-content">
+                <h3>${lang === 'fr' ? 'Vous cherchez des partenaires de jeu ?' : 'Looking for playing partners?'}</h3>
+                <p>${lang === 'fr' ? 'Définissez votre disponibilité et les joueurs correspondant à vos critères vous trouveront. Indiquez vos dates, créneaux horaires et parcours préférés.' : 'Set up your availability and players matching your criteria will find you. Share your dates, time slots, and preferred courses.'}</p>
+                <a href="/availability/create" class="btn btn-primary">${t.players.setAvailability}</a>
+            </div>
+        </div>
+
+        <div class="section-intro">
+            <p>${t.players.subtitle}</p>
         </div>
 
         <div class="filters-bar">
@@ -114,7 +121,46 @@
 
 <style>
 .players-page { padding: 2rem 0 4rem; }
-.players-page .page-actions { margin-bottom: 1.5rem; text-align: center; }
+
+/* Availability CTA at top */
+.availability-cta {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+    border: 1px solid #d1fae5;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+.availability-cta h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+    color: var(--color-text);
+}
+.availability-cta p {
+    margin: 0 0 1rem;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.availability-cta .btn {
+    padding: 0.6rem 1.5rem;
+}
+
+.section-intro {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+}
+.section-intro p {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
 .players-page .filters-bar { max-width: 900px; margin-left: auto; margin-right: auto; }
 .players-grid {
     display: grid;

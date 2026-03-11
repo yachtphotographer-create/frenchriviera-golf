@@ -105,7 +105,7 @@
     },
     "players": {
         "title": "Available Players",
-        "subtitle": "These golfers are looking for playing partners but don't have a game yet. Unlike 'Find a Game' where you join an existing tee time, here you can connect with players whose availability matches yours and create a game together.",
+        "subtitle": "Browse golfers looking for partners. Unlike 'Find a Game' where you join an existing tee time, here you connect with players who don't have a game yet and create one together.",
         "setAvailability": "Set Up Your Availability",
         "anyDate": "Any date",
         "allAreas": "All Areas",
