@@ -36,7 +36,7 @@ const Availability = {
         return result.rows;
     },
 
-    // Get all active availability with filters
+    // Get all active availability with filters (grouped by user)
     async findActive(filters = {}) {
         let query = `
             SELECT a.*,
@@ -84,13 +84,41 @@ const Availability = {
 
         query += ' ORDER BY a.available_date, u.display_name';
 
-        if (filters.limit) {
-            query += ` LIMIT $${paramIndex}`;
-            params.push(filters.limit);
+        const result = await db.query(query, params);
+
+        // Group by user
+        const userMap = new Map();
+        for (const row of result.rows) {
+            const key = row.user_id;
+            if (!userMap.has(key)) {
+                userMap.set(key, {
+                    user_id: row.user_id,
+                    display_name: row.display_name,
+                    profile_photo: row.profile_photo,
+                    handicap: row.handicap,
+                    playing_level: row.playing_level,
+                    nationality: row.nationality,
+                    languages: row.languages,
+                    note: row.note,
+                    dates: [],
+                    time_windows: new Set(),
+                    courses: new Set()
+                });
+            }
+            const user = userMap.get(key);
+            user.dates.push(row.available_date);
+            user.time_windows.add(row.time_window);
+            if (row.course_name) user.courses.add(row.course_name);
+            if (row.note && !user.note) user.note = row.note;
         }
 
-        const result = await db.query(query, params);
-        return result.rows;
+        // Convert to array and format
+        return Array.from(userMap.values()).map(user => ({
+            ...user,
+            dates: user.dates.sort(),
+            time_windows: Array.from(user.time_windows),
+            courses: Array.from(user.courses)
+        }));
     },
 
     // Deactivate availability

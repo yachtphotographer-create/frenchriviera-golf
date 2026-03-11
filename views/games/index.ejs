@@ -13,6 +13,7 @@
         </div>
 
         <div class="page-actions">
+            <p class="create-game-hint">Can't find a game that suits you? Create your own and let players come to you.</p>
             <a href="/games/create" class="btn btn-primary">${t.games.createGame}</a>
         </div>
 
@@ -32,7 +33,7 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <input type="date" name="date" value="${filters.date || ''}" placeholder="${t.games.anyDate}">
+                    <input type="text" id="filter_date" name="date" value="${filters.date || ''}" placeholder="${t.games.anyDate}" readonly>
                 </div>
                 <div class="filter-group">
                     <select name="gender">
@@ -92,9 +93,36 @@
     </div>
 </div>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
 .games-page { padding: 2rem 0 4rem; }
 .games-page .page-actions { margin-bottom: 1.5rem; text-align: center; }
+.create-game-hint {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Flatpickr Calendar */
+.flatpickr-calendar {
+    font-size: 16px !important;
+    width: 340px !important;
+}
+.flatpickr-day {
+    width: 44px !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    font-size: 16px !important;
+}
+.flatpickr-weekday { font-size: 14px !important; }
+.flatpickr-current-month { font-size: 18px !important; }
+.flatpickr-day.selected {
+    background: var(--color-primary, #1B5E20) !important;
+    border-color: var(--color-primary, #1B5E20) !important;
+}
+#filter_date {
+    cursor: pointer;
+}
 .games-page .filters-bar { max-width: 900px; margin-left: auto; margin-right: auto; }
 .games-grid {
     display: grid;
@@ -218,4 +246,16 @@
     .games-grid { grid-template-columns: 1fr; }
 }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("#filter_date", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d/m/Y",
+        allowInput: false
+    });
+});
+</script>
 ` }) %>

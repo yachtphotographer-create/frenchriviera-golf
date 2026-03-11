@@ -3,7 +3,7 @@
         "courses": "Courses",
         "blog": "Blog",
         "findGames": "Find Games",
-        "players": "Players",
+        "players": "Find Players",
         "login": "Login",
         "signUp": "Sign Up",
         "dashboard": "Dashboard",
@@ -11,6 +11,7 @@
         "editProfile": "Edit Profile",
         "myGames": "My Games",
         "setAvailability": "Set Availability",
+        "notifications": "Notifications",
         "logout": "Logout"
     },
     "home": {

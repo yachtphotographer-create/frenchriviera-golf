@@ -17,15 +17,28 @@
                     </select>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="game_date">Date *</label>
-                        <input type="date" id="game_date" name="game_date" required
-                               min="${new Date().toISOString().split('T')[0]}">
-                    </div>
-                    <div class="form-group">
-                        <label for="tee_time">Tee Time *</label>
-                        <input type="time" id="tee_time" name="tee_time" required>
+                <div class="form-group">
+                    <label for="game_date">Date *</label>
+                    <input type="text" id="game_date" name="game_date" placeholder="Select date" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tee Time *</label>
+                    <input type="hidden" id="tee_time" name="tee_time" required>
+                    <div class="time-select-row">
+                        <select id="tee_hour" class="time-select">
+                            <option value="">Hour</option>
+                            ${Array.from({length: 15}, (_, i) => i + 6).map(h =>
+                                `<option value="${String(h).padStart(2, '0')}">${String(h).padStart(2, '0')}</option>`
+                            ).join('')}
+                        </select>
+                        <span class="time-separator">:</span>
+                        <select id="tee_minute" class="time-select">
+                            <option value="">Minute</option>
+                            ${Array.from({length: 60}, (_, i) => i).map(m =>
+                                `<option value="${String(m).padStart(2, '0')}">${String(m).padStart(2, '0')}</option>`
+                            ).join('')}
+                        </select>
                     </div>
                 </div>
 
@@ -129,6 +142,7 @@
     </div>
 </div>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
 .create-game-page { padding: var(--spacing-2xl) 0; }
 .create-game-page h1 { margin-bottom: var(--spacing-xs); }
@@ -136,5 +150,109 @@
 .checkbox-group { display: flex; flex-wrap: wrap; gap: var(--spacing-lg); }
 .checkbox-label { display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer; }
 .checkbox-label input { width: auto; }
+
+/* Date Input */
+#game_date {
+    padding: 14px 16px;
+    font-size: 18px;
+    font-weight: 500;
+    border: 1px solid var(--color-border, #E0E0E0);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    width: 100%;
+    min-height: 50px;
+}
+#game_date:focus {
+    outline: none;
+    border-color: var(--color-primary, #1B5E20);
+}
+
+/* Flatpickr Calendar - Make it bigger */
+.flatpickr-calendar {
+    font-size: 16px !important;
+    width: 340px !important;
+}
+.flatpickr-day {
+    width: 44px !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    font-size: 16px !important;
+}
+.flatpickr-weekday {
+    font-size: 14px !important;
+}
+.flatpickr-current-month {
+    font-size: 18px !important;
+}
+.flatpickr-day.selected {
+    background: var(--color-primary, #1B5E20) !important;
+    border-color: var(--color-primary, #1B5E20) !important;
+}
+
+/* Time Select Dropdowns */
+.time-select-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.time-select {
+    padding: 12px 16px;
+    font-size: 18px;
+    font-weight: 500;
+    border: 1px solid var(--color-border, #E0E0E0);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    min-width: 80px;
+}
+.time-select:focus {
+    outline: none;
+    border-color: var(--color-primary, #1B5E20);
+}
+.time-separator {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-text, #1A1A1A);
+}
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Flatpickr date picker
+    flatpickr("#game_date", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: false
+    });
+
+    const hourSelect = document.getElementById('tee_hour');
+    const minuteSelect = document.getElementById('tee_minute');
+    const timeInput = document.getElementById('tee_time');
+
+    function updateTime() {
+        const hour = hourSelect.value;
+        const minute = minuteSelect.value;
+        if (hour && minute) {
+            timeInput.value = hour + ':' + minute;
+        } else {
+            timeInput.value = '';
+        }
+    }
+
+    hourSelect.addEventListener('change', updateTime);
+    minuteSelect.addEventListener('change', updateTime);
+
+    // Form validation
+    document.querySelector('.game-form').addEventListener('submit', function(e) {
+        if (!timeInput.value) {
+            e.preventDefault();
+            alert('Please select a tee time (hour and minute)');
+        }
+    });
+});
+</script>
 ` }) %>

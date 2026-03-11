@@ -124,6 +124,79 @@ router.get('/mine', isAuthenticated, async (req, res) => {
     }
 });
 
+// GET /games/:id/invite/:userId - Invite via link (must be before /:id route)
+router.get('/:id/invite/:userId', isAuthenticated, async (req, res) => {
+    try {
+        const gameId = parseInt(req.params.id);
+        const userId = parseInt(req.params.userId);
+        console.log(`GET Invite request: game ${gameId}, user ${userId}, by ${req.session.user.display_name}`);
+
+        const game = await Game.findById(gameId);
+
+        if (!game || game.creator_id !== req.session.user.id) {
+            console.log('Invite failed: unauthorized');
+            req.session.error = 'Unauthorized';
+            return res.redirect('/available');
+        }
+
+        // Get invited player info
+        const User = require('../models/User');
+        const invitedPlayer = await User.findById(userId);
+        if (!invitedPlayer) {
+            req.session.error = 'Player not found';
+            return res.redirect('/available');
+        }
+
+        const inviteResult = await Game.invitePlayer(gameId, userId, req.session.user.id);
+        console.log('Invite result:', inviteResult);
+
+        const { createNotification } = require('../utils/notifications');
+
+        // Notify invited player
+        await createNotification(
+            userId,
+            'invitation',
+            'Game invitation',
+            `${req.session.user.display_name} invited you to play at ${game.course_name}`,
+            `/games/${gameId}`
+        );
+
+        // Notify sender (confirmation)
+        await createNotification(
+            req.session.user.id,
+            'invitation_sent',
+            'Invitation sent',
+            `You invited ${invitedPlayer.display_name} to play at ${game.course_name}`,
+            `/games/${gameId}`
+        );
+
+        // Push real-time notifications
+        const io = req.app.get('io');
+        if (io) {
+            io.to(`user-${userId}`).emit('new-notification', {
+                type: 'invitation',
+                title: 'Game invitation',
+                message: `${req.session.user.display_name} invited you to play at ${game.course_name}`,
+                link: `/games/${gameId}`
+            });
+            io.to(`user-${req.session.user.id}`).emit('new-notification', {
+                type: 'invitation_sent',
+                title: 'Invitation sent',
+                message: `You invited ${invitedPlayer.display_name} to play at ${game.course_name}`,
+                link: `/games/${gameId}`
+            });
+        }
+
+        req.session.success = `Invitation sent to ${invitedPlayer.display_name}!`;
+        res.redirect('/available');
+
+    } catch (err) {
+        console.error('GET Invite player error:', err);
+        req.session.error = 'Error inviting player';
+        res.redirect('/available');
+    }
+});
+
 // GET /games/:id - Game detail
 router.get('/:id', async (req, res) => {
     try {
@@ -139,12 +212,14 @@ router.get('/:id', async (req, res) => {
 
         // Check current user's status in game
         let userStatus = null;
+        let userInvited = false;
         let isCreator = false;
         let messages = [];
 
         if (req.session.user) {
             const userPlayer = players.find(p => p.user_id === req.session.user.id);
             userStatus = userPlayer?.status || null;
+            userInvited = userPlayer?.invited_by ? true : false;
             isCreator = game.creator_id === req.session.user.id;
 
             // Load messages if user is accepted player or creator
@@ -159,6 +234,7 @@ router.get('/:id', async (req, res) => {
             game,
             players,
             userStatus,
+            userInvited,
             isCreator,
             messages
         });
@@ -318,6 +394,112 @@ router.post('/:id/decline/:playerId', isAuthenticated, async (req, res) => {
     }
 });
 
+// POST /games/:id/accept-invite - Invited player accepts invitation
+router.post('/:id/accept-invite', isAuthenticated, async (req, res) => {
+    try {
+        const gameId = parseInt(req.params.id);
+        const game = await Game.findById(gameId);
+
+        if (!game) {
+            req.session.error = 'Game not found';
+            return res.redirect('/games');
+        }
+
+        // Check if user was invited to this game
+        const players = await Game.getPlayers(gameId);
+        const userPlayer = players.find(p => p.user_id === req.session.user.id);
+
+        if (!userPlayer || userPlayer.status !== 'pending' || !userPlayer.invited_by) {
+            req.session.error = 'You were not invited to this game';
+            return res.redirect(`/games/${gameId}`);
+        }
+
+        // Accept the invitation (reuse existing acceptPlayer method)
+        await Game.acceptPlayer(gameId, req.session.user.id);
+
+        // Notify the game creator
+        await createNotification(
+            game.creator_id,
+            'invitation_accepted',
+            'Invitation accepted!',
+            `${req.session.user.display_name} accepted your invitation to play at ${game.course_name}`,
+            `/games/${gameId}`
+        );
+
+        // Push real-time notification to creator
+        const io = req.app.get('io');
+        if (io) {
+            io.to(`user-${game.creator_id}`).emit('new-notification', {
+                type: 'invitation_accepted',
+                title: 'Invitation accepted!',
+                message: `${req.session.user.display_name} accepted your invitation to play at ${game.course_name}`,
+                link: `/games/${gameId}`
+            });
+        }
+
+        req.session.success = 'You\'ve joined the game! You can now chat with the group.';
+        res.redirect(`/games/${gameId}`);
+
+    } catch (err) {
+        console.error('Accept invite error:', err);
+        req.session.error = 'Error accepting invitation';
+        res.redirect('/games');
+    }
+});
+
+// POST /games/:id/decline-invite - Invited player declines invitation
+router.post('/:id/decline-invite', isAuthenticated, async (req, res) => {
+    try {
+        const gameId = parseInt(req.params.id);
+        const game = await Game.findById(gameId);
+
+        if (!game) {
+            req.session.error = 'Game not found';
+            return res.redirect('/games');
+        }
+
+        // Check if user was invited to this game
+        const players = await Game.getPlayers(gameId);
+        const userPlayer = players.find(p => p.user_id === req.session.user.id);
+
+        if (!userPlayer || userPlayer.status !== 'pending' || !userPlayer.invited_by) {
+            req.session.error = 'You were not invited to this game';
+            return res.redirect(`/games/${gameId}`);
+        }
+
+        // Decline the invitation (reuse existing declinePlayer method)
+        await Game.declinePlayer(gameId, req.session.user.id);
+
+        // Notify the game creator
+        await createNotification(
+            game.creator_id,
+            'invitation_declined',
+            'Invitation declined',
+            `${req.session.user.display_name} declined your invitation to play at ${game.course_name}`,
+            `/games/${gameId}`
+        );
+
+        // Push real-time notification to creator
+        const io = req.app.get('io');
+        if (io) {
+            io.to(`user-${game.creator_id}`).emit('new-notification', {
+                type: 'invitation_declined',
+                title: 'Invitation declined',
+                message: `${req.session.user.display_name} declined your invitation to play at ${game.course_name}`,
+                link: `/games/${gameId}`
+            });
+        }
+
+        req.session.success = 'Invitation declined';
+        res.redirect('/games');
+
+    } catch (err) {
+        console.error('Decline invite error:', err);
+        req.session.error = 'Error declining invitation';
+        res.redirect('/games');
+    }
+});
+
 // POST /games/:id/withdraw - Withdraw from game
 router.post('/:id/withdraw', isAuthenticated, async (req, res) => {
     try {
@@ -450,23 +632,28 @@ router.post('/:id/invite/:userId', isAuthenticated, async (req, res) => {
     try {
         const gameId = parseInt(req.params.id);
         const userId = parseInt(req.params.userId);
+        console.log(`Invite request: game ${gameId}, user ${userId}, by ${req.session.user.display_name}`);
+
         const game = await Game.findById(gameId);
 
         if (!game || game.creator_id !== req.session.user.id) {
+            console.log('Invite failed: unauthorized');
             req.session.error = 'Unauthorized';
             return res.redirect('/games');
         }
 
-        await Game.invitePlayer(gameId, userId, req.session.user.id);
+        const inviteResult = await Game.invitePlayer(gameId, userId, req.session.user.id);
+        console.log('Invite result:', inviteResult);
 
         // Notify invited player
-        await createNotification(
+        const notifResult = await createNotification(
             userId,
             'invitation',
             'Game invitation',
             `${req.session.user.display_name} invited you to play at ${game.course_name}`,
             `/games/${gameId}`
         );
+        console.log('Notification created:', notifResult);
 
         // Push real-time notification
         const io = req.app.get('io');

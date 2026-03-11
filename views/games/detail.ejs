@@ -80,10 +80,10 @@
                         `).join('')}
                     </div>
 
-                    ${isCreator && players.filter(p => p.status === 'pending').length > 0 ? `
+                    ${isCreator && players.filter(p => p.status === 'pending' && !p.invited_by).length > 0 ? `
                         <div class="pending-requests">
-                            <h3>Pending Requests</h3>
-                            ${players.filter(p => p.status === 'pending').map(player => `
+                            <h3>Pending Join Requests</h3>
+                            ${players.filter(p => p.status === 'pending' && !p.invited_by).map(player => `
                                 <div class="player-item pending">
                                     ${player.profile_photo ?
                                         `<img src="${player.profile_photo}" alt="" class="player-avatar">` :
@@ -105,6 +105,27 @@
                                             <input type="hidden" name="_csrf" value="${csrfToken}">
                                             <button type="submit" class="btn btn-outline btn-sm">Decline</button>
                                         </form>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${isCreator && players.filter(p => p.status === 'pending' && p.invited_by).length > 0 ? `
+                        <div class="pending-invitations">
+                            <h3>Pending Invitations</h3>
+                            ${players.filter(p => p.status === 'pending' && p.invited_by).map(player => `
+                                <div class="player-item invited">
+                                    ${player.profile_photo ?
+                                        `<img src="${player.profile_photo}" alt="" class="player-avatar">` :
+                                        `<span class="player-avatar-placeholder">${player.display_name.charAt(0)}</span>`
+                                    }
+                                    <div class="player-info">
+                                        <a href="/profile/${player.user_id}" class="player-name">${player.display_name}</a>
+                                        <div class="player-details">
+                                            ${player.handicap ? `<span>HCP ${player.handicap}</span>` : ''}
+                                            <span class="text-muted">Awaiting response</span>
+                                        </div>
                                     </div>
                                 </div>
                             `).join('')}
@@ -179,6 +200,17 @@
                               onsubmit="return confirm('Are you sure you want to withdraw from this game?');">
                             <input type="hidden" name="_csrf" value="${csrfToken}">
                             <button type="submit" class="btn btn-outline btn-block">Withdraw</button>
+                        </form>
+                    ` : userStatus === 'pending' && userInvited ? `
+                        <p class="text-success"><strong>You've been invited!</strong></p>
+                        <p class="text-muted" style="margin-bottom: var(--spacing-md);">Accept to join the game and start chatting with the group.</p>
+                        <form action="/games/${game.id}/accept-invite" method="POST" style="margin-bottom: var(--spacing-sm);">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
+                            <button type="submit" class="btn btn-primary btn-block">Accept Invitation</button>
+                        </form>
+                        <form action="/games/${game.id}/decline-invite" method="POST">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
+                            <button type="submit" class="btn btn-outline btn-block">Decline</button>
                         </form>
                     ` : userStatus === 'pending' ? `
                         <p class="text-muted">Your request is pending...</p>
@@ -258,6 +290,9 @@
 .pending-requests { margin-top: var(--spacing-xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--color-border); }
 .pending-requests h3 { margin-bottom: var(--spacing-md); }
 .player-item.pending { background: #fff3cd; }
+.player-item.invited { background: #cce5ff; }
+.pending-invitations { margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border); }
+.pending-invitations h3 { margin-bottom: var(--spacing-md); }
 .player-actions { display: flex; gap: var(--spacing-sm); }
 .text-success { color: var(--color-success); font-weight: 500; }
 .organizer-info { display: flex; align-items: center; gap: var(--spacing-md); }

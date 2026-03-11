@@ -120,15 +120,21 @@ const Game = {
     },
 
     // Get games created by a user
-    async findByCreator(userId) {
-        const result = await db.query(
-            `SELECT g.*, c.name as course_name, c.slug as course_slug
+    async findByCreator(userId, status = null) {
+        let query = `SELECT g.*, c.name as course_name, c.slug as course_slug
              FROM games g
              JOIN courses c ON g.course_id = c.id
-             WHERE g.creator_id = $1
-             ORDER BY g.game_date DESC, g.tee_time`,
-            [userId]
-        );
+             WHERE g.creator_id = $1`;
+        const params = [userId];
+
+        if (status) {
+            query += ` AND g.status = $2 AND g.game_date >= CURRENT_DATE`;
+            params.push(status);
+        }
+
+        query += ` ORDER BY g.game_date DESC, g.tee_time`;
+
+        const result = await db.query(query, params);
         return result.rows;
     },
 
@@ -274,7 +280,9 @@ const Game = {
         const result = await db.query(
             `INSERT INTO game_players (game_id, user_id, role, status, invited_by)
              VALUES ($1, $2, 'player', 'pending', $3)
-             ON CONFLICT (game_id, user_id) DO NOTHING
+             ON CONFLICT (game_id, user_id) DO UPDATE
+             SET status = 'pending', invited_by = $3, updated_at = NOW()
+             WHERE game_players.status IN ('withdrawn', 'declined')
              RETURNING *`,
             [gameId, userId, invitedBy]
         );
