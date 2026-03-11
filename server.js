@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 const { doubleCsrf } = require('csrf-csrf');
 const sessionConfig = require('./config/session');
 const languageMiddleware = require('./middleware/language');
+const { launchStatusMiddleware } = require('./utils/launch');
 const { escapeHtml } = require('./utils/security');
 
 const app = express();
@@ -123,6 +124,9 @@ app.use((req, res, next) => {
 
 // Language middleware (must be after cookie-parser)
 app.use(languageMiddleware);
+
+// Launch status middleware (tracks user count for feature gating)
+app.use(launchStatusMiddleware);
 
 // Share session with Socket.io
 io.use((socket, next) => {

@@ -1164,6 +1164,104 @@ h3 { font-size: 1.375rem; }
     transition: color 0.3s ease;
 }
 
+/* Locked action cards (pre-launch) */
+.action-card.locked {
+    opacity: 0.7;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.action-card.locked:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+}
+
+.action-card.locked .locked-label {
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    font-weight: 500;
+    margin-top: var(--spacing-xs);
+}
+
+/* Launch Countdown */
+.launch-countdown {
+    margin-bottom: var(--spacing-xl);
+    background: linear-gradient(135deg, rgba(52, 199, 89, 0.1) 0%, rgba(52, 199, 89, 0.05) 100%);
+    border: 2px solid var(--color-primary);
+}
+
+.launch-countdown-content {
+    text-align: center;
+}
+
+.launch-countdown h2 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.launch-subtitle {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+}
+
+.launch-progress {
+    max-width: 400px;
+    margin: 0 auto var(--spacing-lg);
+}
+
+.progress-bar {
+    height: 12px;
+    background: var(--color-bg-alt);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: var(--spacing-sm);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary) 0%, #2ecc71 100%);
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+}
+
+.progress-count {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.progress-remaining {
+    color: var(--color-text-muted);
+}
+
+.founding-member-notice {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    padding: var(--spacing-md);
+    background: var(--glass-bg);
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-md);
+}
+
+/* Founding Member Badge */
+.founding-badge {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    background: rgba(52, 199, 89, 0.1);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    margin-left: var(--spacing-sm);
+    vertical-align: middle;
+}
+
 .empty-state {
     padding: var(--spacing-xl);
     text-align: center;

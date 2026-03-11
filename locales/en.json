@@ -317,5 +317,21 @@
         "youReceivedRating": "{playerName} rated you from the game at {courseName}",
         "newGameNearby": "New game in your area",
         "newGameNearbyMessage": "{playerName} is looking for partners at {courseName} on {date}"
+    },
+    "launch": {
+        "foundingMember": "Founding Member",
+        "foundingMemberBadge": "🏆 Founding Member",
+        "countdownTitle": "Platform Launch Countdown",
+        "countdownSubtitle": "We're building our community! Game matching features unlock at {threshold} members.",
+        "spotsLeft": "{count} spots left",
+        "membersJoined": "{count} members joined",
+        "progress": "{current} / {threshold} members",
+        "almostThere": "Almost there!",
+        "featureLockedTitle": "Feature Coming Soon",
+        "featureLockedDesc": "This feature unlocks when we reach {threshold} founding members. Complete your profile while you wait!",
+        "youAreFoundingMember": "You're a Founding Member!",
+        "foundingMemberPerks": "As one of our first {limit} members, you'll always have the Founding Member badge on your profile.",
+        "launched": "We're Live!",
+        "launchedDesc": "The platform is now fully operational. Start finding your golf partners!"
     }
 }

@@ -9,7 +9,7 @@
                 }
             </div>
             <div class="profile-info">
-                <h1>${profile.display_name}</h1>
+                <h1>${profile.display_name}${profile.is_founding_member ? ' <span class="founding-badge">' + t.launch.foundingMemberBadge + '</span>' : ''}</h1>
                 <p class="profile-location">
                     ${profile.nationality ? profile.nationality : ''}
                     ${profile.location_city ? (profile.nationality ? ' · ' : '') + profile.location_city : ''}

@@ -3,6 +3,7 @@ const router = express.Router();
 const Game = require('../models/Game');
 const Course = require('../models/Course');
 const { isAuthenticated, isVerified } = require('../middleware/auth');
+const { requireLaunched } = require('../utils/launch');
 const { createNotification, createTranslatedNotification, getUserLanguage } = require('../utils/notifications');
 const { translations } = require('../middleware/language');
 
@@ -38,7 +39,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /games/create - Create game form
-router.get('/create', isAuthenticated, async (req, res) => {
+router.get('/create', isAuthenticated, requireLaunched, async (req, res) => {
     try {
         const courses = await Course.findAll();
         const preselectedCourse = req.query.course ? parseInt(req.query.course) : null;
@@ -57,7 +58,7 @@ router.get('/create', isAuthenticated, async (req, res) => {
 });
 
 // POST /games/create - Submit new game
-router.post('/create', isAuthenticated, async (req, res) => {
+router.post('/create', isAuthenticated, requireLaunched, async (req, res) => {
     try {
         const {
             course_id, game_date, tee_time, spots_total,
@@ -193,7 +194,7 @@ router.get('/mine', isAuthenticated, async (req, res) => {
 });
 
 // GET /games/:id/invite/:userId - Invite via link (must be before /:id route)
-router.get('/:id/invite/:userId', isAuthenticated, async (req, res) => {
+router.get('/:id/invite/:userId', isAuthenticated, requireLaunched, async (req, res) => {
     try {
         const gameId = parseInt(req.params.id);
         const userId = parseInt(req.params.userId);
@@ -320,7 +321,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /games/:id/join - Request to join
-router.post('/:id/join', isAuthenticated, async (req, res) => {
+router.post('/:id/join', isAuthenticated, requireLaunched, async (req, res) => {
     try {
         const gameId = parseInt(req.params.id);
         const game = await Game.findById(gameId);
@@ -748,7 +749,7 @@ router.post('/:id/cancel', isAuthenticated, async (req, res) => {
 });
 
 // POST /games/:id/invite/:userId - Invite a player
-router.post('/:id/invite/:userId', isAuthenticated, async (req, res) => {
+router.post('/:id/invite/:userId', isAuthenticated, requireLaunched, async (req, res) => {
     try {
         const gameId = parseInt(req.params.id);
         const userId = parseInt(req.params.userId);

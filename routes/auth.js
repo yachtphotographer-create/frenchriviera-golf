@@ -4,6 +4,7 @@ const User = require('../models/User');
 const { sendVerificationEmail, sendPasswordResetEmail } = require('../utils/email');
 const { generateToken } = require('../utils/helpers');
 const { isGuest, isAuthenticated } = require('../middleware/auth');
+const { checkAndSetFoundingMember } = require('../utils/launch');
 
 // GET /auth/register
 router.get('/register', isGuest, (req, res) => {
@@ -96,7 +97,8 @@ router.post('/login', isGuest, async (req, res) => {
             email: user.email,
             display_name: user.display_name,
             profile_photo: user.profile_photo,
-            email_verified: user.email_verified
+            email_verified: user.email_verified,
+            is_founding_member: user.is_founding_member || false
         };
 
         req.session.success = `Welcome back, ${user.display_name}!`;
@@ -129,12 +131,24 @@ router.get('/verify/:token', async (req, res) => {
 
         await User.verifyEmail(user.id);
 
+        // Check if user qualifies as founding member
+        const isFoundingMember = await checkAndSetFoundingMember(user.id);
+
         // Update session if logged in
         if (req.session.user && req.session.user.id === user.id) {
             req.session.user.email_verified = true;
+            req.session.user.is_founding_member = isFoundingMember;
         }
 
-        req.session.success = 'Email verified successfully! You can now access all features.';
+        if (isFoundingMember) {
+            req.session.success = req.lang === 'fr'
+                ? 'Email vérifié ! Vous êtes maintenant Membre Fondateur 🏆'
+                : 'Email verified! You are now a Founding Member 🏆';
+        } else {
+            req.session.success = req.lang === 'fr'
+                ? 'Email vérifié avec succès !'
+                : 'Email verified successfully!';
+        }
         res.redirect('/dashboard');
 
     } catch (err) {

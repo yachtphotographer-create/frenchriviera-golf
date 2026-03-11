@@ -148,7 +148,8 @@ const User = {
                     location_type, location_city, handicap, handicap_type, playing_level,
                     pace_preference, transport_preference, typical_tee_time, usual_days,
                     vibe, group_preference, post_round, games_played, average_rating,
-                    total_ratings, favorite_courses, gender, birth_date, created_at
+                    total_ratings, favorite_courses, gender, birth_date, created_at,
+                    is_founding_member
              FROM users WHERE id = $1`,
             [userId]
         );

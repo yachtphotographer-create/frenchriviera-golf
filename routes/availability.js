@@ -4,6 +4,7 @@ const Availability = require('../models/Availability');
 const Course = require('../models/Course');
 const Game = require('../models/Game');
 const { isAuthenticated } = require('../middleware/auth');
+const { requireLaunched } = require('../utils/launch');
 
 // GET /available - Browse available players
 router.get('/', async (req, res) => {
@@ -44,7 +45,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /availability/create - Set availability form
-router.get('/create', isAuthenticated, async (req, res) => {
+router.get('/create', isAuthenticated, requireLaunched, async (req, res) => {
     try {
         const courses = await Course.findAll();
         const myAvailability = await Availability.findByUser(req.session.user.id);
@@ -63,7 +64,7 @@ router.get('/create', isAuthenticated, async (req, res) => {
 });
 
 // POST /availability/create - Submit availability
-router.post('/create', isAuthenticated, async (req, res) => {
+router.post('/create', isAuthenticated, requireLaunched, async (req, res) => {
     try {
         const { date_type, available_date, start_date, end_date, time_window, course_ids, area, note } = req.body;
 

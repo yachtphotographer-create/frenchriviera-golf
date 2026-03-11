@@ -317,5 +317,21 @@
         "youReceivedRating": "{playerName} vous a noté(e) suite à la partie à {courseName}",
         "newGameNearby": "Nouvelle partie dans votre zone",
         "newGameNearbyMessage": "{playerName} cherche des partenaires à {courseName} le {date}"
+    },
+    "launch": {
+        "foundingMember": "Membre Fondateur",
+        "foundingMemberBadge": "🏆 Membre Fondateur",
+        "countdownTitle": "Lancement de la Plateforme",
+        "countdownSubtitle": "Nous construisons notre communauté ! Les fonctionnalités de matching seront disponibles à {threshold} membres.",
+        "spotsLeft": "{count} places restantes",
+        "membersJoined": "{count} membres inscrits",
+        "progress": "{current} / {threshold} membres",
+        "almostThere": "On y est presque !",
+        "featureLockedTitle": "Fonctionnalité à Venir",
+        "featureLockedDesc": "Cette fonctionnalité sera disponible quand nous atteindrons {threshold} membres fondateurs. Complétez votre profil en attendant !",
+        "youAreFoundingMember": "Vous êtes Membre Fondateur !",
+        "foundingMemberPerks": "En tant que l'un de nos {limit} premiers membres, vous aurez toujours le badge Membre Fondateur sur votre profil.",
+        "launched": "C'est Parti !",
+        "launchedDesc": "La plateforme est maintenant opérationnelle. Trouvez vos partenaires de golf !"
     }
 }
