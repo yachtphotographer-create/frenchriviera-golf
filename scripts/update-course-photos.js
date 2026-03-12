@@ -14,7 +14,7 @@ const photoUpdates = [
     { slug: 'old-course-mandelieu', photo: '/images/courses/golf-old-course-mandelieu-new.png' },
     { slug: 'riviera-golf-barbossi', photo: '/images/courses/golf-barbossi-new.jpg' },
     { slug: 'royal-mougins-golf-club', photo: '/images/courses/golf-royal-mougins-new.jpeg' },
-    { slug: 'terre-blanche-chateau', photo: '/images/courses/golf-terre-blanche-chateau.jpg' },
+    { slug: 'terre-blanche-chateau', photo: '/images/courses/golf-terre-blanche-chateau-new.jpeg' },
     { slug: 'terre-blanche-le-riou', photo: '/images/courses/golf-terre-blanche-riou-new.jpeg' },
     { slug: 'golf-dolcefregate', photo: '/images/courses/golf-dolcefregate-new.jpg' },
     { slug: 'chateau-de-taulane', photo: '/images/courses/golf-chateau-taulane-new.webp' }
