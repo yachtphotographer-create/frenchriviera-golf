@@ -41,7 +41,7 @@ const Availability = {
         let query = `
             SELECT a.*,
                    u.id as user_id, u.display_name, u.profile_photo, u.handicap,
-                   u.playing_level, u.nationality, u.languages,
+                   u.playing_level, u.nationality, u.languages, u.is_founding_member,
                    c.name as course_name, c.slug as course_slug
             FROM availability a
             JOIN users u ON a.user_id = u.id
@@ -99,6 +99,7 @@ const Availability = {
                     playing_level: row.playing_level,
                     nationality: row.nationality,
                     languages: row.languages,
+                    is_founding_member: row.is_founding_member,
                     note: row.note,
                     dates: [],
                     time_windows: new Set(),

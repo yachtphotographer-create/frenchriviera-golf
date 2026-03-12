@@ -2934,6 +2934,18 @@ a.favorite-course-badge:hover {
     color: var(--color-error);
 }
 
+.badge-founding {
+    background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%);
+    color: #1a1a1a;
+    font-weight: 600;
+    font-size: 0.65rem;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 1px 3px rgba(255, 179, 0, 0.3);
+}
+
 /* ===== Notification Badge ===== */
 .nav-notifications {
     position: relative;

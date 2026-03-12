@@ -58,7 +58,7 @@
                     ${users.map(u => `
                     <tr class="${u.suspended ? 'suspended-row' : ''}">
                         <td>${u.id}</td>
-                        <td><a href="/profile/${u.id}">${u.display_name}</a></td>
+                        <td><a href="/profile/${u.id}">${u.display_name}</a>${u.is_founding_member ? ' <span class="badge badge-founding">Founder</span>' : ''}</td>
                         <td>${u.email}</td>
                         <td>${u.handicap !== null ? u.handicap : '-'}</td>
                         <td>${u.games_played || 0}</td>

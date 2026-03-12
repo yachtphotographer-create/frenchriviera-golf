@@ -74,7 +74,7 @@
                                     }
                                 </div>
                                 <div class="player-header-info">
-                                    <h2 class="player-card-title">${avail.display_name}</h2>
+                                    <h2 class="player-card-title">${avail.display_name}${avail.is_founding_member ? ' <span class="badge-founding" title="Founding Member">★</span>' : ''}</h2>
                                     <span class="player-card-subtitle">${avail.nationality || ''}${avail.handicap ? ' • HCP ' + avail.handicap : ''}</span>
                                 </div>
                             </div>

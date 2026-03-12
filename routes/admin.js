@@ -250,7 +250,7 @@ router.get('/users', isAdmin, async (req, res) => {
     try {
         const users = await db.query(`
             SELECT id, display_name, email, created_at, email_verified, last_login,
-                   handicap, games_played, average_rating,
+                   handicap, games_played, average_rating, is_founding_member,
                    COALESCE(suspended, false) as suspended, suspended_at, suspended_reason
             FROM users
             ORDER BY created_at DESC
